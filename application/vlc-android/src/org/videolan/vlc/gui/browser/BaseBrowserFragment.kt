@@ -32,6 +32,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.view.ActionMode
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
@@ -116,6 +117,7 @@ import org.videolan.vlc.gui.helpers.UiTools.addToPlaylistAsync
 import org.videolan.vlc.gui.helpers.UiTools.showMediaInfo
 import org.videolan.vlc.gui.helpers.hf.OTG_SCHEME
 import org.videolan.vlc.gui.view.EmptyLoadingState
+import org.videolan.vlc.gui.view.EmptyLoadingStateView
 import org.videolan.vlc.gui.view.VLCDividerItemDecoration
 import org.videolan.vlc.interfaces.IEventsHandler
 import org.videolan.vlc.interfaces.IRefreshable
@@ -236,15 +238,15 @@ abstract class BaseBrowserFragment : MediaBrowserFragment<BrowserModel>(), IRefr
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        menu.findItem(R.id.ml_menu_display_options)?.isVisible = true
-        menu.findItem(R.id.ml_menu_filter)?.isVisible = enableSearchOption()
-        menu.findItem(R.id.ml_menu_sortby)?.isVisible = false
-        menu.findItem(R.id.ml_menu_sortby_media_number)?.isVisible = false
-        menu.findItem(R.id.ml_menu_add_playlist)?.isVisible = !isRootDirectory
-        addPlaylistFolderOnly = menu.findItem(R.id.folder_add_playlist)
-        addPlaylistFolderOnly.isVisible = adapter.mediaCount > 0
+//        menu.findItem(R.id.ml_menu_display_options)?.isVisible = true
+//        menu.findItem(R.id.ml_menu_filter)?.isVisible = enableSearchOption()
+//        menu.findItem(R.id.ml_menu_sortby)?.isVisible = false
+//        menu.findItem(R.id.ml_menu_sortby_media_number)?.isVisible = false
+//        menu.findItem(R.id.ml_menu_add_playlist)?.isVisible = !isRootDirectory
+//        addPlaylistFolderOnly = menu.findItem(R.id.folder_add_playlist)
+//        addPlaylistFolderOnly.isVisible = adapter.mediaCount > 0
 
-        if (requireActivity().isTalkbackIsEnabled()) menu.findItem(R.id.play_all).isVisible = true
+//        if (requireActivity().isTalkbackIsEnabled()) menu.findItem(R.id.play_all).isVisible = true
         UiTools.updateSortTitles(this)
     }
 
@@ -355,7 +357,7 @@ abstract class BaseBrowserFragment : MediaBrowserFragment<BrowserModel>(), IRefr
         val ariane = binding.ariane
         val media = currentMedia
         if (media != null && isSchemeSupported(media.uri?.scheme)) {
-            ariane.visibility = View.VISIBLE
+            ariane.visibility = View.GONE
             ariane.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             ariane.adapter = PathAdapter(this, media)
             if (ariane.itemDecorationCount == 0) {
@@ -468,6 +470,7 @@ abstract class BaseBrowserFragment : MediaBrowserFragment<BrowserModel>(), IRefr
     }
 
     fun browse(media: MediaWrapper, save: Boolean) {
+        Log.d("TAG", "CLIK MainBASE FRAGMENT")
         val ctx = activity
         if (ctx == null || !isResumed || isRemoving) return
         val ft = ctx.supportFragmentManager.beginTransaction()
@@ -664,28 +667,28 @@ abstract class BaseBrowserFragment : MediaBrowserFragment<BrowserModel>(), IRefr
                 true
             }
 
-            R.id.ml_menu_scan -> {
-                currentMedia?.let { media ->
-                    addToScannedFolders(media)
-                    item.isVisible = false
-                }
-                true
-            }
+//            R.id.ml_menu_scan -> {
+//                currentMedia?.let { media ->
+//                    addToScannedFolders(media)
+//                    item.isVisible = false
+//                }
+//                true
+//            }
 
-            R.id.folder_add_playlist -> {
-                currentMedia?.let { requireActivity().addToPlaylistAsync(it.uri.toString(), defaultTitle = it.title) }
-                true
-            }
-
-            R.id.subfolders_add_playlist -> {
-                currentMedia?.let { requireActivity().addToPlaylistAsync(it.uri.toString(), true, defaultTitle = it.title) }
-                true
-            }
-
-            R.id.play_all -> {
-                onFabPlayClick(binding.root)
-                true
-            }
+//            R.id.folder_add_playlist -> {
+//                currentMedia?.let { requireActivity().addToPlaylistAsync(it.uri.toString(), defaultTitle = it.title) }
+//                true
+//            }
+//
+//            R.id.subfolders_add_playlist -> {
+//                currentMedia?.let { requireActivity().addToPlaylistAsync(it.uri.toString(), true, defaultTitle = it.title) }
+//                true
+//            }
+//
+//            R.id.play_all -> {
+//                onFabPlayClick(binding.root)
+//                true
+//            }
 
             else -> super.onOptionsItemSelected(item)
         }
@@ -707,6 +710,8 @@ abstract class BaseBrowserFragment : MediaBrowserFragment<BrowserModel>(), IRefr
     }
 
     override fun onClick(v: View, position: Int, item: MediaLibraryItem) {
+        Toast.makeText(currentContext(), "CLIK BASE FRAGMENT", Toast.LENGTH_SHORT).show()
+        Log.d("TAG", "CLIK BASE FRAGMENT")
         if (KeyHelper.isShiftPressed || KeyHelper.isCtrlPressed) {
             onLongClick(v, position, item)
             return
@@ -761,6 +766,7 @@ abstract class BaseBrowserFragment : MediaBrowserFragment<BrowserModel>(), IRefr
     }
 
     override fun onCtxClick(v: View, position: Int, item: MediaLibraryItem) {
+        Log.d("TAG", "CtxCLIK BASE FRAGMENT")
         if (actionMode == null && item.itemType == MediaLibraryItem.TYPE_MEDIA) lifecycleScope.launch {
             val mw = item as MediaWrapper
             if (mw.uri.scheme == "content" || mw.uri.scheme == OTG_SCHEME) return@launch

@@ -6,5 +6,5 @@
     <dimen name="audio_item_header_padding">8dp</dimen>
     <dimen name="audio_item_padding_botom">8dp</dimen>
     <dimen name="audio_browser_item_size">48dp</dimen>
-    <dimen name="audio_item_title_size">16sp</dimen>
+    <dimen name="audio_item_title_size">36sp</dimen>
 </resources>

@@ -202,7 +202,7 @@ class MainActivity : ContentActivity(),
 
 
     private fun prepareActionBar() {
-        toolbarIcon = findViewById(R.id.toolbar_icon)
+//        toolbarIcon = findViewById(R.id.toolbar_icon)
         updateIncognitoModeIcon()
         supportActionBar?.run {
             setDisplayHomeAsUpEnabled(false)
@@ -267,7 +267,7 @@ class MainActivity : ContentActivity(),
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.findItem(R.id.ml_menu_refresh)?.isVisible = Permissions.canReadStorage(this)
-        menu?.findItem(R.id.incognito_mode)?.isChecked = Settings.getInstance(this).getBoolean(KEY_INCOGNITO, false)
+//        menu?.findItem(R.id.incognito_mode)?.isChecked = Settings.getInstance(this).getBoolean(KEY_INCOGNITO, false)
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -284,13 +284,13 @@ class MainActivity : ContentActivity(),
                 if (Permissions.canReadStorage(this)) forceRefresh()
                 true
             }
-            R.id.incognito_mode -> {
-                lifecycleScope.launch {
-                    if (!UiTools.updateIncognitoMode(this@MainActivity, item)) return@launch
-                    updateIncognitoModeIcon()
-                }
-                true
-            }
+//            R.id.incognito_mode -> {
+//                lifecycleScope.launch {
+//                    if (!UiTools.updateIncognitoMode(this@MainActivity, item)) return@launch
+//                    updateIncognitoModeIcon()
+//                }
+//                true
+//            }
             android.R.id.home ->
                 // Slide down the audio player or toggle the sidebar
                 slideDownAudioPlayer()
@@ -300,7 +300,7 @@ class MainActivity : ContentActivity(),
 
     private fun updateIncognitoModeIcon() {
         val incognito = Settings.getInstance (this).getBoolean(KEY_INCOGNITO, false)
-        toolbarIcon.setImageDrawable(ContextCompat.getDrawable(this, if (incognito) R.drawable.ic_incognito else if (BuildConfig.DEBUG && BuildConfig.VLC_MAJOR_VERSION == 4) R.drawable.ic_icon_vlc4 else R.drawable.ic_icon))
+//        toolbarIcon.setImageDrawable(ContextCompat.getDrawable(this, if (incognito) R.drawable.ic_incognito else if (BuildConfig.DEBUG && BuildConfig.VLC_MAJOR_VERSION == 4) R.drawable.ic_icon_vlc4 else R.drawable.ic_icon))
 
     }
 

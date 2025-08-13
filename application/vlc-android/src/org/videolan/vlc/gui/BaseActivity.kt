@@ -143,10 +143,10 @@ abstract class BaseActivity : AppCompatActivity() {
         if (relockItem != null) {
             relockItem.isVisible = Settings.safeMode && PinCodeDelegate.pinUnlocked.value == true
         }
-        val unlockItem = menu?.findItem(R.id.pin_unlock)
-        if (unlockItem != null) {
-            unlockItem.isVisible = Settings.safeMode && PinCodeDelegate.pinUnlocked.value == false
-        }
+//        val unlockItem = menu?.findItem(R.id.pin_unlock)
+//        if (unlockItem != null) {
+//            unlockItem.isVisible = Settings.safeMode && PinCodeDelegate.pinUnlocked.value == false
+//        }
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -156,10 +156,10 @@ abstract class BaseActivity : AppCompatActivity() {
             UiTools.snacker(this, R.string.safe_mode_enabled)
             return true
         }
-        if (item.itemId == R.id.pin_unlock) {
-            lifecycleScope.launch { checkPIN(true) }
-            return true
-        }
+//        if (item.itemId == R.id.pin_unlock) {
+//            lifecycleScope.launch { checkPIN(true) }
+//            return true
+//        }
         return super.onOptionsItemSelected(item)
     }
 
@@ -175,10 +175,10 @@ abstract class BaseActivity : AppCompatActivity() {
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
         super.onPostCreate(savedInstanceState)
-        if (displayTitle) {
-            findViewById<View>(R.id.toolbar_icon).setGone()
-            findViewById<View>(R.id.toolbar_vlc_title).setGone()
-        }
+//        if (displayTitle) {
+//            findViewById<View>(R.id.toolbar_icon).setGone()
+//            findViewById<View>(R.id.toolbar_vlc_title).setGone()
+//        }
     }
 
     override fun getDelegate() = baseContextWrappingDelegate

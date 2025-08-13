@@ -139,9 +139,12 @@
         <item name="fontFamily">sans-serif-black</item>
     </style>
 
-    <style name="Theme.VLC.PickerDialog" parent="Theme.VLC.PickerDialog.Light"/>
-    <style name="Theme.VLC.PickerDialog.Dark" parent="Theme.VLC.PickerDialog.Dark.7"/>
-    <style name="Theme.VLC.PickerDialog.Light" parent="Theme.VLC.PickerDialog.Light.7"/>
+    <style name="Theme.VLC.PickerDialog" parent="Theme.VLC.PickerDialog.Light" />
+
+    <style name="Theme.VLC.PickerDialog.Dark" parent="Theme.VLC.PickerDialog.Dark.7" />
+
+    <style name="Theme.VLC.PickerDialog.Light" parent="Theme.VLC.PickerDialog.Light.7" />
+
     <style name="Theme.VLC.PickerDialog.Dark.7" parent="Theme.MaterialComponents.Dialog">
         <item name="colorPrimary">@color/orange500</item>
         <item name="colorPrimaryDark">@color/orange700</item>
@@ -197,10 +200,12 @@
     </style>
 
     <style name="Theme.VLC.Black" parent="Theme.VLC.Black.7" />
+
     <style name="Theme.VLC.Black.BottomSheet">
         <item name="dialogButtonStyle">@style/Widget.Leanback.DetailsActionButtonStyle</item>
     </style>
-    <style name="Theme.VLC.Material.TV" parent="Theme.VLC.Black" >
+
+    <style name="Theme.VLC.Material.TV" parent="Theme.VLC.Black">
         <item name="android:background">@color/tv_card_content_darker</item>
     </style>
 
@@ -275,7 +280,8 @@
         <item name="fast_scroller_handle">@drawable/fastscroller_handle_black</item>
         <item name="primary_focus">@color/orange_500_transparent_20</item>
         <item name="swipe_refresh_background">?attr/background_default_darker</item>
-        <item name="dialogButtonStyle">@style/Widget.MaterialComponents.Button.TextButton.Dialog</item>
+        <item name="dialogButtonStyle">@style/Widget.MaterialComponents.Button.TextButton.Dialog
+        </item>
         <item name="permission_explanation_background">@color/grey800</item>
 
         <item name="gridview_progressbar">@drawable/gridview_progressbar_w</item>
@@ -299,7 +305,9 @@
         <item name="disabled_overlay_color">@color/black_transparent_50</item>
         <item name="video_card_background">@drawable/video_grid_card_background_dark</item>
         <item name="video_list_background">@drawable/video_list_background_dark</item>
-        <item name="rounded_corners_bottom_default_darker">@drawable/rounded_corners_bottom_default_darker_dark</item>
+        <item name="rounded_corners_bottom_default_darker">
+            @drawable/rounded_corners_bottom_default_darker_dark
+        </item>
         <item name="audio_chip_background">@drawable/rounded_corners_audio_dark</item>
         <item name="audio_chip_text_color">@color/black_transparent_60</item>
         <item name="empty_title">@color/grey300</item>
@@ -307,7 +315,8 @@
         <item name="audio_player_gradient_top">@drawable/gradient_audio_player_top_dark</item>
         <item name="tips_item_background">@color/grey900</item>
         <item name="about_text_primary">@color/orange500</item>
-        <item name="widget_preview_rounded_bg">@drawable/rounded_top_corners_left_background_dark</item>
+        <item name="widget_preview_rounded_bg">@drawable/rounded_top_corners_left_background_dark
+        </item>
         <item name="sliderStyle">@style/VLC.Slider.Dark</item>
     </style>
 
@@ -317,9 +326,11 @@
         <item name="titleTextStyle">@style/ActionModeTitleTextStyle</item>
         <item name="subtitleTextStyle">@style/ActionModeSubtitleTextStyle</item>
     </style>
+
     <style name="ActionModeTitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Title">
         <item name="android:textColor">@color/orange800</item>
     </style>
+
     <style name="ActionModeSubtitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionMode.Subtitle">
         <item name="android:textColor">@color/orange800</item>
     </style>
@@ -381,10 +392,12 @@
         <item name="primary_focus">@color/orange_500_transparent_20</item>
         <item name="empty_title">@color/grey300</item>
         <item name="selectableItemBackground">?android:attr/selectableItemBackground</item>
-        <item name="selectableItemBackgroundBorderless">?android:attr/selectableItemBackgroundBorderless</item>
+        <item name="selectableItemBackgroundBorderless">
+            ?android:attr/selectableItemBackgroundBorderless
+        </item>
     </style>
-    
-    
+
+
     <style name="Theme.VLC.TV.Onboarding" parent="Theme.Leanback.Onboarding">
         <item name="onboardingPageIndicatorStyle">@style/VLC.OnboardingPageIndicatorStyle</item>
     </style>
@@ -580,7 +593,7 @@
     </style>
 
     <style name="Theme.VLC.NoStatus" parent="Theme.VLC">
-        <item name="android:windowTranslucentStatus"  tools:targetApi="lollipop">true</item>
+        <item name="android:windowTranslucentStatus" tools:targetApi="lollipop">true</item>
         <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/transparent</item>
         <item name="android:statusBarColor" tools:targetApi="lollipop">@color/white</item>
         <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
@@ -600,14 +613,14 @@
 
     <style name="VLC.TextViewTitle" parent="VLC.TextView">
         <item name="android:textSize">@dimen/audio_item_title_size</item>
-        <item name="android:textColor">?attr/list_title</item>
+        <item name="android:textColor">#272D32</item>
         <item name="android:maxLines">2</item>
         <item name="android:lineSpacingMultiplier">1.1</item>
     </style>
 
     <style name="VLC.TextViewDescription" parent="VLC.TextView">
-        <item name="android:textSize">12sp</item>
-        <item name="android:textColor">?attr/list_subtitle</item>
+        <item name="android:textColor">#272D32</item>
+        <item name="android:textSize">36sp</item>
         <item name="android:singleLine">true</item>
         <item name="android:maxLines">1</item>
         <item name="android:ellipsize">start</item>
@@ -685,12 +698,61 @@
     </style>
 
     <style name="TabLayout.VLC" parent="Widget.MaterialComponents.TabLayout">
-        <item name="android:background">?attr/background_default</item>
-        <item name="tabRippleColor">?attr/colorPrimary</item>
+        <item name="android:background">@drawable/tab_background</item>
+        <item name="tabIndicatorHeight">0dp</item>
+        <item name="tabIndicator">@null</item>
+        <item name="tabIconTint">@color/tab_icon_tint</item>
+        <item name="tabRippleColor">@null</item>
         <item name="tabMode">scrollable</item>
-        <item name="tabIndicatorFullWidth">false</item>
-        <item name="tabIndicator">@drawable/tab_indicator</item>
-        <item name="tabIndicatorHeight">3dp</item>
+        <item name="tabTextColor">#272D32</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="textAllCaps">false</item>
+        <item name="tabSelectedTextColor">#EDEEF0</item>
+        <item name="tabBackground">@drawable/tab_background_selector</item>
+        <item name="tabSelectedTextAppearance">@style/TabLayout.VLC.TextAppearance</item>
+    </style>
+
+    <style name="TabLayout.VLC.TextAppearance">
+        <item name="android:textAllCaps">false</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">32sp</item>
+        <item name="tabIconTint">#EDEEF0</item>
+    </style>
+
+    <style name="CustomAudioItemTrack.VLC" parent="Widget.AppCompat.TextView">
+        <item name="tabIndicatorHeight">0dp</item>
+        <item name="tabIndicator">@null</item>
+        <item name="tabIconTint">@color/tab_icon_tint</item>
+        <item name="tabRippleColor">@null</item>
+        <item name="tabMode">scrollable</item>
+        <item name="tabTextColor">#272D32</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="textAllCaps">false</item>
+        <item name="tabSelectedTextColor">#EDEEF0</item>
+        <item name="tabBackground">@drawable/tab_background_selector</item>
+        <item name="tabSelectedTextAppearance">@style/CustomAudioItemTrack.VLC.TextAppearance</item>
+    </style>
+
+    <style name="CustomAudioItemTrack.VLC.TextAppearance">
+        <item name="android:textAllCaps">false</item>
+        <item name="textAllCaps">false</item>
+        <item name="android:textSize">32sp</item>
+        <item name="tabIconTint">#EDEEF0</item>
+    </style>
+
+    <style name="CustomSearchView" parent="Widget.Material3.SearchView">
+        <!-- Фон для всего SearchView -->
+        <item name="android:background">@drawable/search_view_background</item>
+        <item name="tabRippleColor">@null</item>
+
+<!--        &lt;!&ndash; Фон для поля ввода &ndash;&gt;-->
+<!--        <item name="queryBackground">@drawable/searchview_query_background</item>-->
+
+<!--        &lt;!&ndash; Цвет текста и иконок &ndash;&gt;-->
+<!--        <item name="android:textColor">@color/white</item>-->
+<!--        <item name="android:textColorHint">@color/gray_light</item>-->
+<!--        <item name="closeIconTint">@color/white</item>-->
+<!--        <item name="searchIconTint">@color/white</item>-->
     </style>
 
     <style name="Result.Title" parent="Base.TextAppearance.AppCompat.Subhead">
@@ -796,8 +858,8 @@
 
     <style name="Theme.VLC.HorizontalListTitle">
         <item name="android:fontFamily">sans-serif-medium</item>
-        <item name="android:textColor">?attr/colorAccent</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#272D32</item>
+        <item name="android:textSize">40sp</item>
     </style>
 
     <style name="ToolbarTitleText" parent="@style/TextAppearance.MaterialComponents.Headline6">
@@ -845,7 +907,8 @@
         <item name="android:background">@drawable/button_background</item>
     </style>
 
-    <style name="WidgetConfiguration" parent="WidgetConfiguration.19"/>
+    <style name="WidgetConfiguration" parent="WidgetConfiguration.19" />
+
     <style name="WidgetConfiguration.19" parent="Theme.VLC">
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowShowWallpaper">true</item>

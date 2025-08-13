@@ -270,10 +270,11 @@ open class AudioPlayerContainerActivity : BaseActivity(), KeycodeListener, Sched
         setSupportActionBar(toolbar)
         appBarLayout = findViewById(R.id.appbar)
         tabLayout = findViewById(R.id.sliding_tabs)
-        navigationRail = findViewById(R.id.navigation_rail)
-        tabLayout?.visibility = View.VISIBLE
+//        navigationRail = findViewById(R.id.navigation_rail)
+        tabLayout?.visibility = View.GONE
         appBarLayout.setExpanded(true)
         bottomBar = findViewById(R.id.navigation)
+        bottomBar?.visibility = View.GONE
         tabLayout?.viewTreeObserver?.addOnGlobalLayoutListener {
             //add a shadow if there are tabs
             val needToElevate = (tabLayout?.layoutParams?.height != 0) || navigationRail?.visibility ?: View.GONE != View.GONE

@@ -212,10 +212,10 @@ class AudioAlbumsSongsFragment : BaseAudioBrowser<AlbumSongsViewModel>(), SwipeR
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.play_all -> {
-                onFabPlayClick(fastScroller)
-                true
-            }
+//            R.id.play_all -> {
+//                onFabPlayClick(fastScroller)
+//                true
+//            }
             R.id.ml_menu_display_options -> {
                 //filter all sorts and keep only applicable ones
                 val sorts = arrayListOf(Medialibrary.SORT_ALPHA, Medialibrary.SORT_FILENAME, Medialibrary.SORT_ARTIST, Medialibrary.SORT_ALBUM, Medialibrary.SORT_DURATION, Medialibrary.SORT_RELEASEDATE, Medialibrary.SORT_LASTMODIFICATIONDATE, Medialibrary.SORT_FILESIZE, Medialibrary.NbMedia).filter {

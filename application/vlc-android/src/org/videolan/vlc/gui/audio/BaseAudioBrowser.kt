@@ -277,9 +277,7 @@ abstract class BaseAudioBrowser<T : MedialibraryViewModel> : MediaBrowserFragmen
         }
         val lp = list.layoutParams
         val dimension = requireActivity().resources.getDimension(R.dimen.default_content_width)
-        lp.width = if (providerInCard) ViewGroup.LayoutParams.MATCH_PARENT else {
-            dimension.toInt()
-        }
+        lp.width = ViewGroup.LayoutParams.MATCH_PARENT
 
         (list.parent as View).setBackgroundColor(if (!providerInCard && dimension != -1F) backgroundColor else ContextCompat.getColor(requireContext(), R.color.transparent))
         list.setBackgroundColor(if (!providerInCard && dimension != -1F) listColor else ContextCompat.getColor(requireContext(), R.color.transparent))
@@ -337,10 +335,10 @@ abstract class BaseAudioBrowser<T : MedialibraryViewModel> : MediaBrowserFragmen
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.ml_menu_last_playlist -> {
-                MediaUtils.loadlastPlaylist(activity, PLAYLIST_TYPE_AUDIO)
-                true
-            }
+//            R.id.ml_menu_last_playlist -> {
+//                MediaUtils.loadlastPlaylist(activity, PLAYLIST_TYPE_AUDIO)
+//                true
+//            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -363,14 +361,14 @@ abstract class BaseAudioBrowser<T : MedialibraryViewModel> : MediaBrowserFragmen
         }
         val isMedia = selection.first().itemType == MediaLibraryItem.TYPE_MEDIA
         val isSong = count == 1 && isMedia
-        menu.findItem(R.id.action_mode_audio_set_song).isVisible = isSong && AndroidDevices.isPhone
+//        menu.findItem(R.id.action_mode_audio_set_song).isVisible = isSong && AndroidDevices.isPhone
         menu.findItem(R.id.action_mode_audio_info).isVisible = count == 1
         menu.findItem(R.id.action_mode_audio_append).isVisible = PlaylistManager.hasMedia()
         menu.findItem(R.id.action_mode_audio_delete).isVisible = isMedia
         menu.findItem(R.id.action_mode_audio_share).isVisible = isMedia
         menu.findItem(R.id.action_mode_audio_share).isVisible = isMedia
-        menu.findItem(R.id.action_mode_favorite_add).isVisible = getCurrentAdapter()?.multiSelectHelper?.getSelection()?.none { it.isFavorite } ?: false
-        menu.findItem(R.id.action_mode_favorite_remove).isVisible = getCurrentAdapter()?.multiSelectHelper?.getSelection()?.none { !it.isFavorite } ?: false
+//        menu.findItem(R.id.action_mode_favorite_add).isVisible = getCurrentAdapter()?.multiSelectHelper?.getSelection()?.none { it.isFavorite } ?: false
+//        menu.findItem(R.id.action_mode_favorite_remove).isVisible = getCurrentAdapter()?.multiSelectHelper?.getSelection()?.none { !it.isFavorite } ?: false
         menu.findItem(R.id.action_mode_go_to_folder).isVisible = if (count == 1) getCurrentAdapter()?.multiSelectHelper?.let { selectHelper ->
             (selectHelper.getSelection().first() as? MediaWrapper)?.let {
                 it.uri.retrieveParent() != null
@@ -400,7 +398,7 @@ abstract class BaseAudioBrowser<T : MedialibraryViewModel> : MediaBrowserFragmen
                 R.id.action_mode_audio_add_playlist -> requireActivity().addToPlaylist(list.getTracks())
                 R.id.action_mode_audio_info -> showInfoDialog(list.first())
                 R.id.action_mode_audio_share -> requireActivity().share(list as List<MediaWrapper>)
-                R.id.action_mode_audio_set_song -> activity?.setRingtone(list.first() as MediaWrapper)
+//                R.id.action_mode_audio_set_song -> activity?.setRingtone(list.first() as MediaWrapper)
                 R.id.action_mode_audio_delete -> removeItems(list)
                 R.id.action_mode_go_to_folder -> (list.first() as? MediaWrapper)?.let { showParentFolder(it) }
                 R.id.action_mode_favorite_add -> lifecycleScope.launch { viewModel.changeFavorite(list, true) }

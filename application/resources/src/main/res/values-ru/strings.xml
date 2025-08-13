@@ -602,7 +602,7 @@
     <string name="recommendations">Рекомендации</string>
     <string name="recommendations_desc">Карточки рекомендаций на панели запуска</string>
     <string name="browser_quick_access">Быстрый доступ</string>
-    <string name="browser_storages">Хранилища</string>
+    <string name="browser_storages">Внутренняя память</string>
     <string name="msg_delete_failed">Ошибка при удалении медиафайла %1$s</string>
     <string name="renderer_list_title">Экраны</string>
     <string name="sdcard_permission_dialog_title">Вы должны разрешить VLC запись на SD-карту</string>

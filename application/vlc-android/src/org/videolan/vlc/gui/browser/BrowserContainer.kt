@@ -38,6 +38,7 @@ interface BrowserContainer<T> : IEventsHandler<T> {
     val isRootDirectory: Boolean
     val isNetwork: Boolean
     val isFile: Boolean
+    val isUsb: Boolean
     var inCards: Boolean
 }
 
@@ -47,6 +48,7 @@ class BrowserContainerImpl<T>(
         override val isRootDirectory: Boolean,
         override val isNetwork: Boolean,
         override val isFile: Boolean,
+        override val isUsb: Boolean,
         override var inCards: Boolean
 ) : BrowserContainer<T> {
     override fun containerActivity() = throw NotImplementedError()

@@ -248,48 +248,48 @@ class VideoGridFragment : MediaBrowserFragment<VideosViewModel>(), SwipeRefreshL
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        menu.findItem(R.id.ml_menu_last_playlist).isVisible = settings.contains(KEY_MEDIA_LAST_PLAYLIST)
-        menu.findItem(R.id.rename_group).isVisible = viewModel.group != null
-        menu.findItem(R.id.ungroup).isVisible = viewModel.group != null
-        menu.findItem(R.id.ml_menu_sortby).isVisible = false
-        menu.findItem(R.id.ml_menu_display_options).isVisible = true
-        if (requireActivity().isTalkbackIsEnabled()) menu.findItem(R.id.play_all).isVisible = true
+//        menu.findItem(R.id.ml_menu_last_playlist).isVisible = settings.contains(KEY_MEDIA_LAST_PLAYLIST)
+//        menu.findItem(R.id.rename_group).isVisible = viewModel.group != null
+//        menu.findItem(R.id.ungroup).isVisible = viewModel.group != null
+//        menu.findItem(R.id.ml_menu_sortby).isVisible = false
+//        menu.findItem(R.id.ml_menu_display_options).isVisible = true
+//        if (requireActivity().isTalkbackIsEnabled()) menu.findItem(R.id.play_all).isVisible = true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.ml_menu_last_playlist -> {
-                MediaUtils.loadlastPlaylist(activity, PLAYLIST_TYPE_VIDEO)
-            }
-            R.id.rename_group -> {
-                viewModel.group?.let { renameGroup(it) }
-            }
-            R.id.ungroup -> {
-                viewModel.group?.let { lifecycleScope.launch{if (!requireActivity().showPinIfNeeded()) viewModel.ungroup(it) } }
-            }
-            R.id.play_all -> {
-                onFabPlayClick(binding.root)
-            }
-            R.id.ml_menu_display_options -> {
-                //filter all sorts and keep only applicable ones
-                val sorts = arrayListOf(Medialibrary.SORT_ALPHA, Medialibrary.SORT_FILENAME, Medialibrary.SORT_ARTIST, Medialibrary.SORT_ALBUM, Medialibrary.SORT_DURATION, Medialibrary.SORT_RELEASEDATE, Medialibrary.SORT_LASTMODIFICATIONDATE, Medialibrary.SORT_FILESIZE, Medialibrary.NbMedia, Medialibrary.SORT_INSERTIONDATE).filter {
-                    viewModel.provider.canSortBy(it)
-                }
-                //Open the display settings Bottom sheet
-                DisplaySettingsDialog.newInstance(
-                    displayInCards = settings.getBoolean(KEY_VIDEOS_CARDS, true),
-                    onlyFavs = viewModel.provider.onlyFavorites,
-                    sorts = sorts,
-                    currentSort = viewModel.provider.sort,
-                    currentSortDesc = viewModel.provider.desc,
-                    videoGroup = settings.getString(KEY_GROUP_VIDEOS, GROUP_VIDEOS_NAME),
-                    defaultPlaybackActions = DefaultPlaybackActionMediaType.VIDEO.getDefaultPlaybackActions(settings),
-                    defaultActionType = getString(DefaultPlaybackActionMediaType.VIDEO.title)
-                )
-                        .show(requireActivity().supportFragmentManager, "DisplaySettingsDialog")
-            }
-            else -> return super.onOptionsItemSelected(item)
-        }
+//        when (item.itemId) {
+//            R.id.ml_menu_last_playlist -> {
+//                MediaUtils.loadlastPlaylist(activity, PLAYLIST_TYPE_VIDEO)
+//            }
+//            R.id.rename_group -> {
+//                viewModel.group?.let { renameGroup(it) }
+//            }
+//            R.id.ungroup -> {
+//                viewModel.group?.let { lifecycleScope.launch{if (!requireActivity().showPinIfNeeded()) viewModel.ungroup(it) } }
+//            }
+//            R.id.play_all -> {
+//                onFabPlayClick(binding.root)
+//            }
+//            R.id.ml_menu_display_options -> {
+//                //filter all sorts and keep only applicable ones
+//                val sorts = arrayListOf(Medialibrary.SORT_ALPHA, Medialibrary.SORT_FILENAME, Medialibrary.SORT_ARTIST, Medialibrary.SORT_ALBUM, Medialibrary.SORT_DURATION, Medialibrary.SORT_RELEASEDATE, Medialibrary.SORT_LASTMODIFICATIONDATE, Medialibrary.SORT_FILESIZE, Medialibrary.NbMedia, Medialibrary.SORT_INSERTIONDATE).filter {
+//                    viewModel.provider.canSortBy(it)
+//                }
+//                //Open the display settings Bottom sheet
+//                DisplaySettingsDialog.newInstance(
+//                    displayInCards = settings.getBoolean(KEY_VIDEOS_CARDS, true),
+//                    onlyFavs = viewModel.provider.onlyFavorites,
+//                    sorts = sorts,
+//                    currentSort = viewModel.provider.sort,
+//                    currentSortDesc = viewModel.provider.desc,
+//                    videoGroup = settings.getString(KEY_GROUP_VIDEOS, GROUP_VIDEOS_NAME),
+//                    defaultPlaybackActions = DefaultPlaybackActionMediaType.VIDEO.getDefaultPlaybackActions(settings),
+//                    defaultActionType = getString(DefaultPlaybackActionMediaType.VIDEO.title)
+//                )
+//                        .show(requireActivity().supportFragmentManager, "DisplaySettingsDialog")
+//            }
+//            else -> return super.onOptionsItemSelected(item)
+//        }
         return true
     }
 

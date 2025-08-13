@@ -8,5 +8,5 @@
         android:paddingEnd="28dp"
         android:singleLine="true"
         android:gravity="center_vertical"
-        android:textColor="?attr/audio_browser_separator"
-        android:textSize="20sp" />
+        android:textColor="#272D32"
+        android:textSize="30sp" />

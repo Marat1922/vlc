@@ -234,46 +234,46 @@ abstract class MediaBrowserFragment<T : SortableModel> : BaseFragment(), Filtera
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.ml_menu_sortby_name -> {
-                sortBy(Medialibrary.SORT_ALPHA)
-                return true
-            }
-            R.id.ml_menu_sortby_filename -> {
-                sortBy(Medialibrary.SORT_FILENAME)
-                return true
-            }
-            R.id.ml_menu_sortby_length -> {
-                sortBy(Medialibrary.SORT_DURATION)
-                return true
-            }
-            R.id.ml_menu_sortby_date -> {
-                sortBy(Medialibrary.SORT_RELEASEDATE)
-                return true
-            }
-            R.id.ml_menu_sortby_last_modified -> {
-                sortBy(Medialibrary.SORT_LASTMODIFICATIONDATE)
-                return true
-            }
-            R.id.ml_menu_sortby_insertion_date -> {
-                sortBy(Medialibrary.SORT_INSERTIONDATE)
-                return true
-            }
-            R.id.ml_menu_sortby_artist_name -> {
-                sortBy(Medialibrary.SORT_ARTIST)
-                return true
-            }
-            R.id.ml_menu_sortby_album_name -> {
-                sortBy(Medialibrary.SORT_ALBUM)
-                return true
-            }
-            R.id.ml_menu_sortby_media_number -> {
-                sortBy(Medialibrary.NbMedia)
-                return true
-            }
-            R.id.ml_menu_sortby_number -> {
-                sortBy(Medialibrary.SORT_FILESIZE) //TODO
-                return super.onOptionsItemSelected(item)
-            }
+//            R.id.ml_menu_sortby_name -> {
+//                sortBy(Medialibrary.SORT_ALPHA)
+//                return true
+//            }
+//            R.id.ml_menu_sortby_filename -> {
+//                sortBy(Medialibrary.SORT_FILENAME)
+//                return true
+//            }
+//            R.id.ml_menu_sortby_length -> {
+//                sortBy(Medialibrary.SORT_DURATION)
+//                return true
+//            }
+//            R.id.ml_menu_sortby_date -> {
+//                sortBy(Medialibrary.SORT_RELEASEDATE)
+//                return true
+//            }
+//            R.id.ml_menu_sortby_last_modified -> {
+//                sortBy(Medialibrary.SORT_LASTMODIFICATIONDATE)
+//                return true
+//            }
+//            R.id.ml_menu_sortby_insertion_date -> {
+//                sortBy(Medialibrary.SORT_INSERTIONDATE)
+//                return true
+//            }
+//            R.id.ml_menu_sortby_artist_name -> {
+//                sortBy(Medialibrary.SORT_ARTIST)
+//                return true
+//            }
+//            R.id.ml_menu_sortby_album_name -> {
+//                sortBy(Medialibrary.SORT_ALBUM)
+//                return true
+//            }
+//            R.id.ml_menu_sortby_media_number -> {
+//                sortBy(Medialibrary.NbMedia)
+//                return true
+//            }
+//            R.id.ml_menu_sortby_number -> {
+//                sortBy(Medialibrary.SORT_FILESIZE) //TODO
+//                return super.onOptionsItemSelected(item)
+//            }
             else -> return super.onOptionsItemSelected(item)
         }
     }

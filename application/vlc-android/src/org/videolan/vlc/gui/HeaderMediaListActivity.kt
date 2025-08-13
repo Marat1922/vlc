@@ -504,7 +504,7 @@ open class HeaderMediaListActivity : AudioPlayerContainerActivity(), IEventsHand
         }
         val isMedia = audioBrowserAdapter.multiSelectHelper.getSelection()[0].itemType == MediaLibraryItem.TYPE_MEDIA
         val isSong = count == 1 && isMedia
-        menu.findItem(R.id.action_mode_audio_set_song).isVisible = isSong && AndroidDevices.isPhone && !isPlaylist
+//        menu.findItem(R.id.action_mode_audio_set_song).isVisible = isSong && AndroidDevices.isPhone && !isPlaylist
         menu.findItem(R.id.action_mode_audio_info).isVisible = isSong
         menu.findItem(R.id.action_mode_audio_append).isVisible = PlaylistManager.hasMedia()
         menu.findItem(R.id.action_mode_audio_delete).isVisible = true
@@ -528,7 +528,7 @@ open class HeaderMediaListActivity : AudioPlayerContainerActivity(), IEventsHand
             R.id.action_mode_audio_add_playlist -> addToPlaylist(tracks)
             R.id.action_mode_audio_info -> showInfoDialog(list[0] as MediaWrapper)
             R.id.action_mode_audio_share -> lifecycleScope.launch { share(list.map { it as MediaWrapper }) }
-            R.id.action_mode_audio_set_song -> setRingtone(list[0] as MediaWrapper)
+//            R.id.action_mode_audio_set_song -> setRingtone(list[0] as MediaWrapper)
             R.id.action_mode_audio_delete -> lifecycleScope.launch { if (isPlaylist) removeFromPlaylist(tracks, indexes.toMutableList()) else removeItems(tracks) }
             R.id.action_mode_favorite_add -> lifecycleScope.launch { viewModel.changeFavorite(tracks, true) }
             R.id.action_mode_favorite_remove -> lifecycleScope.launch { viewModel.changeFavorite(tracks, false) }

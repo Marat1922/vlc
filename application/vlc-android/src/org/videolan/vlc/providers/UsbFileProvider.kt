@@ -1,5 +1,5 @@
 /*****************************************************************************
- * FileBrowserProvider.kt
+ * UsbFileProvider.kt
  *****************************************************************************
  * Copyright © 2018 VLC authors and VideoLAN
  *
@@ -44,12 +44,12 @@ import org.videolan.vlc.repository.DirectoryRepository
 import org.videolan.vlc.util.FileUtils
 import java.io.File
 
-open class FileBrowserProvider(
-        context: Context,
-        dataset: LiveDataset<MediaLibraryItem>,
-        url: String?, private val filePicker: Boolean = false,
-        private val showDummyCategory: Boolean = true, sort:Int, desc:Boolean) : BrowserProvider(context, dataset,
-        url, sort, desc), Observer<MutableList<UsbDevice>> {
+open class UsbFileProvider(
+    context: Context,
+    dataset: LiveDataset<MediaLibraryItem>,
+    url: String?, private val filePicker: Boolean = false,
+    private val showDummyCategory: Boolean = true, sort:Int, desc:Boolean) : BrowserProvider(context, dataset,
+    url, sort, desc), Observer<MutableList<UsbDevice>> {
 
     private var storagePosition = -1
     private var otgPosition = -1
@@ -63,46 +63,27 @@ open class FileBrowserProvider(
     override suspend fun browseRootImpl() {
         loading.postValue(true)
 
-        // 1. Только внутренняя память
-        val internalMemoryPath = AndroidDevices.EXTERNAL_PUBLIC_DIRECTORY
-        val file = File(internalMemoryPath)
+        // 1. Создаем список только для USB-устройств
+        val usbDevices = mutableListOf<MediaLibraryItem>()
 
-        // 2. Проверка доступа
-        if (!file.exists() || !file.canRead()) {
-            loading.postValue(false)
-            dataset.value = mutableListOf()
-            return
-        }
-
-        // 3. Создаем обёртку для папки
-        val directory = MLServiceLocator.getAbstractMediaWrapper(AndroidUtil.PathToUri(internalMemoryPath)).apply {
-            type = MediaWrapper.TYPE_DIR
-            setDisplayTitle(context.getString(R.string.internal_memory))
-        }
-
-        // 4. Получаем содержимое папки через существующий механизм
-        val contents = withContext(Dispatchers.IO) {
-            val items = mutableListOf<MediaLibraryItem>()
-            file.listFiles()?.forEach { file ->
-                val uri = when {
-                    file.isDirectory -> AndroidUtil.PathToUri(file.absolutePath)
-                    file.isFile -> AndroidUtil.PathToUri(file.absolutePath)
-                    else -> null
-                }
-
-                uri?.let {
-                    items.add(MLServiceLocator.getAbstractMediaWrapper(it).apply {
-                        type = if (file.isDirectory) MediaWrapper.TYPE_DIR else MediaWrapper.TYPE_VIDEO
-                        // Установите другие свойства wrapper при необходимости
-                    })
-                }
+        // 2. Проверяем поддержку OTG и наличие устройств
+        if (VlcMigrationHelper.isLolliPopOrLater && !ExternalMonitor.devices.isEmpty()) {
+            // 3. Добавляем OTG-устройство
+            val otg = MLServiceLocator.getAbstractMediaWrapper("otg://".toUri()).apply {
+                title = context.getString(R.string.otg_device_title)
+                type = MediaWrapper.TYPE_DIR
+                addStateFlags(MediaLibraryItem.FLAG_STORAGE)
             }
-            items
+            usbDevices.add(otg)
         }
 
-        // 5. Обновляем LiveData
-        dataset.postValue(contents)
+        // 4. Обновляем UI
+        dataset.value = usbDevices
         loading.postValue(false)
+        headers.clear()
+
+        // 5. Подписываемся на изменения OTG-устройств
+        ExternalMonitor.devices.observeForever(this@UsbFileProvider)
     }
 
     override suspend fun requestBrowsing(url: String?, eventListener: MediaBrowser.EventListener, interact : Boolean) = withContext(coroutineContextProvider.IO) {
@@ -136,7 +117,7 @@ open class FileBrowserProvider(
                     val files = withContext(coroutineContextProvider.IO) {
                         @Suppress("UNCHECKED_CAST")
                         getDocumentFiles(context, url.toUri().path?.substringAfterLast(':')
-                                ?: "") as? MutableList<MediaLibraryItem> ?: mutableListOf()
+                            ?: "") as? MutableList<MediaLibraryItem> ?: mutableListOf()
                     }.map { it as MediaWrapper }
 
                     result.addAll(files.filter { it.itemType == MediaWrapper.TYPE_MEDIA })

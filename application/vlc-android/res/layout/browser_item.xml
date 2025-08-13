@@ -106,8 +106,8 @@
         <!-- Image downloading is handled by org.videolan.vlc.gui.helpers.ImageLoader.loadImage() -->
         <ImageView
                 android:id="@+id/item_icon"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="40dp"
+                android:layout_height="32dp"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="4dp"
@@ -173,7 +173,7 @@
                 android:scrollHorizontally="true"
                 android:singleLine="true"
                 android:text="@{filename ?? item.title}"
-                android:textColor="?attr/list_title"
+                android:textColor="#4D5964"
                 android:textSize="16sp"
                 app:ellipsizeMode="@{true}"
                 app:layout_constraintBottom_toTopOf="@+id/text"

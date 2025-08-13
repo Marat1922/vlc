@@ -69,8 +69,10 @@ class MLStorageBrowserFragment : BaseFragment(), IStorageFragmentDelegate by Sto
 
     private lateinit var localEntry: TitleListView
     private lateinit var networkEntry: TitleListView
+    private lateinit var usbEntry: TitleListView
     private lateinit var networkMonitor: NetworkMonitor
     private lateinit var localViewModel: BrowserModel
+    private lateinit var usbViewModel: BrowserModel
     private lateinit var networkViewModel: BrowserModel
     private lateinit var storageBrowserAdapter: StorageBrowserAdapter
 
@@ -109,8 +111,8 @@ class MLStorageBrowserFragment : BaseFragment(), IStorageFragmentDelegate by Sto
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val favoritesEntry = view.findViewById<View>(R.id.fav_browser_entry)
-        favoritesEntry.setGone()
+//        val favoritesEntry = view.findViewById<View>(R.id.fav_browser_entry)
+//        favoritesEntry.setGone()
 
         localEntry = view.findViewById(R.id.local_browser_entry)
         storageBrowserAdapter = StorageBrowserAdapter(getBrowserContainer(false))
@@ -134,29 +136,31 @@ class MLStorageBrowserFragment : BaseFragment(), IStorageFragmentDelegate by Sto
             if (pair != null) storageBrowserAdapter.notifyItemChanged(pair.first, pair.second)
         }
 
-        networkEntry = view.findViewById(R.id.network_browser_entry)
-        networkEntry.loading.showNoMedia = false
-        networkEntry.loading.emptyText = getString(R.string.nomedia)
-        val networkAdapter = StorageBrowserAdapter(getBrowserContainer(true))
-        networkEntry.list.adapter = networkAdapter
-        networkViewModel = getBrowserModel(category = TYPE_NETWORK, url = null)
-        networkViewModel.dataset.observe(viewLifecycleOwner) { list ->
-            list?.let {
-                val filtered = it.filter { item -> item is MediaWrapper && item.uri?.scheme == "smb" }
-                networkAdapter.update(filtered)
-                updateNetworkEmptyView(networkEntry.loading)
-                if (networkViewModel.loading.value == false) networkEntry.loading.state = if (list.isEmpty()) EmptyLoadingState.EMPTY else EmptyLoadingState.NONE
-            }
-        }
-        networkViewModel.loading.observe(viewLifecycleOwner) {
-            if (it) networkEntry.loading.state = EmptyLoadingState.LOADING
-            updateNetworkEmptyView(networkEntry.loading)
-        }
-        networkViewModel.browseRoot()
+        usbEntry = view.findViewById(R.id.usb_browser_entry)
 
-        localEntry.displayInCards = false
-        networkEntry.displayInCards = false
-        withAdapters(arrayOf(storageBrowserAdapter, networkAdapter))
+//        networkEntry = view.findViewById(R.id.network_browser_entry)
+//        networkEntry.loading.showNoMedia = false
+//        networkEntry.loading.emptyText = getString(R.string.nomedia)
+//        val networkAdapter = StorageBrowserAdapter(getBrowserContainer(true))
+//        networkEntry.list.adapter = networkAdapter
+//        networkViewModel = getBrowserModel(category = TYPE_NETWORK, url = null)
+//        networkViewModel.dataset.observe(viewLifecycleOwner) { list ->
+//            list?.let {
+//                val filtered = it.filter { item -> item is MediaWrapper && item.uri?.scheme == "smb" }
+//                networkAdapter.update(filtered)
+//                updateNetworkEmptyView(networkEntry.loading)
+//                if (networkViewModel.loading.value == false) networkEntry.loading.state = if (list.isEmpty()) EmptyLoadingState.EMPTY else EmptyLoadingState.NONE
+//            }
+//        }
+//        networkViewModel.loading.observe(viewLifecycleOwner) {
+//            if (it) networkEntry.loading.state = EmptyLoadingState.LOADING
+//            updateNetworkEmptyView(networkEntry.loading)
+//        }
+//        networkViewModel.browseRoot()
+//
+//        localEntry.displayInCards = false
+//        networkEntry.displayInCards = false
+//        withAdapters(arrayOf(storageBrowserAdapter, networkAdapter))
     }
 
     private fun updateNetworkEmptyView(emptyLoading: EmptyLoadingStateView) {
@@ -188,17 +192,17 @@ class MLStorageBrowserFragment : BaseFragment(), IStorageFragmentDelegate by Sto
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
 
-        val onboarding = arguments?.getBoolean(FROM_ONBOARDING, false) == true
-        menu.findItem(R.id.ml_menu_custom_dir)?.isVisible = !onboarding
-        menu.findItem(R.id.ml_menu_refresh)?.isVisible = false
-        menu.findItem(R.id.ml_menu_add_playlist)?.isVisible = false
+//        val onboarding = arguments?.getBoolean(FROM_ONBOARDING, false) == true
+//        menu.findItem(R.id.ml_menu_custom_dir)?.isVisible = !onboarding
+//        menu.findItem(R.id.ml_menu_refresh)?.isVisible = false
+//        menu.findItem(R.id.ml_menu_add_playlist)?.isVisible = false
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.ml_menu_custom_dir) {
-            showAddDirectoryDialog()
-            return true
-        }
+//        if (item.itemId == R.id.ml_menu_custom_dir) {
+//            showAddDirectoryDialog()
+//            return true
+//        }
         return false
     }
 
@@ -235,6 +239,7 @@ class MLStorageBrowserFragment : BaseFragment(), IStorageFragmentDelegate by Sto
         override val isRootDirectory = true
         override val isNetwork = isNetwork
         override val isFile = !isNetwork
+        override val isUsb = true
         override var inCards = false
 
         override fun onClick(v: View, position: Int, item: MediaLibraryItem) {

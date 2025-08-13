@@ -63,7 +63,7 @@ open class BaseBrowserAdapter(val browserContainer: BrowserContainer<MediaLibrar
 
     val multiSelectHelper: MultiSelectHelper<MediaLibraryItem> = MultiSelectHelper(this, UPDATE_SELECTION)
 
-    private val folderDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder)) }
+    private val folderDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_directories)) }
     private val folderDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_big)) }
     private val audioDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_song)) }
     private val audioDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_song_big)) }

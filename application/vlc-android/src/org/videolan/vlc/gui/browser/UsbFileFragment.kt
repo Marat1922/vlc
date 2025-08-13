@@ -24,6 +24,7 @@
 package org.videolan.vlc.gui.browser
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.View
@@ -53,7 +54,7 @@ import org.videolan.vlc.viewmodels.browser.TYPE_FILE
 import org.videolan.vlc.viewmodels.browser.TYPE_USB
 import org.videolan.vlc.viewmodels.browser.getBrowserModel
 
-open class FileBrowserFragment : BaseBrowserFragment() {
+open class UsbFileFragment : BaseBrowserFragment() {
 
     private var needsRefresh: Boolean = false
 
@@ -61,7 +62,7 @@ open class FileBrowserFragment : BaseBrowserFragment() {
         get() = getString(R.string.directories)
 
     override fun createFragment(): Fragment {
-        return FileBrowserFragment()
+        return UsbFileFragment()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,6 +74,7 @@ open class FileBrowserFragment : BaseBrowserFragment() {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as? SecondaryActivity)?.supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_up)
     }
+
 
     override fun onStart() {
         super.onStart()
@@ -138,8 +140,8 @@ open class FileBrowserFragment : BaseBrowserFragment() {
     override fun getStorageDelegate(): IStorageFragmentDelegate? = null
 
     override val isNetwork = false
-    override val isFile = true
-    override val isUsb = false
+    override val isFile = false
+    override val isUsb = true
 
     override fun onResume() {
         super.onResume()

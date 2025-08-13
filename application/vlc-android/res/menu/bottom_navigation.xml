@@ -28,24 +28,24 @@
 
 
     <item
-            android:id="@+id/nav_video"
-            android:title="@string/video"
-            android:icon="@drawable/ic_video" />
+        android:id="@+id/nav_video"
+        android:icon="@drawable/ic_video_file"
+        android:title="@string/video" />
     <item
-            android:id="@+id/nav_audio"
-            android:title="@string/audio"
-            android:icon="@drawable/ic_menu_audio" />
+        android:id="@+id/nav_audio"
+        android:icon="@drawable/ic_audio_file"
+        android:title="Музыка" />
     <item
-            android:id="@+id/nav_directories"
-            android:title="@string/browse"
-            android:icon="@drawable/ic_folder" />
-    <item
-            android:id="@+id/nav_playlists"
-            android:title="@string/playlists"
-            android:icon="@drawable/ic_playlist" />
-    <item
-            android:id="@+id/nav_more"
-            android:title="@string/more"
-            android:icon="@drawable/ic_nav_more" />
+        android:id="@+id/nav_directories"
+        android:icon="@drawable/ic_directories"
+        android:title="Папки" />
+    <!--    <item-->
+    <!--            android:id="@+id/nav_playlists"-->
+    <!--            android:title="@string/playlists"-->
+    <!--            android:icon="@drawable/ic_playlist" />-->
+    <!--    <item-->
+    <!--            android:id="@+id/nav_more"-->
+    <!--            android:title="@string/more"-->
+    <!--            android:icon="@drawable/ic_nav_more" />-->
 
 </menu>

@@ -26,16 +26,28 @@ package org.videolan.vlc.gui.helpers
 import android.app.Activity
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
+import android.widget.LinearLayout
+import android.widget.Toast
+import androidx.appcompat.view.menu.MenuBuilder
 import androidx.core.content.edit
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
+import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 import org.videolan.medialibrary.media.MediaLibraryItem
 import org.videolan.resources.EXTRA_FOR_ESPRESSO
 import org.videolan.resources.EXTRA_TARGET
@@ -61,10 +73,12 @@ import org.videolan.vlc.util.getScreenWidth
 
 private const val TAG = "Navigator"
 
-class Navigator : NavigationBarView.OnItemSelectedListener, DefaultLifecycleObserver, INavigator {
+class Navigator :  DefaultLifecycleObserver, INavigator {
 
     private val defaultFragmentId = R.id.nav_video
+//    private val linearLayout = R.id.linearLayout
     override var currentFragmentId: Int = 0
+    override var currentFragmentId2: Int = 0
     private var currentFragment: Fragment? = null
         private set
     private lateinit var activity: MainActivity
@@ -72,7 +86,7 @@ class Navigator : NavigationBarView.OnItemSelectedListener, DefaultLifecycleObse
     override lateinit var navigationView: List<NavigationBarView>
     override lateinit var appbarLayout: AppBarLayout
     private var forExpresso: ArrayList<MediaLibraryItem>? = null
-
+    private lateinit var tabLayout: TabLayout
 
     override fun MainActivity.setupNavigation(state: Bundle?) {
         activity = this
@@ -83,13 +97,39 @@ class Navigator : NavigationBarView.OnItemSelectedListener, DefaultLifecycleObse
             currentFragment = supportFragmentManager.getFragment(state, "current_fragment")
         }
         lifecycle.addObserver(this@Navigator)
-        navigationView = listOf(findViewById(R.id.navigation), findViewById(R.id.navigation_rail))
+        navigationView = listOf(findViewById(R.id.navigation))
         appbarLayout = findViewById(R.id.appbar)
+
+        tabLayout = findViewById(R.id.novio_tabs)
+        val menu = MenuBuilder(this).apply {
+            MenuInflater(activity).inflate(R.menu.bottom_navigation, this)
+        }
+
+        for (i in 0 until menu.size()) {
+            val menuItem = menu.getItem(i)
+            tabLayout.addTab(
+                tabLayout.newTab()
+                    .setText(menuItem.title)
+                    .setIcon(menuItem.icon)
+                    .setTag(menuItem.itemId)
+            )
+        }
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                showFragment(tab?.tag as Int)
+                currentFragmentId2 = tab.position
+                Log.d("TAG", " currentFragmentId = $currentFragmentId2")
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+        })
+
     }
 
     override fun onStart(owner: LifecycleOwner) {
-        if (currentFragment === null && !currentIdIsExtension()) showFragment(if (currentFragmentId != 0) currentFragmentId else settings.getInt("fragment_id", defaultFragmentId))
-        navigationView.forEach { it.setOnItemSelectedListener(this) }
+        if (currentFragment === null && !currentIdIsExtension()) showFragment(currentFragmentId2)
+//        navigationView.forEach { it.setOnItemSelectedListener(this) }
     }
 
     override fun onStop(owner: LifecycleOwner) {
@@ -99,11 +139,12 @@ class Navigator : NavigationBarView.OnItemSelectedListener, DefaultLifecycleObse
     private fun getNewFragment(id: Int): Fragment {
         return when (id) {
             R.id.nav_audio -> AudioBrowserFragment()
-            R.id.nav_directories -> MainBrowserFragment().apply {
+            R.id.nav_directories ->
+                MainBrowserFragment().apply {
                 arguments = bundleOf(EXTRA_FOR_ESPRESSO to forExpresso)
             }
-            R.id.nav_playlists -> PlaylistFragment()
-            R.id.nav_more -> MoreFragment()
+//            R.id.nav_playlists -> PlaylistFragment()
+//            R.id.nav_more -> MoreFragment()
             else -> VideoBrowserFragment()
         }
     }
@@ -124,6 +165,7 @@ class Navigator : NavigationBarView.OnItemSelectedListener, DefaultLifecycleObse
         updateCheckedItem(id)
         currentFragment = fragment
         currentFragmentId = id
+        Log.d("TAG", " Fragment = $currentFragmentId")
     }
 
     override fun currentIdIsExtension() = idIsExtension(currentFragmentId)
@@ -142,8 +184,9 @@ class Navigator : NavigationBarView.OnItemSelectedListener, DefaultLifecycleObse
     override fun configurationChanged(size: Int) {
         navigationView.forEach {
             when (it) {
-                is BottomNavigationView -> if (activity.isTablet()) it.setGone() else it.setVisible()
-                else -> if (!activity.isTablet()) it.setGone() else it.setVisible()
+//                is BottomNavigationView -> it.setGone()
+////                is BottomNavigationView -> if (activity.isTablet()) it.setVisible() else it.setVisible()
+////                else -> if (!activity.isTablet()) it.setVisible() else it.setVisible()
             }
         }
     }
@@ -159,30 +202,33 @@ class Navigator : NavigationBarView.OnItemSelectedListener, DefaultLifecycleObse
         else -> ID_VIDEO
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        val id = item.itemId
-        val current = currentFragment
-
-        appbarLayout.setExpanded(true, true)
-
-        if (current == null) {
-            return false
-        }
-        if (current is BaseFragment && current.actionMode != null) current.stopActionMode()
-
-        if (currentFragmentId == id) { /* Already selected */
-            // Go back at root level of current mProvider
-            if ((current as? BaseBrowserFragment)?.isStarted() == false) {
-                activity.supportFragmentManager.popBackStackImmediate("root", FragmentManager.POP_BACK_STACK_INCLUSIVE)
-            } else {
-                return false
-            }
-        } else {
-            activity.slideDownAudioPlayer()
-            showFragment(id)
-        }
-        return true
-    }
+//    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+//        val id = item.itemId
+//        val current = currentFragment
+//
+//        appbarLayout.setExpanded(true, true)
+//
+//        if (current == null) {
+//            return false
+//        }
+//        if (current is BaseFragment && current.actionMode != null) current.stopActionMode()
+//
+//        if (currentFragmentId == id) { /* Already selected */
+//            // Go back at root level of current mProvider
+//            if ((current as? BaseBrowserFragment)?.isStarted() == false) {
+//                activity.supportFragmentManager.popBackStackImmediate("root", FragmentManager.POP_BACK_STACK_INCLUSIVE)
+//            } else {
+//                return false
+//            }
+//        } else {
+//            activity.slideDownAudioPlayer()
+//            showFragment(id)
+//            val tab = tabLayout.getTabAt(id)
+//            tab?.select()
+//            Log.d("TAG", " tabt = $id")
+//        }
+//        return true
+//    }
 
 
     private fun updateCheckedItem(id: Int) {
@@ -205,6 +251,7 @@ interface INavigator {
     var navigationView: List<NavigationBarView>
     var appbarLayout: AppBarLayout
     var currentFragmentId: Int
+    var currentFragmentId2: Int
 
     fun MainActivity.setupNavigation(state: Bundle?)
     fun currentIdIsExtension(): Boolean

@@ -239,7 +239,9 @@ object UiTools {
 
     fun getDefaultArtistDrawable(context: Context): BitmapDrawable {
         if (DEFAULT_COVER_ARTIST_DRAWABLE == null) {
-            DEFAULT_COVER_ARTIST_DRAWABLE = BitmapDrawable(context.resources, getBitmapFromDrawable(context, R.drawable.ic_no_artist))
+            DEFAULT_COVER_ARTIST_DRAWABLE = BitmapDrawable(context.resources, getBitmapFromDrawable(context,
+                R.drawable.ic_audio_item_track
+            ))
         }
         return DEFAULT_COVER_ARTIST_DRAWABLE!!
     }
@@ -779,35 +781,35 @@ object UiTools {
     }
 
     fun updateSortTitles(menu: Menu, provider: MedialibraryProvider<*>) {
-        val sort = provider.sort
-        val desc = provider.desc
-        menu.appendSortOrder(provider.context, R.id.ml_menu_sortby_name, R.string.sortby_name, (sort == Medialibrary.SORT_ALPHA || sort == Medialibrary.SORT_DEFAULT), desc)
-        menu.appendSortOrder(provider.context, R.id.ml_menu_sortby_filename, R.string.sortby_filename, sort == Medialibrary.SORT_FILENAME, desc)
-        menu.appendSortOrder(provider.context, R.id.ml_menu_sortby_artist_name, R.string.sortby_artist_name, sort == Medialibrary.SORT_ARTIST, desc)
-        menu.appendSortOrder(provider.context, R.id.ml_menu_sortby_album_name, R.string.sortby_album_name, sort == Medialibrary.SORT_ALBUM, desc)
-        menu.appendSortOrder(provider.context, R.id.ml_menu_sortby_length, R.string.sortby_length, sort == Medialibrary.SORT_DURATION, desc)
-        menu.appendSortOrder(provider.context, R.id.ml_menu_sortby_date, R.string.sortby_date_release, sort == Medialibrary.SORT_RELEASEDATE, desc)
-        menu.appendSortOrder(provider.context,R.id.ml_menu_sortby_last_modified, R.string.sortby_date_last_modified, sort == Medialibrary.SORT_LASTMODIFICATIONDATE, desc)
-        menu.appendSortOrder(provider.context,R.id.ml_menu_sortby_insertion_date, R.string.sortby_date_insertion, sort == Medialibrary.SORT_INSERTIONDATE, desc)
-        //        item = menu.findItem(R.id.ml_menu_sortby_number); TODO sort by track number
-        //        if (item != null) item.setTitle(sort == Medialibrary.SORT_ && !desc ? R.string.sortby_number_desc : R.string.sortby_number);
+//        val sort = provider.sort
+//        val desc = provider.desc
+//        menu.appendSortOrder(provider.context, R.id.ml_menu_sortby_name, R.string.sortby_name, (sort == Medialibrary.SORT_ALPHA || sort == Medialibrary.SORT_DEFAULT), desc)
+//        menu.appendSortOrder(provider.context, R.id.ml_menu_sortby_filename, R.string.sortby_filename, sort == Medialibrary.SORT_FILENAME, desc)
+//        menu.appendSortOrder(provider.context, R.id.ml_menu_sortby_artist_name, R.string.sortby_artist_name, sort == Medialibrary.SORT_ARTIST, desc)
+//        menu.appendSortOrder(provider.context, R.id.ml_menu_sortby_album_name, R.string.sortby_album_name, sort == Medialibrary.SORT_ALBUM, desc)
+//        menu.appendSortOrder(provider.context, R.id.ml_menu_sortby_length, R.string.sortby_length, sort == Medialibrary.SORT_DURATION, desc)
+//        menu.appendSortOrder(provider.context, R.id.ml_menu_sortby_date, R.string.sortby_date_release, sort == Medialibrary.SORT_RELEASEDATE, desc)
+//        menu.appendSortOrder(provider.context,R.id.ml_menu_sortby_last_modified, R.string.sortby_date_last_modified, sort == Medialibrary.SORT_LASTMODIFICATIONDATE, desc)
+//        menu.appendSortOrder(provider.context,R.id.ml_menu_sortby_insertion_date, R.string.sortby_date_insertion, sort == Medialibrary.SORT_INSERTIONDATE, desc)
+//        //        item = menu.findItem(R.id.ml_menu_sortby_number); TODO sort by track number
+//        //        if (item != null) item.setTitle(sort == Medialibrary.SORT_ && !desc ? R.string.sortby_number_desc : R.string.sortby_number);
 
     }
 
     fun updateSortTitles(sortable: MediaBrowserFragment<*>) {
-        val menu = sortable.menu ?: return
-        val model = sortable.viewModel
-        val sort = model.sort
-        val desc = model.desc
-        menu.appendSortOrder(sortable.requireActivity(), R.id.ml_menu_sortby_name, R.string.sortby_name, sort == Medialibrary.SORT_ALPHA, desc)
-        menu.appendSortOrder(sortable.requireActivity(), R.id.ml_menu_sortby_filename, R.string.sortby_filename, (sort == Medialibrary.SORT_FILENAME || sort == Medialibrary.SORT_DEFAULT), desc)
-        menu.appendSortOrder(sortable.requireActivity(), R.id.ml_menu_sortby_artist_name, R.string.sortby_artist_name, sort == Medialibrary.SORT_ARTIST, desc)
-        menu.appendSortOrder(sortable.requireActivity(), R.id.ml_menu_sortby_album_name, R.string.sortby_album_name, sort == Medialibrary.SORT_ALBUM, desc)
-        menu.appendSortOrder(sortable.requireActivity(), R.id.ml_menu_sortby_length, R.string.sortby_length, sort == Medialibrary.SORT_DURATION, desc)
-        menu.appendSortOrder(sortable.requireActivity(), R.id.ml_menu_sortby_date, R.string.sortby_date_release, sort == Medialibrary.SORT_RELEASEDATE, desc)
-        menu.appendSortOrder(sortable.requireActivity(),R.id.ml_menu_sortby_last_modified, R.string.sortby_date_last_modified, sort == Medialibrary.SORT_RELEASEDATE, desc)
-        //        item = menu.findItem(R.id.ml_menu_sortby_number); TODO sort by track number
-        //        if (item != null) item.setTitle(sort == Medialibrary.SORT_ && !desc ? R.string.sortby_number_desc : R.string.sortby_number);
+//        val menu = sortable.menu ?: return
+//        val model = sortable.viewModel
+//        val sort = model.sort
+//        val desc = model.desc
+//        menu.appendSortOrder(sortable.requireActivity(), R.id.ml_menu_sortby_name, R.string.sortby_name, sort == Medialibrary.SORT_ALPHA, desc)
+//        menu.appendSortOrder(sortable.requireActivity(), R.id.ml_menu_sortby_filename, R.string.sortby_filename, (sort == Medialibrary.SORT_FILENAME || sort == Medialibrary.SORT_DEFAULT), desc)
+//        menu.appendSortOrder(sortable.requireActivity(), R.id.ml_menu_sortby_artist_name, R.string.sortby_artist_name, sort == Medialibrary.SORT_ARTIST, desc)
+//        menu.appendSortOrder(sortable.requireActivity(), R.id.ml_menu_sortby_album_name, R.string.sortby_album_name, sort == Medialibrary.SORT_ALBUM, desc)
+//        menu.appendSortOrder(sortable.requireActivity(), R.id.ml_menu_sortby_length, R.string.sortby_length, sort == Medialibrary.SORT_DURATION, desc)
+//        menu.appendSortOrder(sortable.requireActivity(), R.id.ml_menu_sortby_date, R.string.sortby_date_release, sort == Medialibrary.SORT_RELEASEDATE, desc)
+//        menu.appendSortOrder(sortable.requireActivity(),R.id.ml_menu_sortby_last_modified, R.string.sortby_date_last_modified, sort == Medialibrary.SORT_RELEASEDATE, desc)
+//        //        item = menu.findItem(R.id.ml_menu_sortby_number); TODO sort by track number
+//        //        if (item != null) item.setTitle(sort == Medialibrary.SORT_ && !desc ? R.string.sortby_number_desc : R.string.sortby_number);
 
     }
 

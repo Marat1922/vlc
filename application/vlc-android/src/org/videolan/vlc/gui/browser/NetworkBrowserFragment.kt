@@ -81,6 +81,7 @@ class NetworkBrowserFragment : BaseBrowserFragment(), IDialogManager {
 
     override val isNetwork = true
     override val isFile = false
+    override val isUsb = false
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
@@ -92,7 +93,7 @@ class NetworkBrowserFragment : BaseBrowserFragment(), IDialogManager {
             item.setTitle(if (isFavorite) R.string.favorites_remove else R.string.favorites_add)
             mrl?.let {
                 val isScanned = withContext(Dispatchers.IO) { MedialibraryUtils.isScanned(it) }
-                menu.findItem(R.id.ml_menu_scan)?.isVisible = !isRootDirectory && it.startsWith("smb") && !isScanned
+//                menu.findItem(R.id.ml_menu_scan)?.isVisible = !isRootDirectory && it.startsWith("smb") && !isScanned
             }
         }
 

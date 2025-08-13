@@ -55,6 +55,7 @@ import org.videolan.vlc.gui.browser.FileBrowserFragment
 import org.videolan.vlc.gui.browser.KEY_MEDIA
 import org.videolan.vlc.gui.browser.MLStorageBrowserFragment
 import org.videolan.vlc.gui.browser.NetworkBrowserFragment
+import org.videolan.vlc.gui.browser.UsbFileFragment
 import org.videolan.vlc.gui.helpers.UiTools
 import org.videolan.vlc.gui.network.MRLPanelFragment
 import org.videolan.vlc.gui.video.VideoGridFragment
@@ -145,7 +146,7 @@ class SecondaryActivity : ContentActivity(), IDialogManager {
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.findItem(R.id.ml_menu_refresh)?.isVisible = Permissions.canReadStorage(this)
-        menu?.findItem(R.id.incognito_mode)?.isChecked = Settings.getInstance(this).getBoolean(KEY_INCOGNITO, false)
+//        menu?.findItem(R.id.incognito_mode)?.isChecked = Settings.getInstance(this).getBoolean(KEY_INCOGNITO, false)
         return super.onPrepareOptionsMenu(menu)
     }
 
@@ -159,12 +160,12 @@ class SecondaryActivity : ContentActivity(), IDialogManager {
                 }
                 return true
             }
-            R.id.incognito_mode -> {
-                lifecycleScope.launch {
-                    if (!UiTools.updateIncognitoMode(this@SecondaryActivity, item)) return@launch
-                }
-                return true
-            }
+//            R.id.incognito_mode -> {
+//                lifecycleScope.launch {
+//                    if (!UiTools.updateIncognitoMode(this@SecondaryActivity, item)) return@launch
+//                }
+//                return true
+//            }
         }
         return super.onOptionsItemSelected(item)
     }

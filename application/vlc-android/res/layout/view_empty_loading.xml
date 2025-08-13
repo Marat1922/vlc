@@ -111,16 +111,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_empty" />
 
-    <Button
-            android:id="@+id/noMediaButton"
-            style="?attr/empty_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/button_medialibrary_preferences"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_barrier_bottom" />
+
 
 
     <Button
@@ -130,9 +121,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="@string/permission_ask_again"
-            app:layout_constraintEnd_toEndOf="@+id/noMediaButton"
+            app:layout_constraintEnd_toEndOf="@+id/emptyTextView"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/noMediaButton"
+            app:layout_constraintStart_toStartOf="@+id/emptyTextView"
             app:layout_constraintTop_toBottomOf="@+id/permissionTextView"
             app:layout_constraintVertical_chainStyle="packed" />
 
@@ -143,9 +134,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:text="@string/pick_file"
-            app:layout_constraintEnd_toEndOf="@+id/noMediaButton"
+            app:layout_constraintEnd_toEndOf="@+id/emptyTextView"
             app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/noMediaButton"
+            app:layout_constraintStart_toStartOf="@+id/emptyTextView"
             app:layout_constraintTop_toBottomOf="@+id/grantPermissionButton" />
 
     <TextView

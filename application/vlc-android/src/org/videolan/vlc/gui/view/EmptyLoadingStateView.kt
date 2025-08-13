@@ -40,6 +40,8 @@ import android.widget.*
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.getString
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.transition.TransitionManager
 import kotlinx.coroutines.launch
@@ -48,10 +50,13 @@ import org.videolan.tools.AppScope
 import org.videolan.tools.dp
 import org.videolan.vlc.R
 import org.videolan.vlc.gui.BaseActivity
+import org.videolan.vlc.gui.MainActivity
 import org.videolan.vlc.gui.SecondaryActivity
+import org.videolan.vlc.gui.audio.AudioBrowserFragment
 import org.videolan.vlc.gui.helpers.getBitmapFromDrawable
 import org.videolan.vlc.gui.helpers.hf.StoragePermissionsDelegate.Companion.askStoragePermission
 import org.videolan.vlc.gui.helpers.hf.StoragePermissionsDelegate.Companion.getStoragePermission
+import org.videolan.vlc.gui.video.VideoBrowserFragment
 import org.videolan.vlc.util.Permissions
 
 class EmptyLoadingStateView : FrameLayout {
@@ -64,7 +69,6 @@ class EmptyLoadingStateView : FrameLayout {
     private lateinit var loadingTitle: TextView
     private lateinit var emptyImageView: ImageView
     private lateinit var permissionTitle: TextView
-    private lateinit var noMediaButton: Button
     private val normalConstraintSet = ConstraintSet()
     private val compactConstraintSet = ConstraintSet()
     var filterQuery: String? = null
@@ -89,7 +93,6 @@ class EmptyLoadingStateView : FrameLayout {
             permissionTextView.visibility = if (value in arrayOf(EmptyLoadingState.MISSING_PERMISSION, EmptyLoadingState.MISSING_VIDEO_PERMISSION, EmptyLoadingState.MISSING_AUDIO_PERMISSION)) View.VISIBLE else View.GONE
             grantPermissionButton.visibility = if (value in arrayOf(EmptyLoadingState.MISSING_PERMISSION, EmptyLoadingState.MISSING_VIDEO_PERMISSION, EmptyLoadingState.MISSING_AUDIO_PERMISSION)) View.VISIBLE else View.GONE
             pickFileButton.visibility = if (value in arrayOf(EmptyLoadingState.MISSING_PERMISSION, EmptyLoadingState.MISSING_VIDEO_PERMISSION, EmptyLoadingState.MISSING_AUDIO_PERMISSION) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) View.VISIBLE else View.GONE
-            noMediaButton.visibility = if (showNoMedia && value == EmptyLoadingState.EMPTY) View.VISIBLE else if (value == EmptyLoadingState.EMPTY_FAVORITES) View.INVISIBLE else  View.GONE
             permissionTextView.text = when (state) {
                 EmptyLoadingState.MISSING_VIDEO_PERMISSION -> context.getString(R.string.permission_video)
                 EmptyLoadingState.MISSING_AUDIO_PERMISSION -> context.getString(R.string.permission_audio)
@@ -105,14 +108,21 @@ class EmptyLoadingStateView : FrameLayout {
 
     var emptyText: String = context.getString(R.string.nomedia)
         set(value) {
+            field = value  // Исправлено: сохраняем переданное значение
             emptyTextView.text = value
-            field = emptyText
         }
+    fun updateEmptyTextForFragment(fragment: Fragment?) {
+        emptyText = when (fragment) {
+            is AudioBrowserFragment -> "context.getString(R.string.empty_audio)"
+            is VideoBrowserFragment -> "context.getString(R.string.empty_video)"
+            else -> "context.getString(R.string.nomedia)"
+        }
+    }
 
     var loadingText: String = context.getString(R.string.loading)
         set(value) {
+            field = value  // Исправлено: сохраняем переданное значение
             loadingTitle.text = value
-            field = emptyText
         }
 
     private var noMediaClickListener: (() -> Unit)? = null
@@ -151,12 +161,12 @@ class EmptyLoadingStateView : FrameLayout {
 
         state = EmptyLoadingState.LOADING
 
-        noMediaButton.setOnClickListener {
-            val intent = Intent(context.applicationContext, SecondaryActivity::class.java)
-            intent.putExtra("fragment", SecondaryActivity.STORAGE_BROWSER)
-            (context as Activity).startActivityForResult(intent, ACTIVITY_RESULT_PREFERENCES)
-            noMediaClickListener?.invoke()
-        }
+//        noMediaButton.setOnClickListener {
+//            val intent = Intent(context.applicationContext, SecondaryActivity::class.java)
+//            intent.putExtra("fragment", SecondaryActivity.STORAGE_BROWSER)
+//            (context as Activity).startActivityForResult(intent, ACTIVITY_RESULT_PREFERENCES)
+//            noMediaClickListener?.invoke()
+//        }
         grantPermissionButton.setOnClickListener {
             when (state) {
                 EmptyLoadingState.MISSING_AUDIO_PERMISSION -> ActivityCompat.requestPermissions(
@@ -207,9 +217,9 @@ class EmptyLoadingStateView : FrameLayout {
         loadingTitle = findViewById(R.id.loadingTitle)
         emptyImageView = findViewById(R.id.emptyImageView)
         permissionTitle = findViewById(R.id.permissionTitle)
-        noMediaButton = findViewById(R.id.noMediaButton)
     }
 }
+
 
 enum class EmptyLoadingState {
     LOADING, EMPTY, EMPTY_SEARCH, NONE, MISSING_PERMISSION, MISSING_VIDEO_PERMISSION, MISSING_AUDIO_PERMISSION, EMPTY_FAVORITES

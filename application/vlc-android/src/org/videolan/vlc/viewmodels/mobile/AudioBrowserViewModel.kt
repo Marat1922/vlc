@@ -25,7 +25,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import org.videolan.medialibrary.interfaces.media.Playlist
+import org.videolan.medialibrary.media.MediaLibraryItem
 import org.videolan.resources.KEY_AUDIO_CURRENT_TAB
 import org.videolan.tools.KEY_ARTISTS_SHOW_ALL
 import org.videolan.tools.Settings
@@ -42,11 +44,11 @@ class AudioBrowserViewModel(context: Context) : MedialibraryViewModel(context) {
     val tracksProvider = TracksProvider(null, context, this)
     val genresProvider = GenresProvider(context, this)
     private val playlistsProvider = PlaylistsProvider(context, this, Playlist.Type.Audio)
-    override val providers = arrayOf(artistsProvider, albumsProvider, tracksProvider, genresProvider, playlistsProvider)
-    val providersInCard = arrayOf(true, true, false, false, true)
+    override val providers = arrayOf(tracksProvider, tracksProvider, tracksProvider, tracksProvider, playlistsProvider)
+    val providersInCard = arrayOf(false, false,false, false, true)
 
     var showResumeCard = settings.getBoolean("audio_resume_card", true)
-    val displayModeKeys = arrayOf("display_mode_audio_browser_artists", "display_mode_audio_browser_albums", "display_mode_audio_browser_track", "display_mode_audio_browser_genres", "display_mode_playlists_AudioOnly")
+    val displayModeKeys = arrayOf("display_mode_audio_browser_track", "display_mode_audio_browser_track", "display_mode_audio_browser_track", "display_mode_audio_browser_genres", "display_mode_playlists_AudioOnly")
 
 
     init {

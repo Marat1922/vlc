@@ -26,6 +26,7 @@ package org.videolan.vlc.gui.browser
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
@@ -84,6 +85,7 @@ import org.videolan.vlc.viewmodels.browser.BrowserFavoritesModel
 import org.videolan.vlc.viewmodels.browser.BrowserModel
 import org.videolan.vlc.viewmodels.browser.TYPE_FILE
 import org.videolan.vlc.viewmodels.browser.TYPE_NETWORK
+import org.videolan.vlc.viewmodels.browser.TYPE_USB
 import org.videolan.vlc.viewmodels.browser.getBrowserModel
 
 class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionReceiver {
@@ -99,6 +101,9 @@ class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionRecei
 
     private lateinit var networkEntry: TitleListView
     private lateinit var networkViewModel: BrowserModel
+
+    private lateinit var usbEntry: TitleListView
+    private lateinit var usbViewModel: BrowserModel
 
     private var currentAdapterActionMode: BaseBrowserAdapter? = null
 
@@ -138,43 +143,43 @@ class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionRecei
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
 
-        menu.findItem(R.id.ml_menu_display_grid).isVisible = displayInList
-        menu.findItem(R.id.ml_menu_display_list).isVisible = !displayInList
-        menu.findItem(R.id.add_server_favorite).isVisible = true
-        menu.findItem(R.id.browse_network)?.isVisible = true
-        menu.findItem(R.id.browse_network)?.isChecked = Settings.getInstance(requireActivity()).getBoolean(KEY_BROWSE_NETWORK, true)
+//        menu.findItem(R.id.ml_menu_display_grid).isVisible = displayInList
+//        menu.findItem(R.id.ml_menu_display_list).isVisible = !displayInList
+//        menu.findItem(R.id.add_server_favorite).isVisible = true
+//        menu.findItem(R.id.browse_network)?.isVisible = true
+//        menu.findItem(R.id.browse_network)?.isChecked = Settings.getInstance(requireActivity()).getBoolean(KEY_BROWSE_NETWORK, true)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.ml_menu_display_list, R.id.ml_menu_display_grid -> {
-                displayInList = item.itemId == R.id.ml_menu_display_list
-                containerAdapterAssociation.keys.forEach {
-                    it.inCards = !displayInList
-                }
-                localEntry.displayInCards = !displayInList
-                favoritesEntry.displayInCards = !displayInList
-                networkEntry.displayInCards = !displayInList
-                activity?.invalidateOptionsMenu()
-                Settings.getInstance(requireActivity()).putSingle(displayInListKey, displayInList)
-                true
-            }
-            R.id.browse_network -> {
-                lifecycleScope.launch {
-                    item.isChecked = !item.isChecked
-                    Settings.getInstance(requireActivity()).putSingle(KEY_BROWSE_NETWORK, item.isChecked)
-                    if (!item.isChecked) {
-                        networkViewModel.provider.stop()
-                        networkViewModel.provider.dataset.clear()
-                    }
-                    networkViewModel.refresh()
-                }
-                true
-            }
-            R.id.add_server_favorite -> {
-                showAddServerDialog(null)
-                true
-            }
+//            R.id.ml_menu_display_list, R.id.ml_menu_display_grid -> {
+//                displayInList = item.itemId == R.id.ml_menu_display_list
+//                containerAdapterAssociation.keys.forEach {
+//                    it.inCards = !displayInList
+//                }
+//                localEntry.displayInCards = !displayInList
+////                favoritesEntry.displayInCards = !displayInList
+//                networkEntry.displayInCards = !displayInList
+//                activity?.invalidateOptionsMenu()
+//                Settings.getInstance(requireActivity()).putSingle(displayInListKey, displayInList)
+//                true
+//            }
+//            R.id.browse_network -> {
+//                lifecycleScope.launch {
+//                    item.isChecked = !item.isChecked
+//                    Settings.getInstance(requireActivity()).putSingle(KEY_BROWSE_NETWORK, item.isChecked)
+//                    if (!item.isChecked) {
+//                        networkViewModel.provider.stop()
+//                        networkViewModel.provider.dataset.clear()
+//                    }
+//                    networkViewModel.refresh()
+//                }
+//                true
+//            }
+//            R.id.add_server_favorite -> {
+//                showAddServerDialog(null)
+//                true
+//            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -202,7 +207,8 @@ class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionRecei
         networkMonitor = NetworkMonitor.getInstance(requireContext())
         super.onCreate(savedInstanceState)
         localViewModel = getBrowserModel(category = TYPE_FILE, url = null)
-        favoritesViewModel = BrowserFavoritesModel(requireContext())
+        usbViewModel = getBrowserModel(category = TYPE_USB, url = null)
+//        favoritesViewModel = BrowserFavoritesModel(requireContext())
         networkViewModel = getBrowserModel(category = TYPE_NETWORK, url = null, mocked = arguments?.parcelableList(EXTRA_FOR_ESPRESSO))
     }
 
@@ -215,12 +221,12 @@ class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionRecei
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         displayInList = Settings.getInstance(requireActivity()).getBoolean(displayInListKey, false)
-
+        Log.d("TAG", " USBtype = ${usbViewModel.type}")
+        //Log.d("TAG", " localtype = ${localViewModel.type}")
         //local
         localEntry = view.findViewById(R.id.local_browser_entry)
-        val storageBrowserContainer = MainBrowserContainer(isNetwork = false, isFile = true, inCards = !displayInList)
+        val storageBrowserContainer = MainBrowserContainer(isNetwork = false, isFile = true, isUsb = false, inCards = !displayInList)
         val storageBrowserAdapter = BaseBrowserAdapter(storageBrowserContainer)
         localEntry.list.adapter = storageBrowserAdapter
         containerAdapterAssociation[storageBrowserContainer] = Pair(storageBrowserAdapter, localViewModel)
@@ -243,60 +249,112 @@ class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionRecei
             if (pair != null) storageBrowserAdapter.notifyItemChanged(pair.first, pair.second)
         }
 
-        favoritesEntry = view.findViewById(R.id.fav_browser_entry)
-        favoritesEntry.loading.showNoMedia = false
-        favoritesEntry.loading.emptyText = getString(R.string.no_favorite)
-        val favoritesBrowserContainer = MainBrowserContainer(isNetwork = false, isFile = true, inCards = !displayInList)
-        val favoritesAdapter = BaseBrowserAdapter(favoritesBrowserContainer)
-        favoritesEntry.list.adapter = favoritesAdapter
-        containerAdapterAssociation[favoritesBrowserContainer] = Pair(favoritesAdapter, favoritesViewModel)
-        favoritesViewModel.favorites.observe(viewLifecycleOwner) { list ->
-            list.let {
-                if (list.isEmpty()) favoritesEntry.setGone() else favoritesEntry.setVisible()
-                favoritesAdapter.update(it)
-                favoritesEntry.loading.state = when {
+        //Usb
+        usbEntry = view.findViewById(R.id.usb_browser_entry)
+        val usbBrowserContainer = MainBrowserContainer(isNetwork = false, isFile = false, isUsb = true, inCards = !displayInList)
+        val usbBrowserAdapter = BaseBrowserAdapter(usbBrowserContainer)
+        usbEntry.list.adapter = usbBrowserAdapter
+        containerAdapterAssociation[usbBrowserContainer] = Pair(usbBrowserAdapter, usbViewModel)
+        usbViewModel.dataset.observe(viewLifecycleOwner) { list ->
+            list?.let {
+                if (Permissions.canReadStorage(requireActivity())) usbBrowserAdapter.update(it)
+                usbEntry.loading.state = when {
+                    !Permissions.canReadStorage(requireActivity()) -> EmptyLoadingState.MISSING_PERMISSION
                     list.isNotEmpty() -> EmptyLoadingState.NONE
-                    localViewModel.loading.value == true -> EmptyLoadingState.LOADING
+                    usbViewModel.loading.value == true -> EmptyLoadingState.LOADING
                     else -> EmptyLoadingState.EMPTY
                 }
             }
         }
-        favoritesViewModel.provider.loading.observe(viewLifecycleOwner) {
-            if (it) localEntry.loading.state = EmptyLoadingState.LOADING
+        usbViewModel.loading.observe(viewLifecycleOwner) {
+            if (it) usbEntry.loading.state = EmptyLoadingState.LOADING else if (!Permissions.canReadStorage(requireActivity())) usbEntry.loading.state = EmptyLoadingState.MISSING_PERMISSION
         }
-        favoritesViewModel.provider.descriptionUpdate.observe(viewLifecycleOwner) { pair ->
-            if (pair != null) favoritesAdapter.notifyItemChanged(pair.first, pair.second)
+        usbViewModel.browseRoot()
+        usbViewModel.getDescriptionUpdate().observe(viewLifecycleOwner) { pair ->
+            if (pair != null) usbBrowserAdapter.notifyItemChanged(pair.first, pair.second)
         }
+//        val usbBrowserContainer = MainBrowserContainer(isNetwork = false, isFile = true, inCards = false)
+//        val usbBrowserAdapter = BaseBrowserAdapter(usbBrowserContainer)
+//        usbEntry.list.adapter = usbBrowserAdapter
+//        containerAdapterAssociation[usbBrowserContainer] = Pair(storageBrowserAdapter, localViewModel)
+//        localViewModel.dataset.observe(viewLifecycleOwner) { list ->
+//            list?.let {
+//                if (Permissions.canReadStorage(requireActivity())) storageBrowserAdapter.update(it)
+//                usbEntry.loading.state = when {
+//                    !Permissions.canReadStorage(requireActivity()) -> EmptyLoadingState.MISSING_PERMISSION
+//                    list.isNotEmpty() -> EmptyLoadingState.NONE
+//                    localViewModel.loading.value == true -> EmptyLoadingState.LOADING
+//                    else -> EmptyLoadingState.EMPTY
+//                }
+//            }
+//        }
+//        localViewModel.loading.observe(viewLifecycleOwner) {
+//            if (it) localEntry.loading.state = EmptyLoadingState.LOADING else if (!Permissions.canReadStorage(requireActivity())) usbEntry.loading.state = EmptyLoadingState.MISSING_PERMISSION
+//        }
+//        localViewModel.browseRoot()
+//        localViewModel.getDescriptionUpdate().observe(viewLifecycleOwner) { pair ->
+//            if (pair != null) storageBrowserAdapter.notifyItemChanged(pair.first, pair.second)
+//        }
 
-        networkEntry = view.findViewById(R.id.network_browser_entry)
-        networkEntry.loading.showNoMedia = false
-        networkEntry.loading.emptyText = getString(R.string.nomedia)
-        val networkBrowserContainer = MainBrowserContainer(isNetwork = true, isFile = false, inCards = !displayInList)
-        val networkAdapter = BaseBrowserAdapter(networkBrowserContainer)
-        networkEntry.list.adapter = networkAdapter
-        containerAdapterAssociation[networkBrowserContainer] = Pair(networkAdapter, networkViewModel)
-        networkViewModel.dataset.observe(viewLifecycleOwner) { list ->
-            list?.let {
-                networkAdapter.update(it)
-                updateNetworkEmptyView(networkEntry.loading)
-                if (networkViewModel.loading.value == false) networkEntry.loading.state = if (list.isEmpty()) EmptyLoadingState.EMPTY else EmptyLoadingState.NONE
-            }
-        }
-        networkViewModel.loading.observe(viewLifecycleOwner) {
-            if (it) networkEntry.loading.state = EmptyLoadingState.LOADING
-            updateNetworkEmptyView(networkEntry.loading)
-        }
-        networkViewModel.browseRoot()
+//        favoritesEntry = view.findViewById(R.id.fav_browser_entry)
+//        favoritesEntry.loading.showNoMedia = false
+//        favoritesEntry.loading.emptyText = getString(R.string.no_favorite)
+//        val favoritesBrowserContainer = MainBrowserContainer(isNetwork = false, isFile = true, inCards = !displayInList)
+//        val favoritesAdapter = BaseBrowserAdapter(favoritesBrowserContainer)
+//        favoritesEntry.list.adapter = favoritesAdapter
+//        containerAdapterAssociation[favoritesBrowserContainer] = Pair(favoritesAdapter, favoritesViewModel)
+//        favoritesViewModel.favorites.observe(viewLifecycleOwner) { list ->
+//            list.let {
+//                if (list.isEmpty()) favoritesEntry.setGone() else favoritesEntry.setVisible()
+//                favoritesAdapter.update(it)
+//                favoritesEntry.loading.state = when {
+//                    list.isNotEmpty() -> EmptyLoadingState.NONE
+//                    localViewModel.loading.value == true -> EmptyLoadingState.LOADING
+//                    else -> EmptyLoadingState.EMPTY
+//                }
+//            }
+//        }
+//        favoritesViewModel.provider.loading.observe(viewLifecycleOwner) {
+//            if (it) localEntry.loading.state = EmptyLoadingState.LOADING
+//        }
+//        favoritesViewModel.provider.descriptionUpdate.observe(viewLifecycleOwner) { pair ->
+//            if (pair != null) favoritesAdapter.notifyItemChanged(pair.first, pair.second)
+//        }
+
+
+
+
+      //network
+//        networkEntry = view.findViewById(R.id.network_browser_entry)
+//        networkEntry.loading.showNoMedia = false
+//        networkEntry.loading.emptyText = getString(R.string.nomedia)
+//        val networkBrowserContainer = MainBrowserContainer(isNetwork = true, isFile = false, inCards = !displayInList)
+//        val networkAdapter = BaseBrowserAdapter(networkBrowserContainer)
+//        networkEntry.list.adapter = networkAdapter
+//        containerAdapterAssociation[networkBrowserContainer] = Pair(networkAdapter, networkViewModel)
+//        networkViewModel.dataset.observe(viewLifecycleOwner) { list ->
+//            list?.let {
+//                networkAdapter.update(it)
+//                updateNetworkEmptyView(networkEntry.loading)
+//                if (networkViewModel.loading.value == false) networkEntry.loading.state = if (list.isEmpty()) EmptyLoadingState.EMPTY else EmptyLoadingState.NONE
+//            }
+//        }
+//        networkViewModel.loading.observe(viewLifecycleOwner) {
+//            if (it) networkEntry.loading.state = EmptyLoadingState.LOADING
+//            updateNetworkEmptyView(networkEntry.loading)
+//        }
+//        networkViewModel.browseRoot()
 
         localEntry.displayInCards = !displayInList
-        favoritesEntry.displayInCards = !displayInList
-        networkEntry.displayInCards = !displayInList
+        usbEntry.displayInCards = !displayInList
+//        favoritesEntry.displayInCards = !displayInList
+//        networkEntry.displayInCards = !displayInList
 
         requireActivity().supportFragmentManager.setFragmentResultListener(CONFIRM_PERMISSION_CHANGED, viewLifecycleOwner) { requestKey, bundle ->
             val changed = bundle.getBoolean(KEY_PERMISSION_CHANGED)
             if (changed) {
                 localViewModel.provider.refresh()
-                favoritesViewModel.provider.refresh()
+//                favoritesViewModel.provider.refresh()
             }
         }
     }
@@ -365,8 +423,9 @@ class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionRecei
             override val isRootDirectory: Boolean = true,
             override val isNetwork: Boolean,
             override val isFile: Boolean,
+            override val isUsb: Boolean,
             override var inCards: Boolean = true
-    ) : BrowserContainer<MediaLibraryItem> by BrowserContainerImpl(scannedDirectory, mrl, isRootDirectory, isNetwork, isFile, inCards) {
+    ) : BrowserContainer<MediaLibraryItem> by BrowserContainerImpl(scannedDirectory, mrl, isRootDirectory, isNetwork, isFile, isUsb, inCards) {
         override fun containerActivity() = requireActivity()
 
         fun requireAdapter() = containerAdapterAssociation[this]?.first

@@ -100,7 +100,7 @@ class StartActivity : FragmentActivity() {
                     "vlc.shortcut.video" -> R.id.nav_video
                     "vlc.shortcut.audio" -> R.id.nav_audio
                     "vlc.shortcut.browser" -> R.id.nav_directories
-                    "vlc.shortcut.resume" -> R.id.ml_menu_last_playlist
+//                    "vlc.shortcut.resume" -> R.id.ml_menu_last_playlist
                     else -> 0
                 }
             }
@@ -241,10 +241,11 @@ class StartActivity : FragmentActivity() {
             } else {
                 val target = idFromShortcut
                 val service = PlaybackService.instance
-                if (target == R.id.ml_menu_last_playlist) {
-                    PlaybackService.loadLastAudio(this, true)
-                    startApplication(tv, firstRun, upgrade, R.id.nav_audio, removeOldDevices)
-                } else if (service != null && service.isInPiPMode.value == true) {
+//                if (target == R.id.ml_menu_last_playlist) {
+//                    PlaybackService.loadLastAudio(this, true)
+//                    startApplication(tv, firstRun, upgrade, R.id.nav_audio, removeOldDevices)
+//                } else
+                    if (service != null && service.isInPiPMode.value == true) {
                     service.isInPiPMode.value = false
                     val startIntent = Intent(this, VideoPlayerActivity::class.java)
                     startIntent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT

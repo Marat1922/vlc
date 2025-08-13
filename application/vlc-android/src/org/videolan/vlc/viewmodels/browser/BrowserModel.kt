@@ -21,7 +21,9 @@
 package org.videolan.vlc.viewmodels.browser
 
 import android.content.Context
+import android.util.Log
 import androidx.annotation.MainThread
+import androidx.core.content.FileProvider
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
@@ -44,6 +46,7 @@ import org.videolan.vlc.providers.FilePickerProvider
 import org.videolan.vlc.providers.NetworkProvider
 import org.videolan.vlc.providers.PickerType
 import org.videolan.vlc.providers.StorageProvider
+import org.videolan.vlc.providers.UsbFileProvider
 import org.videolan.vlc.repository.DirectoryRepository
 import org.videolan.vlc.viewmodels.BaseModel
 import org.videolan.vlc.viewmodels.tv.TvBrowserModel
@@ -52,6 +55,7 @@ const val TYPE_FILE = 0L
 const val TYPE_NETWORK = 1L
 const val TYPE_PICKER = 2L
 const val TYPE_STORAGE = 3L
+const val TYPE_USB = 4L
 
 open class BrowserModel(
         context: Context,
@@ -72,6 +76,7 @@ open class BrowserModel(
         TYPE_PICKER -> FilePickerProvider(context, dataset, url, pickerType = pickerType)
         TYPE_NETWORK -> NetworkProvider(context, dataset, url, mocked)
         TYPE_STORAGE -> StorageProvider(context, dataset, url)
+        TYPE_USB -> UsbFileProvider(context, dataset, url, showDummyCategory = showDummyCategory, sort = sort, desc = desc)
         else -> FileBrowserProvider(context, dataset, url, showDummyCategory = showDummyCategory, sort = sort, desc = desc)
     }
 
@@ -179,7 +184,10 @@ open class BrowserModel(
     }
 }
 
-fun Fragment.getBrowserModel(category: Long, url: String?, showDummyCategory: Boolean = false, mocked: ArrayList<MediaLibraryItem>? = null) = if (category == TYPE_NETWORK)
-    ViewModelProvider(this, NetworkModel.Factory(requireContext(), url, mocked)).get(NetworkModel::class.java)
-else
-    ViewModelProvider(this, BrowserModel.Factory(requireContext(), url, category, showDummyCategory = showDummyCategory)).get(BrowserModel::class.java)
+fun Fragment.getBrowserModel(category: Long, url: String?, showDummyCategory: Boolean = false, mocked: ArrayList<MediaLibraryItem>? = null) =
+    when (category){
+        TYPE_NETWORK -> ViewModelProvider(this, NetworkModel.Factory(requireContext(), url, mocked)).get(NetworkModel::class.java)
+        TYPE_USB ->  ViewModelProvider(this, BrowserModel.Factory(requireContext(), url, category, showDummyCategory = showDummyCategory)).get(UsbBrowserModel::class.java)
+        else -> ViewModelProvider(this, BrowserModel.Factory(requireContext(), url, category, showDummyCategory = showDummyCategory)).get(BrowserModel::class.java)
+    }
+

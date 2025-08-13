@@ -24,6 +24,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.Menu
@@ -46,6 +47,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.conflate
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import okhttp3.internal.notify
+import okhttp3.internal.notifyAll
 import org.videolan.medialibrary.interfaces.Medialibrary
 import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import org.videolan.medialibrary.media.MediaLibraryItem
@@ -77,6 +80,7 @@ import org.videolan.vlc.gui.helpers.UiTools
 import org.videolan.vlc.gui.helpers.UiTools.addFavoritesIcon
 import org.videolan.vlc.gui.helpers.UiTools.removeDrawables
 import org.videolan.vlc.gui.view.EmptyLoadingState
+import org.videolan.vlc.gui.view.EmptyLoadingStateView
 import org.videolan.vlc.media.MediaUtils
 import org.videolan.vlc.media.PlaylistManager
 import org.videolan.vlc.providers.medialibrary.MedialibraryProvider
@@ -106,6 +110,7 @@ class AudioBrowserFragment : BaseAudioBrowser<AudioBrowserViewModel>() {
     override val hasTabs = true
     private var spacing = 0
     private var restorePositions: SparseArray<Int> = SparseArray()
+    private var lastSelectedPosition = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -137,7 +142,7 @@ class AudioBrowserFragment : BaseAudioBrowser<AudioBrowserViewModel>() {
                 lists.add(it.findViewById(R.id.audio_list))
             }
         }
-        val titles = arrayOf(getString(R.string.artists), getString(R.string.albums), getString(R.string.tracks), getString(R.string.genres), getString(R.string.playlists))
+        val titles = arrayOf( getString(R.string.tracks))
         viewPager.offscreenPageLimit = MODE_TOTAL - 1
         audioPagerAdapter = AudioPagerAdapter(views.toTypedArray(), titles)
         @Suppress("UNCHECKED_CAST")
@@ -195,7 +200,7 @@ class AudioBrowserFragment : BaseAudioBrowser<AudioBrowserViewModel>() {
                 @Suppress("UNCHECKED_CAST")
                 setupLayoutManager(viewModel.providersInCard[currentTab], lists[currentTab], viewModel.providers[currentTab] as MedialibraryProvider<MediaLibraryItem>, adapters[currentTab], spacing)
                 lists[currentTab].adapter = adapters[currentTab]
-                if (currentTab == 2 && songsAdapter.currentMedia != null) {
+                if (currentTab == 0 && songsAdapter.currentMedia != null) {
                     songsAdapter.currentMedia = null
                     songsAdapter.currentMedia = PlaylistManager.currentPlayedMedia.value
                 }
@@ -265,7 +270,7 @@ class AudioBrowserFragment : BaseAudioBrowser<AudioBrowserViewModel>() {
         }.launchWhenStarted(lifecycleScope)
         genresAdapter = AudioBrowserAdapter(MediaLibraryItem.TYPE_GENRE, this).apply { stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY }
         playlistAdapter = AudioBrowserAdapter(MediaLibraryItem.TYPE_PLAYLIST, this).apply { stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY }
-        adapters = arrayOf(artistsAdapter, albumsAdapter, songsAdapter, genresAdapter, playlistAdapter)
+        adapters = arrayOf(artistsAdapter, artistsAdapter, artistsAdapter, artistsAdapter, playlistAdapter)
         setupProvider()
     }
 
@@ -321,42 +326,42 @@ class AudioBrowserFragment : BaseAudioBrowser<AudioBrowserViewModel>() {
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
-        menu.findItem(R.id.ml_menu_last_playlist)?.isVisible = settings.contains(KEY_AUDIO_LAST_PLAYLIST)
-        (viewModel.providers[currentTab]).run {
-            menu.findItem(R.id.ml_menu_sortby).isVisible = false
-            menu.findItem(R.id.ml_menu_display_options).isVisible = true
-        }
+//        menu.findItem(R.id.ml_menu_last_playlist)?.isVisible = settings.contains(KEY_AUDIO_LAST_PLAYLIST)
+//        (viewModel.providers[currentTab]).run {
+//            menu.findItem(R.id.ml_menu_sortby).isVisible = false
+//            menu.findItem(R.id.ml_menu_display_options).isVisible = true
+//        }
         sortMenuTitles(currentTab)
         reopenSearchIfNeeded()
-         if (requireActivity().isTalkbackIsEnabled()) menu.findItem(R.id.shuffle_all).isVisible = true
+//         if (requireActivity().isTalkbackIsEnabled()) menu.findItem(R.id.shuffle_all).isVisible = true
    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.shuffle_all -> {
-                onFabPlayClick(binding.audioEmptyLoading)
-                true
-            }
-            R.id.ml_menu_display_options -> {
-                //filter all sorts and keep only applicable ones
-                val sorts = arrayListOf(Medialibrary.SORT_ALPHA, Medialibrary.SORT_FILENAME, Medialibrary.SORT_ARTIST, Medialibrary.SORT_ALBUM, Medialibrary.SORT_DURATION, Medialibrary.SORT_RELEASEDATE, Medialibrary.SORT_LASTMODIFICATIONDATE, Medialibrary.SORT_FILESIZE, Medialibrary.NbMedia, Medialibrary.SORT_INSERTIONDATE).filter {
-                    viewModel.providers[currentTab].canSortBy(it)
-                }
-
-                //Open the display settings Bottom sheet
-                DisplaySettingsDialog.newInstance(
-                    displayInCards = viewModel.providersInCard[currentTab],
-                    showAllArtists = if (currentTab == 0) Settings.getInstance(requireActivity()).getBoolean(KEY_ARTISTS_SHOW_ALL, false) else null,
-                    onlyFavs = viewModel.providers[currentTab].onlyFavorites,
-                    sorts = sorts,
-                    currentSort = viewModel.providers[currentTab].sort,
-                    currentSortDesc = viewModel.providers[currentTab].desc,
-                    defaultPlaybackActions = getDefaultActionMediaType().getDefaultPlaybackActions(settings),
-                    defaultActionType = getString(getDefaultActionMediaType().title)
-                )
-                        .show(requireActivity().supportFragmentManager, "DisplaySettingsDialog")
-                true
-            }
+//            R.id.shuffle_all -> {
+//                onFabPlayClick(binding.audioEmptyLoading)
+//                true
+//            }
+//            R.id.ml_menu_display_options -> {
+//                //filter all sorts and keep only applicable ones
+//                val sorts = arrayListOf(Medialibrary.SORT_ALPHA, Medialibrary.SORT_FILENAME, Medialibrary.SORT_ARTIST, Medialibrary.SORT_ALBUM, Medialibrary.SORT_DURATION, Medialibrary.SORT_RELEASEDATE, Medialibrary.SORT_LASTMODIFICATIONDATE, Medialibrary.SORT_FILESIZE, Medialibrary.NbMedia, Medialibrary.SORT_INSERTIONDATE).filter {
+//                    viewModel.providers[currentTab].canSortBy(it)
+//                }
+//
+//                //Open the display settings Bottom sheet
+//                DisplaySettingsDialog.newInstance(
+//                    displayInCards = viewModel.providersInCard[currentTab],
+//                    showAllArtists = if (currentTab == 0) Settings.getInstance(requireActivity()).getBoolean(KEY_ARTISTS_SHOW_ALL, false) else null,
+//                    onlyFavs = viewModel.providers[currentTab].onlyFavorites,
+//                    sorts = sorts,
+//                    currentSort = viewModel.providers[currentTab].sort,
+//                    currentSortDesc = viewModel.providers[currentTab].desc,
+//                    defaultPlaybackActions = getDefaultActionMediaType().getDefaultPlaybackActions(settings),
+//                    defaultActionType = getString(getDefaultActionMediaType().title)
+//                )
+//                        .show(requireActivity().supportFragmentManager, "DisplaySettingsDialog")
+//                true
+//            }
             else -> super.onOptionsItemSelected(item)
         }
     }
@@ -371,7 +376,7 @@ class AudioBrowserFragment : BaseAudioBrowser<AudioBrowserViewModel>() {
 
     private fun setFabPlayShuffleAllVisibility(force: Boolean = false) {
         setFabPlayVisibility(
-                currentTab == 2 && (
+                currentTab == 0 && (
                         force ||
                                 (viewModel.providers[currentTab].pagedList.value?.size ?: 0) > 2
                         )
@@ -390,7 +395,6 @@ class AudioBrowserFragment : BaseAudioBrowser<AudioBrowserViewModel>() {
             !Permissions.canReadStorage(requireActivity()) && empty -> EmptyLoadingState.MISSING_PERMISSION
             !Permissions.canReadAudios(AppContextProvider.appContext) && empty -> EmptyLoadingState.MISSING_AUDIO_PERMISSION
             viewModel.providers[currentTab].loading.value == true && empty -> EmptyLoadingState.LOADING
-            emptyAt(currentTab) && viewModel.providers[currentTab].onlyFavorites -> EmptyLoadingState.EMPTY_FAVORITES
             emptyAt(currentTab) && viewModel.filterQuery?.isNotEmpty() == true -> EmptyLoadingState.EMPTY_SEARCH
             emptyAt(currentTab) -> EmptyLoadingState.EMPTY
             else -> EmptyLoadingState.NONE
@@ -452,10 +456,13 @@ class AudioBrowserFragment : BaseAudioBrowser<AudioBrowserViewModel>() {
 
     private val TAG = this::class.java.name
     override fun onClick(v: View, position: Int, item: MediaLibraryItem) {
+        adapter = artistsAdapter
         if (actionMode != null) {
             super.onClick(v, position, item)
             return
         }
+
+        adapter?.setSelectedPosition(position)
         if (inSearchMode()) UiTools.setKeyboardVisibility(v, false)
         if (item.itemType == MediaLibraryItem.TYPE_MEDIA) {
             if (item is MediaWrapper && !item.isPresent) {
@@ -494,12 +501,8 @@ class AudioBrowserFragment : BaseAudioBrowser<AudioBrowserViewModel>() {
 
     override fun getCurrentRV() = lists[currentTab]
 
-    override fun getDefaultActionMediaType() = when (currentTab) {
-        0 -> DefaultPlaybackActionMediaType.ARTIST
-        1 -> DefaultPlaybackActionMediaType.ALBUM
-        2 -> DefaultPlaybackActionMediaType.TRACK
-        3 -> DefaultPlaybackActionMediaType.GENRE
-        else -> DefaultPlaybackActionMediaType.PLAYLIST
+    override fun getDefaultActionMediaType(): DefaultPlaybackActionMediaType {
+        return DefaultPlaybackActionMediaType.TRACK
     }
 
     override fun getCurrentProvider() = viewModel.providers[currentTab] as? MedialibraryProvider<MediaWrapper>
@@ -512,7 +515,7 @@ class AudioBrowserFragment : BaseAudioBrowser<AudioBrowserViewModel>() {
         const val TAG = "VLC/AudioBrowserFragment"
 
         private const val KEY_LISTS_POSITIONS = "key_lists_position"
-        private const val MODE_TOTAL = 5 // Number of audio lists
+        private const val MODE_TOTAL = 1   // Number of audio lists
 
         const val TAG_ITEM = "ML_ITEM"
     }

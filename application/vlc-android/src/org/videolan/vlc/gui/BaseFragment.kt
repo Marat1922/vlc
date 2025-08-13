@@ -8,6 +8,7 @@ import android.util.TypedValue
 import android.view.Menu
 import android.view.MotionEvent
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -59,6 +60,7 @@ abstract class BaseFragment : Fragment(), ActionMode.Callback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Toast.makeText(requireActivity(), "AFAFSD", Toast.LENGTH_SHORT).show()
         setHasOptionsMenu(true)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -83,7 +85,7 @@ abstract class BaseFragment : Fragment(), ActionMode.Callback {
 
     override fun onStart() {
         super.onStart()
-        updateActionBar()
+//        updateActionBar()
         setFabPlayVisibility(hasFAB())
         fabPlay?.setOnClickListener { v -> onFabPlayClick(v) }
     }

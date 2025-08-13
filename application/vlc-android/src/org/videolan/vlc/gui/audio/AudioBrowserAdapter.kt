@@ -27,6 +27,7 @@ import android.annotation.TargetApi
 import android.content.Context
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -98,6 +99,7 @@ open class AudioBrowserAdapter @JvmOverloads constructor(
     var areSectionsEnabled = true
     private var currentPlayingVisu: MiniVisualizer? = null
     private var model: PlaylistModel? = null
+   private var selectedPosition = -1
 
     var currentMedia:MediaWrapper? = null
         set(media) {
@@ -117,6 +119,14 @@ open class AudioBrowserAdapter @JvmOverloads constructor(
     protected fun inflaterInitialized() = ::inflater.isInitialized
 
     open fun playbackStateChanged(former: MediaWrapper?, currentMedia: MediaWrapper?) {}
+
+    fun setSelectedPosition(position: Int) {
+        val prevSelected = selectedPosition
+        selectedPosition = position
+
+        if (prevSelected != -1) notifyItemChanged(prevSelected)
+        notifyItemChanged(selectedPosition)
+    }
 
     val isEmpty: Boolean
         get() = currentList.isNullOrEmpty()
@@ -169,13 +179,17 @@ open class AudioBrowserAdapter @JvmOverloads constructor(
     }
 
     override fun onBindViewHolder(holder: AbstractMediaItemViewHolder<ViewDataBinding>, position: Int) {
+//        Log.d("TAG", "onBindViewHolder")
+//        holder.itemView.isSelected = position == selectedPosition
         if (position >= itemCount) return
         val item = getItem(position)
         holder.setItem(item)
         if (item is Artist) item.description = holder.binding.root.context.resources.getQuantityString(R.plurals.albums_quantity, item.albumsCount, item.albumsCount)
         if (item is Genre) item.description = holder.binding.root.context.resources.getQuantityString(R.plurals.track_quantity, item.tracksCount, item.tracksCount)
-        val isSelected = multiSelectHelper.isSelected(position)
+        val isSelected = multiSelectHelper.inActionMode && multiSelectHelper.isSelected(position) ||
+                (!multiSelectHelper.inActionMode && position == selectedPosition)
         holder.selectView(isSelected)
+
         if (item is MediaWrapper) {
             holder.binding.setVariable(BR.isNetwork, item.uri.scheme.isSchemeSMB())
             holder.binding.setVariable(BR.isOTG, item.uri.isOTG())
@@ -204,6 +218,7 @@ open class AudioBrowserAdapter @JvmOverloads constructor(
     }
 
     override fun onBindViewHolder(holder: AbstractMediaItemViewHolder<ViewDataBinding>, position: Int, payloads: List<Any>) {
+//        Log.d("TAG", "position ${position == selectedPosition}")
         if (payloads.isNullOrEmpty())
             onBindViewHolder(holder, position)
         else {
@@ -316,10 +331,12 @@ open class AudioBrowserAdapter @JvmOverloads constructor(
             binding.imageWidth = listImageWidth
         }
 
-        override fun selectView(selected: Boolean) {
-            binding.setVariable(BR.selected, selected)
-            binding.itemMore.visibility = if (multiSelectHelper.inActionMode) View.INVISIBLE else View.VISIBLE
-        }
+
+            override fun selectView(selected: Boolean) {
+                binding.setVariable(BR.selected, selected)
+                binding.itemMore.visibility = if (multiSelectHelper.inActionMode || selected) View.INVISIBLE else View.VISIBLE
+            }
+
 
         override fun setItem(item: MediaLibraryItem?) {
             binding.item = item

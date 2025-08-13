@@ -16,17 +16,17 @@
             android:icon="@drawable/ic_play"
             android:title="@string/play"
             app:showAsAction="always" />
-    <item
-            android:id="@+id/action_mode_favorite_add"
-            android:icon="@drawable/ic_fav_add"
-            android:title="@string/favorites_add"
-            app:showAsAction="ifRoom" />
+<!--    <item-->
+<!--            android:id="@+id/action_mode_favorite_add"-->
+<!--            android:icon="@drawable/ic_fav_add"-->
+<!--            android:title="@string/favorites_add"-->
+<!--            app:showAsAction="ifRoom" />-->
 
-    <item
-            android:id="@+id/action_mode_favorite_remove"
-            android:icon="@drawable/ic_fav_add"
-            android:title="@string/favorites_remove"
-            app:showAsAction="ifRoom" />
+<!--    <item-->
+<!--            android:id="@+id/action_mode_favorite_remove"-->
+<!--            android:icon="@drawable/ic_fav_add"-->
+<!--            android:title="@string/favorites_remove"-->
+<!--            app:showAsAction="ifRoom" />-->
     <item
             android:id="@+id/action_mode_audio_append"
             android:icon="@drawable/ic_play_append"
@@ -43,14 +43,14 @@
             android:title="@string/delete"
             android:visible="false"
             app:showAsAction="ifRoom" />
-    <group android:id="@+id/phone_only">
-        <item
-                android:id="@+id/action_mode_audio_set_song"
-                android:icon="@drawable/ic_set_ringtone"
-                android:title="@string/set_song"
-                android:visible="false"
-                app:showAsAction="always" />
-    </group>
+<!--    <group android:id="@+id/phone_only">-->
+<!--        <item-->
+<!--                android:id="@+id/action_mode_audio_set_song"-->
+<!--                android:icon="@drawable/ic_set_ringtone"-->
+<!--                android:title="@string/set_song"-->
+<!--                android:visible="false"-->
+<!--                app:showAsAction="always" />-->
+<!--    </group>-->
 
     <item
             android:id="@+id/action_mode_go_to_folder"
