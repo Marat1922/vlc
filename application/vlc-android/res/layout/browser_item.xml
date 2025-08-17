@@ -88,8 +88,7 @@
             android:foreground="?android:attr/selectableItemBackground"
             android:longClickable="@{hasContextMenu || item.getItemType() == MediaLibraryItem.TYPE_STORAGE}"
             android:minHeight="48dp"
-            android:onClick="@{holder::onClick}"
-            android:onLongClick="@{holder::onLongClick}">
+            android:onClick="@{holder::onClick}">
 
         <org.videolan.vlc.gui.helpers.ThreeStatesCheckbox
                 android:id="@+id/browser_checkbox"
@@ -112,7 +111,6 @@
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="4dp"
                 android:importantForAccessibility="no"
-                android:onClick="@{holder::onImageClick}"
                 android:scaleType="centerCrop"
                 android:src="@{cover}"
                 android:visibility="@{forceCoverHiding ? View.INVISIBLE : item.getItemType() == MediaLibraryItem.TYPE_STORAGE ? View.GONE : View.VISIBLE}"

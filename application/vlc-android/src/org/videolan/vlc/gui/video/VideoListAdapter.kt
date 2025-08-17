@@ -82,7 +82,7 @@ class VideoListAdapter(private var isSeenMediaMarkerVisible: Boolean, private va
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = DataBindingUtil.inflate<ViewDataBinding>(inflater, if (viewType == 0) R.layout.video_list_card else R.layout.video_grid_card, parent, false)
+        val binding = DataBindingUtil.inflate<ViewDataBinding>(inflater, if (viewType == 0) R.layout.video_list_card else R.layout.video_list_card, parent, false)
         if (BuildConfig.DEBUG) Log.d(this::class.java.simpleName, "Creating View Holder with list: $isListMode")
         return ViewHolder(binding)
     }

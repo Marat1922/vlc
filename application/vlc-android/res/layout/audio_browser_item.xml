@@ -84,21 +84,20 @@
 <!--                vlc:srcCompat="@drawable/ic_move_media" />-->
 
         <org.videolan.vlc.gui.view.FadableImageView
-                android:id="@+id/media_cover"
-                android:layout_width="72dp"
-                android:layout_height="72dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="60dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                android:importantForAccessibility="no"
-                android:scaleType="centerCrop"
-                android:src="@{cover}"
-                vlc:imageWidth="@{imageWidth}"
-                vlc:layout_constraintBottom_toBottomOf="parent"
-                vlc:layout_constraintDimensionRatio="1"
-                vlc:layout_constraintTop_toTopOf="parent"
-                vlc:media="@{item}" />
+            android:id="@+id/media_cover"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:layout_gravity="center"
+            android:layout_margin="20dp"
+            android:importantForAccessibility="no"
+            android:scaleType="centerCrop"
+            android:src="@{cover}"
+            vlc:imageWidth="@{imageWidth}"
+            vlc:layout_constraintBottom_toBottomOf="parent"
+            vlc:layout_constraintDimensionRatio="1"
+            vlc:layout_constraintStart_toStartOf="parent"
+            vlc:layout_constraintTop_toTopOf="parent"
+            vlc:media="@{item}" />
 
 
         <org.videolan.vlc.gui.view.MiniVisualizer
@@ -189,16 +188,15 @@
 <!--        </LinearLayout>-->
 
         <ImageView
-                android:id="@+id/selector_image"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_gravity="center"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="8dp"
-                vlc:layout_constraintBottom_toBottomOf="parent"
-                vlc:layout_constraintDimensionRatio="1"
-                vlc:layout_constraintTop_toTopOf="parent" />
+            android:id="@+id/selector_image"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_margin="12dp"
+            vlc:layout_constraintBottom_toBottomOf="parent"
+            vlc:layout_constraintDimensionRatio="1"
+            vlc:layout_constraintStart_toStartOf="parent"
+            vlc:layout_constraintTop_toTopOf="parent" />
 
 
         <!-- TextView must be set to singleLine

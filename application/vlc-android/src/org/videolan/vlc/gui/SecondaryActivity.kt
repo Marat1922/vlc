@@ -24,6 +24,7 @@
 package org.videolan.vlc.gui
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -84,6 +85,8 @@ class SecondaryActivity : ContentActivity(), IDialogManager {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.secondary)
         initAudioPlayerContainerActivity()
+
+        window.decorView.setBackgroundColor(Color.TRANSPARENT)
 
         if (isOnboarding) WindowInsetsControllerCompat(window, window.decorView).isAppearanceLightStatusBars = false
 

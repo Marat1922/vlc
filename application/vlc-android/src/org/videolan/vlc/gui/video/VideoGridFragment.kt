@@ -294,7 +294,7 @@ class VideoGridFragment : MediaBrowserFragment<VideosViewModel>(), SwipeRefreshL
     }
 
     override fun sortBy(sort: Int) {
-        videoListAdapter.showFilename.set(sort == Medialibrary.SORT_FILENAME)
+        videoListAdapter.showFilename.set(sort == Medialibrary.SORT_ALBUM)
         super.sortBy(sort)
     }
 
@@ -355,7 +355,7 @@ class VideoGridFragment : MediaBrowserFragment<VideosViewModel>(), SwipeRefreshL
     override fun onDisplaySettingChanged(key: String, value: Any) {
         when (key) {
             DISPLAY_IN_CARDS -> {
-                settings.putSingle(KEY_VIDEOS_CARDS, value as Boolean)
+                settings.putSingle(KEY_VIDEOS_CARDS,false)
                 updateViewMode()
             }
             ONLY_FAVS -> {
@@ -372,7 +372,7 @@ class VideoGridFragment : MediaBrowserFragment<VideosViewModel>(), SwipeRefreshL
             }
             VIDEO_GROUPING -> {
                 val videoGroup = value as DisplaySettingsDialog.VideoGroup
-                settings.putSingle(KEY_GROUP_VIDEOS, videoGroup.value)
+                settings.putSingle(KEY_GROUP_VIDEOS, false)
                 changeGroupingType(videoGroup.type)
             }
             DEFAULT_ACTIONS -> {
@@ -432,7 +432,7 @@ class VideoGridFragment : MediaBrowserFragment<VideosViewModel>(), SwipeRefreshL
         }
         val res = resources
         if (gridItemDecoration == null) gridItemDecoration = ItemOffsetDecoration(resources, R.dimen.left_right_1610_margin, R.dimen.top_bottom_1610_margin)
-        val listMode = !settings.getBoolean(KEY_VIDEOS_CARDS, true)
+        val listMode = true
 
         // Select between grid or list
         binding.videoGrid.removeItemDecoration(gridItemDecoration!!)
@@ -448,6 +448,7 @@ class VideoGridFragment : MediaBrowserFragment<VideosViewModel>(), SwipeRefreshL
         }
         binding.videoGrid.setNumColumns(if (listMode) 1 else -1)
         videoListAdapter.isListMode = listMode
+
     }
 
     override fun onFabPlayClick(view: View) {

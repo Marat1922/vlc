@@ -26,6 +26,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
@@ -113,6 +114,7 @@ class MainActivity : ContentActivity(),
         initAudioPlayerContainerActivity()
         setupNavigation(savedInstanceState)
 
+        window.decorView.setBackgroundColor(Color.TRANSPARENT)
         /* Set up the action bar */
         prepareActionBar()
         /* Reload the latest preferences */
