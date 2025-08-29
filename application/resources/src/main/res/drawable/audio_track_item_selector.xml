@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+<item
+    android:left="58dp"
+    android:right="20dp">
+<selector>
     <item android:state_selected="true" android:drawable="@drawable/audio_item_selected_bg"/>
     <item android:drawable="@drawable/audio_item_unselected_bg"/>
 </selector>
+</item>
+</layer-list>

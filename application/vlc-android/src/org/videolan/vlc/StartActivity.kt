@@ -131,7 +131,10 @@ class StartActivity : FragmentActivity() {
     }
 
     private fun resume() {
-        // if browse screen is unstable, revert back to the video screen
+
+        val settings = Settings.getInstance(this)
+        settings.putSingle(PREF_FIRST_RUN, BuildConfig.VLC_VERSION_CODE)
+        settings.putSingle(ONBOARDING_DONE_KEY, true)
 
         val preferences = Settings.getInstance(this)
         if (preferences.getBoolean("navigator_screen_unstable", false)) {
@@ -180,7 +183,6 @@ class StartActivity : FragmentActivity() {
 
         // Start application
         /* Get the current version from package */
-        val settings = Settings.getInstance(this)
         val currentVersionNumber = BuildConfig.VLC_VERSION_CODE
         val savedVersionNumber = settings.getInt(PREF_FIRST_RUN, -1)
         /* Check if it's the first run */

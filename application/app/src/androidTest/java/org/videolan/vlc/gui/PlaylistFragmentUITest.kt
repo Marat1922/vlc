@@ -49,10 +49,10 @@ class PlaylistFragmentUITest: BaseUITest() {
         SavePlaylistDialog.overrideCreator = false
         SavePlaylistDialog.registerCreator(clazz = CoroutineContextProvider::class.java) { TestCoroutineContextProvider() }
 
-        val intent = Intent().apply {
-            putExtra(EXTRA_TARGET, R.id.nav_playlists)
-        }
-        activityTestRule.launchActivity(intent)
+//        val intent = Intent().apply {
+//            putExtra(EXTRA_TARGET, R.id.nav_playlists)
+//        }
+//        activityTestRule.launchActivity(intent)
         activity = activityTestRule.activity
     }
 

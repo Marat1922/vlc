@@ -25,6 +25,7 @@ package org.videolan.vlc.gui.browser
 import android.annotation.TargetApi
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -62,24 +63,25 @@ open class BaseBrowserAdapter(val browserContainer: BrowserContainer<MediaLibrar
     protected val TAG = "VLC/BaseBrowserAdapter"
 
     val multiSelectHelper: MultiSelectHelper<MediaLibraryItem> = MultiSelectHelper(this, UPDATE_SELECTION)
+    private var selectedPosition = -1
 
-    private val folderDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_directories)) }
-    private val folderDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_big)) }
-    private val audioDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_song)) }
-    private val audioDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_song_big)) }
-    private val videoDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_video)) }
-    private val videoDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_video_big)) }
+    private val folderDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_item)) }
+    private val folderDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_item)) }
+    private val audioDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_audio_item_track)) }
+    private val audioDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_audio_item_track)) }
+    private val videoDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_video_file)) }
+    private val videoDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_video_file)) }
     private val subtitleDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_subtitles)) }
     private val subtitleDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_subtitles_big)) }
     private val unknownDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_unknown)) }
-    private val qaMoviesDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_movies)) }
-    private val qaMoviesDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_movies_big)) }
-    private val qaMusicDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_music)) }
-    private val qaMusicDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_music_big)) }
-    private val qaPodcastsDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_podcasts)) }
-    private val qaPodcastsDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_podcasts_big)) }
-    private val qaDownloadDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_download)) }
-    private val qaDownloadDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_download_big)) }
+    private val qaMoviesDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_item)) }
+    private val qaMoviesDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_item)) }
+    private val qaMusicDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_item)) }
+    private val qaMusicDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_item)) }
+    private val qaPodcastsDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_item)) }
+    private val qaPodcastsDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_item)) }
+    private val qaDownloadDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_item)) }
+    private val qaDownloadDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_item)) }
 
     internal var mediaCount = 0
     private var networkRoot = false
@@ -129,7 +131,7 @@ open class BaseBrowserAdapter(val browserContainer: BrowserContainer<MediaLibrar
         val inflater = LayoutInflater.from(parent.context)
         @Suppress("UNCHECKED_CAST")
         return if (viewType == TYPE_MEDIA || viewType == TYPE_STORAGE)
-            MediaViewHolder(if (browserContainer.inCards) BrowserItemBindingContainer(CardBrowserItemBinding.inflate(inflater, parent, false)) else BrowserItemBindingContainer(BrowserItemBinding.inflate(inflater, parent, false)))
+            MediaViewHolder( BrowserItemBindingContainer(BrowserItemBinding.inflate(inflater, parent, false)))
         else
             SeparatorViewHolder(BrowserItemSeparatorBinding.inflate(inflater, parent, false)) as ViewHolder<ViewDataBinding>
     }
@@ -359,7 +361,7 @@ open class BaseBrowserAdapter(val browserContainer: BrowserContainer<MediaLibrar
 
     fun getIcon(media: MediaWrapper, specialFolders: Boolean): BitmapDrawable {
         when (media.type) {
-            MediaWrapper.TYPE_AUDIO -> return if (browserContainer.inCards) audioDrawableBig else audioDrawable
+            MediaWrapper.TYPE_AUDIO -> audioDrawableBig
             MediaWrapper.TYPE_DIR -> {
                 if (specialFolders) {
                     val uri = media.uri
@@ -378,6 +380,7 @@ open class BaseBrowserAdapter(val browserContainer: BrowserContainer<MediaLibrar
             MediaWrapper.TYPE_SUBTITLE -> return  if (browserContainer.inCards) subtitleDrawableBig else subtitleDrawable
             else -> return unknownDrawable
         }
+        return audioDrawableBig
     }
 
     private fun getProtocol(media: MediaWrapper): String? {

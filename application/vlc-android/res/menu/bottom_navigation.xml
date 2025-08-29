@@ -33,11 +33,11 @@
         android:title="@string/video" />
     <item
         android:id="@+id/nav_audio"
-        android:icon="@drawable/ic_audio_file"
+        android:icon="@drawable/ic_audio_tab_layout_item"
         android:title="Музыка" />
     <item
         android:id="@+id/nav_directories"
-        android:icon="@drawable/ic_directories"
+        android:icon="@drawable/ic_folder_item"
         android:title="Папки" />
     <!--    <item-->
     <!--            android:id="@+id/nav_playlists"-->

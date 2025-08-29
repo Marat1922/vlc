@@ -23,12 +23,16 @@
 
 package org.videolan.vlc.gui
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import androidx.appcompat.widget.ActionMenuView
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.os.bundleOf
 import androidx.core.view.WindowInsetsControllerCompat
@@ -115,7 +119,52 @@ class SecondaryActivity : ContentActivity(), IDialogManager {
         }
         dialogsDelegate.observeDialogs(this, this)
         if (intent.getBooleanExtra(KEY_ANIMATED, false)) supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_up)
+
+        toolbar.setOnHierarchyChangeListener(object  : ViewGroup.OnHierarchyChangeListener{
+            override fun onChildViewAdded(parent: View?, child: View?) {
+                if (child is ActionMenuView) {
+                    child.setOnHierarchyChangeListener(object : ViewGroup.OnHierarchyChangeListener {
+                        override fun onChildViewAdded(parent: View?, child: View?) {
+                            child?.setBackgroundResource(R.drawable.search_view_background)
+                            child?.viewTreeObserver?.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+                                override fun onGlobalLayout() {
+                                    child.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                                    applyMarginsToMenuItem(child)
+                                }
+                            })
+                        }
+
+                        override fun onChildViewRemoved(parent: View?, child: View?) {}
+                    })
+                }
+            }
+
+            override fun onChildViewRemoved(parent: View?, child: View?) {
+
+            }
+
+        })
     }
+    private fun applyMarginsToMenuItem(menuItem: View) {
+        val parent = menuItem.parent as? ActionMenuView ?: return
+
+        // Создаем новые LayoutParams
+        val newParams = ActionMenuView.LayoutParams(
+            ActionMenuView.LayoutParams.WRAP_CONTENT,
+            ActionMenuView.LayoutParams.WRAP_CONTENT
+        )
+
+        // Копируем существующие параметры
+        val oldParams = menuItem.layoutParams as? ActionMenuView.LayoutParams
+        if (oldParams != null) {
+            newParams.leftMargin = oldParams.leftMargin
+            newParams.topMargin = 8.dpToPx(menuItem.context)
+            newParams.bottomMargin = oldParams.bottomMargin
+            newParams.rightMargin = 40.dpToPx(menuItem.context)
+        }
+        menuItem.layoutParams = newParams
+    }
+    fun Int.dpToPx(context: Context): Int = (this * context.resources.displayMetrics.density).toInt()
 
     override fun fireDialog(dialog: Dialog) {
         DialogActivity.dialog = dialog

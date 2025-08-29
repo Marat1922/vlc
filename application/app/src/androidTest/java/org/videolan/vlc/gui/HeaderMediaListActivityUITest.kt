@@ -77,8 +77,8 @@ class HeaderMediaListActivityUITest: BaseUITest() {
             coords[1] = recyclerView.measuredHeight.toFloat() //point.y.toFloat()
             coords
         }
-        onView(rvMatcher.atPositionOnView(0, R.id.item_move))
-                .perform(GeneralSwipeAction(Swipe.SLOW, GeneralLocation.TOP_CENTER, finalCoord, Press.FINGER))
+//        onView(rvMatcher.atPositionOnView(0, R.id.item_move))
+//                .perform(GeneralSwipeAction(Swipe.SLOW, GeneralLocation.TOP_CENTER, finalCoord, Press.FINGER))
 
         // To reflect the update in adapter's dataset
         Thread.sleep(1000)

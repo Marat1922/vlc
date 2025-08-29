@@ -31,6 +31,15 @@
             android:layout_height="match_parent">
 
         <org.videolan.vlc.gui.view.TitleListView
+            android:id="@+id/local_browser_entry"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:title="@string/browser_storages" />
+
+        <org.videolan.vlc.gui.view.TitleListView
             android:id="@+id/usb_browser_entry"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -38,17 +47,8 @@
             android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/local_browser_entry"
             app:title="Внешняя память:" />
-
-        <org.videolan.vlc.gui.view.TitleListView
-            android:id="@+id/local_browser_entry"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/usb_browser_entry"
-            app:title="@string/browser_storages" />
 
 
 <!--        <org.videolan.vlc.gui.view.TitleListView-->

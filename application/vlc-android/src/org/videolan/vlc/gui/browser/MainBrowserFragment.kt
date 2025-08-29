@@ -118,6 +118,7 @@ class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionRecei
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.main_browser_fragment, container, false)
+
     }
 
     override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
@@ -251,7 +252,7 @@ class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionRecei
 
         //Usb
         usbEntry = view.findViewById(R.id.usb_browser_entry)
-        val usbBrowserContainer = MainBrowserContainer(isNetwork = false, isFile = false, isUsb = true, inCards = !displayInList)
+        val usbBrowserContainer = MainBrowserContainer(isNetwork = false, isFile = false, isUsb = true, inCards = false)
         val usbBrowserAdapter = BaseBrowserAdapter(usbBrowserContainer)
         usbEntry.list.adapter = usbBrowserAdapter
         containerAdapterAssociation[usbBrowserContainer] = Pair(usbBrowserAdapter, usbViewModel)
@@ -345,7 +346,7 @@ class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionRecei
 //        }
 //        networkViewModel.browseRoot()
 
-        localEntry.displayInCards = !displayInList
+        localEntry.displayInCards = false
         usbEntry.displayInCards = !displayInList
 //        favoritesEntry.displayInCards = !displayInList
 //        networkEntry.displayInCards = !displayInList

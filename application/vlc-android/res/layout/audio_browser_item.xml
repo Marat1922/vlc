@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
-        xmlns:vlc="http://schemas.android.com/apk/res-auto">
+        xmlns:vlc="http://schemas.android.com/apk/res-auto"
+    android:layout_marginTop="10dp">
 
     <data>
 
@@ -88,7 +89,7 @@
             android:layout_width="72dp"
             android:layout_height="72dp"
             android:layout_gravity="center"
-            android:layout_margin="20dp"
+            android:layout_marginLeft="82dp"
             android:importantForAccessibility="no"
             android:scaleType="centerCrop"
             android:src="@{cover}"
@@ -101,14 +102,14 @@
 
 
         <org.videolan.vlc.gui.view.MiniVisualizer
-                android:id="@+id/playing"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                vlc:bar_color="?attr/mini_visualizer_color"
-                vlc:layout_constraintBottom_toBottomOf="@+id/media_cover"
-                vlc:layout_constraintEnd_toEndOf="@+id/media_cover"
-                vlc:layout_constraintStart_toStartOf="@+id/media_cover"
-                vlc:layout_constraintTop_toTopOf="@+id/media_cover" />
+            android:id="@+id/playing"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            vlc:bar_color="?attr/mini_visualizer_color"
+            vlc:layout_constraintBottom_toBottomOf="@+id/media_cover"
+            vlc:layout_constraintEnd_toStartOf="@+id/item_more"
+
+            vlc:layout_constraintTop_toTopOf="@+id/media_cover" />
 
 <!--        <ImageView-->
 <!--                android:id="@+id/ml_item_overlay"-->
@@ -242,6 +243,7 @@
                 android:contentDescription="@string/more_actions"
                 android:onClick="@{holder::onMoreClick}"
                 android:padding="8dp"
+            android:layout_marginEnd="30dp"
                 android:scaleType="center"
                 android:visibility="@{isPresent &amp;&amp; !inSelection ? View.VISIBLE : View.INVISIBLE}"
                 vlc:layout_constraintBottom_toBottomOf="parent"
@@ -255,7 +257,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="4dp"
                 android:visibility="@{selected ? View.GONE : View.GONE}"
-                tools:visibility="visible"
+                tools:visibility="gone"
                 vlc:layout_constraintBottom_toBottomOf="parent"
                 vlc:layout_constraintEnd_toEndOf="parent"
                 vlc:layout_constraintTop_toTopOf="parent"

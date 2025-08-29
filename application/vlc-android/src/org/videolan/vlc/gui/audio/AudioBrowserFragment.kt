@@ -81,6 +81,7 @@ import org.videolan.vlc.gui.helpers.UiTools.addFavoritesIcon
 import org.videolan.vlc.gui.helpers.UiTools.removeDrawables
 import org.videolan.vlc.gui.view.EmptyLoadingState
 import org.videolan.vlc.gui.view.EmptyLoadingStateView
+import org.videolan.vlc.gui.view.MiniVisualizer
 import org.videolan.vlc.media.MediaUtils
 import org.videolan.vlc.media.PlaylistManager
 import org.videolan.vlc.providers.medialibrary.MedialibraryProvider
@@ -103,6 +104,7 @@ class AudioBrowserFragment : BaseAudioBrowser<AudioBrowserViewModel>() {
     private lateinit var albumsAdapter: AudioBrowserAdapter
     private lateinit var genresAdapter: AudioBrowserAdapter
     private lateinit var playlistAdapter: AudioBrowserAdapter
+    private lateinit var audioAlbumsTrackAdapter: AudioAlbumTracksAdapter
     private lateinit var playlistModel: PlaylistModel
 
     private val lists = mutableListOf<RecyclerView>()
@@ -117,6 +119,8 @@ class AudioBrowserFragment : BaseAudioBrowser<AudioBrowserViewModel>() {
         spacing = requireActivity().resources.getDimension(R.dimen.kl_small).toInt()
         PlaylistManager.currentPlayedMedia.observe(this) {
             songsAdapter.currentMedia = it
+            artistsAdapter.currentMedia = it
+            playlistAdapter.currentMedia = it
         }
 
         if (!::settings.isInitialized) settings = Settings.getInstance(requireContext())
@@ -259,17 +263,21 @@ class AudioBrowserFragment : BaseAudioBrowser<AudioBrowserViewModel>() {
         viewModel = getViewModel()
         currentTab = viewModel.currentTab
 
+        playlistAdapter = AudioBrowserAdapter(MediaLibraryItem.TYPE_PLAYLIST, this).apply { stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY }
         artistsAdapter = AudioBrowserAdapter(MediaLibraryItem.TYPE_ARTIST, this).apply { stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY }
         albumsAdapter = AudioBrowserAdapter(MediaLibraryItem.TYPE_ALBUM, this).apply { stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY }
         songsAdapter = AudioBrowserAdapter(MediaLibraryItem.TYPE_MEDIA, this).apply { stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY }
         playlistModel = PlaylistModel.get(this)
         songsAdapter.setModel(playlistModel)
+        artistsAdapter.setModel(playlistModel)
+        playlistAdapter.setModel(playlistModel)
         playlistModel.dataset.asFlow().conflate().onEach {
             songsAdapter.setCurrentlyPlaying(playlistModel.playing)
+            artistsAdapter.setCurrentlyPlaying(playlistModel.playing)
+            playlistAdapter.setCurrentlyPlaying(playlistModel.playing)
             delay(50L)
         }.launchWhenStarted(lifecycleScope)
         genresAdapter = AudioBrowserAdapter(MediaLibraryItem.TYPE_GENRE, this).apply { stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY }
-        playlistAdapter = AudioBrowserAdapter(MediaLibraryItem.TYPE_PLAYLIST, this).apply { stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY }
         adapters = arrayOf(artistsAdapter, artistsAdapter, artistsAdapter, artistsAdapter, playlistAdapter)
         setupProvider()
     }
@@ -456,13 +464,10 @@ class AudioBrowserFragment : BaseAudioBrowser<AudioBrowserViewModel>() {
 
     private val TAG = this::class.java.name
     override fun onClick(v: View, position: Int, item: MediaLibraryItem) {
-        adapter = artistsAdapter
         if (actionMode != null) {
             super.onClick(v, position, item)
             return
         }
-
-        adapter?.setSelectedPosition(position)
         if (inSearchMode()) UiTools.setKeyboardVisibility(v, false)
         if (item.itemType == MediaLibraryItem.TYPE_MEDIA) {
             if (item is MediaWrapper && !item.isPresent) {

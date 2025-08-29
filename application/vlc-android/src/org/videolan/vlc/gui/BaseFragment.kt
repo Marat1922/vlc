@@ -75,7 +75,7 @@ abstract class BaseFragment : Fragment(), ActionMode.Callback {
             it.setProgressBackgroundColorSchemeColor(bColor)
         }
         if (isMainNavigationPoint) manageFabNeverShow()
-        updateFabPlayView()
+//        updateFabPlayView()
     }
 
     fun manageFabNeverShow() {

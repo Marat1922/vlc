@@ -107,11 +107,11 @@ open class AudioBrowserAdapter @JvmOverloads constructor(
             val former = currentMedia
             field = media
             if (former != null) currentList?.indexOf(former)?.let {
-                notifyItemChanged(it)
+               setSelectedPosition(it)
             }
             if (media != null) {
                 currentList?.indexOf(media)?.let {
-                    notifyItemChanged(it)
+                    setSelectedPosition(it)
                 }
             }
             playbackStateChanged(former, currentMedia)
@@ -202,10 +202,12 @@ open class AudioBrowserAdapter @JvmOverloads constructor(
             miniVisualizer.visibility = View.VISIBLE
             holder.changePlayingVisibility(true)
             currentPlayingVisu = miniVisualizer
+            holder.selectView(true)
         } else {
             miniVisualizer.stop()
             holder.changePlayingVisibility(false)
             miniVisualizer.visibility = View.INVISIBLE
+            holder.selectView(false)
         }
         item?.let { holder.binding.setVariable(BR.isFavorite, it.isFavorite) }
         holder.binding.setVariable(BR.inSelection,multiSelectHelper.inActionMode)
@@ -351,7 +353,7 @@ open class AudioBrowserAdapter @JvmOverloads constructor(
         override fun getMiniVisu() = binding.playing
 
         override fun changePlayingVisibility(isCurrent: Boolean) {
-            binding.mediaCover.visibility = if (isCurrent) View.INVISIBLE else View.VISIBLE
+            binding.mediaCover.visibility = if (isCurrent) View.VISIBLE else View.VISIBLE
         }
 
     }

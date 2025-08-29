@@ -79,7 +79,7 @@ class FilePickerFragment : FileBrowserFragment(), BrowserContainer<MediaLibraryI
 
     override fun onStart() {
         super.onStart()
-        if (activity !is ContentActivity || (activity as ContentActivity).displayTitle) activity?.title = getTitle()
+//        if (activity !is ContentActivity || (activity as ContentActivity).displayTitle) activity?.title = getTitle()
         swipeRefreshLayout.isEnabled = false
     }
 
