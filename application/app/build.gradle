@@ -12,7 +12,7 @@ android {
 
     packagingOptions {
         jniLibs {
-            pickFirsts += ['lib/armeabi-v7a/libc++_shared.so', 'lib/armeabi/libc++_shared.so', 'lib/arm64-v8a/libc++_shared.so', 'lib/x86/libc++_shared.so', 'lib/x86_64/libc++_shared.so']
+            pickFirsts += ['lib/arm64-v8a/libc++_shared.so', 'lib/x86_64/libc++_shared.so']
         }
         resources {
             excludes += ['META-INF/*']
@@ -56,6 +56,11 @@ android {
             storealias=androiddebugkey
             storepwd=android
              */
+
+            storeFile file('/home/marattvkvant/sber/KeystoreSberVLC.jks')
+            keyAlias "key0"
+            storePassword "sberVLC"
+            keyPassword "sberVLC"
             if (project.hasProperty('keyStoreFile')) {
                 storeFile file(project.findProperty('keyStoreFile'))
                 keyAlias project.findProperty('storealias')
@@ -82,6 +87,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
             kotlinOptions.freeCompilerArgs = ['-Xno-param-assertions']
             defaultConfig.minSdkVersion rootProject.ext.minSdkVersion
         }
@@ -133,14 +139,14 @@ android {
                 }
                 return false // continue
             }
-            enable isReleaseBuild
+            enable true
             reset()
-            include "x86", "x86_64", "armeabi-v7a", "arm64-v8a"
-//            universalApk !isReleaseBuild
+            include "arm64-v8a","x86_64"
+            universalApk !isReleaseBuild
         }
     }
 
-    def abiCodes = ['armeabi-v7a': 5, 'arm64-v8a': 6, 'x86': 7, 'x86_64': 8]
+    def abiCodes = [ 'arm64-v8a': 6, 'x86_64': 8]
     lint {
         abortOnError false
         disable 'MissingTranslation', 'ExtraTranslation'
