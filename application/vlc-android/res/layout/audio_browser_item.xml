@@ -204,13 +204,14 @@
             see https://code.google.com/p/android/issues/detail?id=33868 -->
         <TextView
             android:id="@+id/title"
-            style="@style/VLC.TextViewTitle"
+            style="@style/Headline"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin"
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="2"
+            android:lineSpacingExtra="-1sp"
             android:singleLine="false"
             vlc:asyncText="@{item.title}"
             vlc:layout_constraintBottom_toTopOf="@+id/subtitle"
@@ -224,43 +225,44 @@
             vlc:placeholder="@{item}" />
 
         <TextView
-                android:id="@+id/subtitle"
-                style="@style/VLC.TextViewDescription"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                vlc:asyncText="@{item}"
-                vlc:layout_constraintBottom_toBottomOf="parent"
-                vlc:layout_constraintEnd_toEndOf="@+id/title"
-                vlc:layout_constraintStart_toStartOf="@+id/title"
-                vlc:layout_constraintTop_toBottomOf="@+id/title"
-                vlc:placeholder="@{item}" />
+            android:id="@+id/subtitle"
+            style="@style/supporting"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="1sp"
+            vlc:asyncText="@{item}"
+            vlc:layout_constraintBottom_toBottomOf="parent"
+            vlc:layout_constraintEnd_toEndOf="@+id/title"
+            vlc:layout_constraintStart_toStartOf="@+id/title"
+            vlc:layout_constraintTop_toBottomOf="@+id/title"
+            vlc:placeholder="@{item}" />
 
         <ImageView
-                android:id="@+id/item_more"
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/more_actions"
-                android:onClick="@{holder::onMoreClick}"
-                android:padding="8dp"
+            android:id="@+id/item_more"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/more_actions"
+            android:onClick="@{holder::onMoreClick}"
+            android:padding="8dp"
             android:layout_marginEnd="30dp"
-                android:scaleType="center"
-                android:visibility="@{isPresent &amp;&amp; !inSelection ? View.VISIBLE : View.INVISIBLE}"
-                vlc:layout_constraintBottom_toBottomOf="parent"
-                vlc:layout_constraintEnd_toEndOf="parent"
-                vlc:layout_constraintTop_toTopOf="parent"
-                vlc:srcCompat="@drawable/ic_more" />
+            android:scaleType="center"
+            android:visibility="@{isPresent &amp;&amp; !inSelection ? View.VISIBLE : View.INVISIBLE}"
+            vlc:layout_constraintBottom_toBottomOf="parent"
+            vlc:layout_constraintEnd_toEndOf="parent"
+            vlc:layout_constraintTop_toTopOf="parent"
+            vlc:srcCompat="@drawable/ic_more" />
 
         <ImageView
-                android:id="@+id/selected_check"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:visibility="@{selected ? View.GONE : View.GONE}"
-                tools:visibility="gone"
-                vlc:layout_constraintBottom_toBottomOf="parent"
-                vlc:layout_constraintEnd_toEndOf="parent"
-                vlc:layout_constraintTop_toTopOf="parent"
-                vlc:srcCompat="@drawable/ic_video_grid_check" />
+            android:id="@+id/selected_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:visibility="@{selected ? View.GONE : View.GONE}"
+            tools:visibility="gone"
+            vlc:layout_constraintBottom_toBottomOf="parent"
+            vlc:layout_constraintEnd_toEndOf="parent"
+            vlc:layout_constraintTop_toTopOf="parent"
+            vlc:srcCompat="@drawable/ic_video_grid_check" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

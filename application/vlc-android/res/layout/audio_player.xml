@@ -100,8 +100,8 @@
 
             <ImageView
                     android:id="@+id/header_shuffle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="4dp"
                     android:background="?attr/actionBarItemBackground"
@@ -121,8 +121,8 @@
 
             <ImageView
                     android:id="@+id/header_previous"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:background="?attr/actionBarItemBackground"
@@ -141,8 +141,8 @@
 
             <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/header_large_play_pause"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:contentDescription="@string/play"
@@ -158,8 +158,8 @@
 
             <ImageView
                     android:id="@+id/header_next"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="4dp"
                     android:background="?attr/actionBarItemBackground"
@@ -179,8 +179,8 @@
 
             <ImageView
                     android:id="@+id/header_repeat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
                     android:layout_marginStart="4dp"
                     android:layout_marginEnd="16dp"
                     android:background="?attr/actionBarItemBackground"
@@ -673,8 +673,8 @@
 
         <ImageView
                 android:id="@+id/previous"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
                 android:background="?attr/actionBarItemBackground"
@@ -692,8 +692,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/play_pause"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
                 android:layout_marginBottom="8dp"
@@ -709,8 +709,8 @@
 
         <ImageView
                 android:id="@+id/next"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="4dp"
                 android:background="?attr/actionBarItemBackground"
@@ -729,8 +729,8 @@
 
         <ImageView
                 android:id="@+id/repeat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
                 android:layout_marginStart="4dp"
                 android:layout_marginEnd="16dp"
                 android:background="?attr/actionBarItemBackground"

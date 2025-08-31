@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background_plate">#171B1E</color>
+    <color name="tab_Secondary_press">#2E353C</color>
+    <color name="color_source_icon">#CFD6E4</color>
+    <color name="text_normal_text">#CFD6E4</color>
+    <color name="text_color_secondary_navio">#4D5964</color>
+    <color name="iconSecondaryColor">#758794</color>
+    <color name="control_secondary_normal_color">#272D32</color>
+    <color name="text_normal_color_navio">#F7F8FA</color>
+    <color name="pause_control_back">#000000</color>
+    <color name="color_icon_disabled">#45505A</color>
+</resources>
