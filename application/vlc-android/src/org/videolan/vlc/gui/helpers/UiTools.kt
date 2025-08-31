@@ -1066,16 +1066,18 @@ fun trackNumber(v: View, media: MediaWrapper) {
 }
 
 fun BaseActivity.applyTheme() {
-    forcedTheme()?.let {
-        setTheme(it)
-        return
-    }
-    if (Settings.showTvUi) {
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        setTheme(R.style.Theme_VLC_Black)
-        return
-    }
-    AppCompatDelegate.setDefaultNightMode(Integer.valueOf(settings.getString(KEY_APP_THEME, "-1")!!))
+    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+//
+//    forcedTheme()?.let {
+//        setTheme(it)
+//        return
+//    }
+//    if (Settings.showTvUi) {
+//        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+//        setTheme(R.style.Theme_VLC_Black)
+//        return
+//    }
+//    AppCompatDelegate.setDefaultNightMode(Integer.valueOf(settings.getString(KEY_APP_THEME, "-1")!!))
 }
 
 fun getTvIconRes(mediaLibraryItem: MediaLibraryItem) = when (mediaLibraryItem.itemType) {

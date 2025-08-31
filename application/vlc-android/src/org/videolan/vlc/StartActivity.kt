@@ -247,7 +247,7 @@ class StartActivity : FragmentActivity() {
 //                    PlaybackService.loadLastAudio(this, true)
 //                    startApplication(tv, firstRun, upgrade, R.id.nav_audio, removeOldDevices)
 //                } else
-                    if (service != null && service.isInPiPMode.value == true) {
+                if (service != null && service.isInPiPMode.value == true) {
                     service.isInPiPMode.value = false
                     val startIntent = Intent(this, VideoPlayerActivity::class.java)
                     startIntent.flags = Intent.FLAG_ACTIVITY_REORDER_TO_FRONT

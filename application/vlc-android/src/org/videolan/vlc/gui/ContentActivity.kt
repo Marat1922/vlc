@@ -26,19 +26,15 @@ package org.videolan.vlc.gui
 import android.app.SearchManager
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import org.videolan.resources.AndroidDevices
 import org.videolan.tools.Settings
 import org.videolan.vlc.PlaybackService
 import org.videolan.vlc.R
 import org.videolan.vlc.RendererDelegate
-import org.videolan.vlc.gui.browser.MLStorageBrowserFragment
-import org.videolan.vlc.gui.dialogs.RenderersDialog
 import org.videolan.vlc.gui.helpers.UiTools
 import org.videolan.vlc.interfaces.Filterable
 
@@ -81,29 +77,31 @@ open class ContentActivity : AudioPlayerContainerActivity(), SearchView.OnQueryT
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val current = currentFragment
         super.onCreateOptionsMenu(menu)
-        if (current is AboutFragment) return true
-        menuInflater.inflate(R.menu.activity_option, menu)
-        if (current is Filterable) {
-            val filterable = current as Filterable?
-            searchItem = menu.findItem(R.id.ml_menu_filter)
-            searchView = searchItem.actionView as SearchView
-            searchView.queryHint = getString(R.string.search_in_list_hint)
-            searchView.setOnQueryTextListener(this)
-            val query = filterable?.getFilterQuery()
-            if (!query.isNullOrEmpty()) {
-                searchView.post {
-                    searchItem.expandActionView()
-                    searchView.clearFocus()
-                    UiTools.setKeyboardVisibility(searchView, false)
-                    searchView.setQuery(query, false)
-                }
-            }
-            searchItem.setOnActionExpandListener(this)
-        } else
-            menu.findItem(R.id.ml_menu_filter).isVisible = false
-//        menu.findItem(R.id.ml_menu_renderers).isVisible = current !is MLStorageBrowserFragment && !hideRenderers() && showRenderers && Settings.getInstance(this).getBoolean("enable_casting", true)
-//        menu.findItem(R.id.ml_menu_renderers).setIcon(if (!PlaybackService.hasRenderer()) R.drawable.ic_renderer else R.drawable.ic_renderer_on)
         return true
+//
+//        if (current is AboutFragment) return true
+//        menuInflater.inflate(R.menu.activity_option, menu)
+//        if (current is Filterable) {
+//            val filterable = current as Filterable?
+//            searchItem = menu.findItem(R.id.ml_menu_filter)
+//            searchView = searchItem.actionView as SearchView
+//            searchView.queryHint = getString(R.string.search_in_list_hint)
+//            searchView.setOnQueryTextListener(this)
+//            val query = filterable?.getFilterQuery()
+//            if (!query.isNullOrEmpty()) {
+//                searchView.post {
+//                    searchItem.expandActionView()
+//                    searchView.clearFocus()
+//                    UiTools.setKeyboardVisibility(searchView, false)
+//                    searchView.setQuery(query, false)
+//                }
+//            }
+//            searchItem.setOnActionExpandListener(this)
+//        } else
+//            menu.findItem(R.id.ml_menu_filter).isVisible = false
+////        menu.findItem(R.id.ml_menu_renderers).isVisible = current !is MLStorageBrowserFragment && !hideRenderers() && showRenderers && Settings.getInstance(this).getBoolean("enable_casting", true)
+////        menu.findItem(R.id.ml_menu_renderers).setIcon(if (!PlaybackService.hasRenderer()) R.drawable.ic_renderer else R.drawable.ic_renderer_on)
+//        return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

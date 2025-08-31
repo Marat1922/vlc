@@ -938,14 +938,28 @@
     <style name="Headline">
         <item name="android:textSize">36sp</item>
         <item name="android:letterSpacing" tools:targetApi="21">0.01</item>
-        <item name="android:textColor">#CFD6E4</item>>
+        <item name="android:textColor">@color/text_normal_text</item>>
         <item name="android:font" tools:targetApi="26">@font/vesta2_regular</item>
     </style>
 
     <style name="supporting">
         <item name="android:textSize">28sp</item>
         <item name="android:letterSpacing" tools:targetApi="21">0.02</item>
-        <item name="android:textColor">#828B93</item>
+        <item name="android:textColor">@color/text_color_secondary_navio</item>
+        <item name="android:font" tools:targetApi="26">@font/vesta2_regular</item>
+    </style>
+
+    <style name="title">
+        <item name="android:textSize">40sp</item>
+        <item name="android:letterSpacing" tools:ignore="NewApi">0.01</item>
+        <item name="android:textColor">@color/text_normal_text</item>
+        <item name="android:font" tools:targetApi="26">@font/vesta2_regular</item>
+    </style>
+
+    <style name="subtitle">
+        <item name="android:textSize">36sp</item>
+        <item name="android:letterSpacing" tools:targetApi="21">0.01</item>
+        <item name="android:textColor">@color/text_color_secondary_navio</item>
         <item name="android:font" tools:targetApi="26">@font/vesta2_regular</item>
     </style>
 
