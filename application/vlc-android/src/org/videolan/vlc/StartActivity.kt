@@ -63,7 +63,10 @@ import org.videolan.resources.util.startMedialibrary
 import org.videolan.tools.AppScope
 import org.videolan.tools.BETA_WELCOME
 import org.videolan.tools.KEY_CURRENT_SETTINGS_VERSION
+import org.videolan.tools.KEY_MEDIALIBRARY_SCAN
 import org.videolan.tools.KEY_TV_ONBOARDING_DONE
+import org.videolan.tools.ML_SCAN_OFF
+import org.videolan.tools.ML_SCAN_ON
 import org.videolan.tools.PREF_SHOW_VIDEO_SETTINGS_DISCLAIMER
 import org.videolan.tools.PREF_TV_UI
 import org.videolan.tools.Settings
@@ -106,6 +109,7 @@ class StartActivity : FragmentActivity() {
             }
             return 0
         }
+    private val preferences by lazy(LazyThreadSafetyMode.NONE) { Settings.getInstance(this) }
 
     override fun attachBaseContext(newBase: Context?) {
         super.attachBaseContext(newBase?.getContextWithLocale(AppContextProvider.locale))
@@ -131,10 +135,7 @@ class StartActivity : FragmentActivity() {
     }
 
     private fun resume() {
-
-        val settings = Settings.getInstance(this)
-        settings.putSingle(PREF_FIRST_RUN, BuildConfig.VLC_VERSION_CODE)
-        settings.putSingle(ONBOARDING_DONE_KEY, true)
+        // if browse screen is unstable, revert back to the video screen
 
         val preferences = Settings.getInstance(this)
         if (preferences.getBoolean("navigator_screen_unstable", false)) {
@@ -152,7 +153,7 @@ class StartActivity : FragmentActivity() {
         val action = intent?.action
 
         if ((Intent.ACTION_VIEW == action || ACTION_VIEW_ARC == action)
-                && TV_CHANNEL_SCHEME != intent.data?.scheme) {
+            && TV_CHANNEL_SCHEME != intent.data?.scheme) {
             startPlaybackFromApp(intent)
             return
         } else if (Intent.ACTION_SEND == action) {
@@ -176,13 +177,14 @@ class StartActivity : FragmentActivity() {
 
         // Setting test mode with stubbed media library if required
         if (intent.hasExtra(MLServiceLocator.EXTRA_TEST_STUBS)
-                && intent.getBooleanExtra(MLServiceLocator.EXTRA_TEST_STUBS, false)) {
+            && intent.getBooleanExtra(MLServiceLocator.EXTRA_TEST_STUBS, false)) {
             MLServiceLocator.setLocatorMode(MLServiceLocator.LocatorMode.TESTS)
             Log.i(TAG, "onCreate: Setting test mode`")
         }
 
         // Start application
         /* Get the current version from package */
+        val settings = Settings.getInstance(this)
         val currentVersionNumber = BuildConfig.VLC_VERSION_CODE
         val savedVersionNumber = settings.getInt(PREF_FIRST_RUN, -1)
         /* Check if it's the first run */
@@ -204,13 +206,13 @@ class StartActivity : FragmentActivity() {
             return
         } else if (MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH == action) {
             val serviceInent = Intent(ACTION_PLAY_FROM_SEARCH, null, this, PlaybackService::class.java)
-                    .putExtra(EXTRA_SEARCH_BUNDLE, intent.extras)
+                .putExtra(EXTRA_SEARCH_BUNDLE, intent.extras)
             launchForeground(serviceInent)
         } else if (Intent.ACTION_VIEW == action && intent.data != null) { //launch from TV Channel
             val data = intent.data
             val path = data!!.path
             if (path == "/$TV_CHANNEL_PATH_APP")
-                startApplication(tv, firstRun, upgrade, 0, removeOldDevices)
+                startApplication(tv, false, upgrade, 0, removeOldDevices)
             else if (path == "/$TV_CHANNEL_PATH_VIDEO") {
                 var id = java.lang.Long.valueOf(data.getQueryParameter(TV_CHANNEL_QUERY_VIDEO_ID)!!)
                 val ctx = this@StartActivity
@@ -229,11 +231,11 @@ class StartActivity : FragmentActivity() {
                 lifecycleScope.launch {
                     getFromMl {
                         val album = when(type) {
-                         "album" ->   getAlbum(id.toLong())
-                         "artist" ->   getArtist(id.toLong())
-                         "genre" ->   getGenre(id.toLong())
-                         "playlist" ->   getPlaylist(id.toLong(), false, false)
-                         else ->   getMedia(id.toLong())
+                            "album" ->   getAlbum(id.toLong())
+                            "artist" ->   getArtist(id.toLong())
+                            "genre" ->   getGenre(id.toLong())
+                            "playlist" ->   getPlaylist(id.toLong(), false, false)
+                            else ->   getMedia(id.toLong())
                         }
                         MediaUtils.playTracks(this@StartActivity, album, 0)
                     }
@@ -254,7 +256,7 @@ class StartActivity : FragmentActivity() {
                     startActivity(startIntent)
                 }
                 else
-                    startApplication(tv, firstRun, upgrade, target, removeOldDevices)
+                    startApplication(tv, false, upgrade, target, removeOldDevices)
             }
         }
         FileUtils.copyLua(applicationContext, upgrade)
@@ -276,7 +278,8 @@ class StartActivity : FragmentActivity() {
 
     private fun startApplication(tv: Boolean, firstRun: Boolean, upgrade: Boolean, target: Int, removeDevices:Boolean = false) {
         val settings = Settings.getInstance(this@StartActivity)
-        val onboarding = !settings.getBoolean(if (tv) KEY_TV_ONBOARDING_DONE else ONBOARDING_DONE_KEY, false)
+        val onboarding = false//!settings.getBoolean(if (tv) KEY_TV_ONBOARDING_DONE else ONBOARDING_DONE_KEY, false)
+        preferences.putSingle(KEY_MEDIALIBRARY_SCAN, ML_SCAN_ON )
         // Start Medialibrary from background to workaround Dispatchers.Main causing ANR
         // cf https://github.com/Kotlin/kotlinx.coroutines/issues/878
         if (!onboarding || !firstRun) {
