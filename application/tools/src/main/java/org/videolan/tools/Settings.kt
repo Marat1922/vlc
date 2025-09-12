@@ -20,7 +20,7 @@ object Settings : SingletonHolder<SharedPreferences, Context>({ init(it.applicat
     var listTitleEllipsize = 0
     var overrideTvUI = false
     var videoHudDelay = 2
-    var includeMissing = true
+    var includeMissing = false
     var showHeaders = true
     var showAudioTrackInfo = false
     var videoJumpDelay = 10
@@ -47,7 +47,7 @@ object Settings : SingletonHolder<SharedPreferences, Context>({ init(it.applicat
         listTitleEllipsize = prefs.getString(LIST_TITLE_ELLIPSIZE, "0")?.toInt() ?: 0
         videoHudDelay = prefs.getInt(VIDEO_HUD_TIMEOUT, 4).coerceInOrDefault(1, 15, -1)
         device = DeviceInfo(context)
-        includeMissing = prefs.getBoolean(KEY_INCLUDE_MISSING, true)
+        includeMissing = prefs.getBoolean(KEY_INCLUDE_MISSING, false)
         showHeaders = prefs.getBoolean(KEY_SHOW_HEADERS, true)
         showAudioTrackInfo = prefs.getBoolean(KEY_SHOW_TRACK_INFO, false)
         videoJumpDelay = prefs.getInt(KEY_VIDEO_JUMP_DELAY, 10)

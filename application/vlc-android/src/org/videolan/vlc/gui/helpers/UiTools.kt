@@ -845,15 +845,15 @@ object UiTools {
         val si = Intent(ACTION_DISCOVER_DEVICE, null, activity, MediaParsingService::class.java)
                 .putExtra(EXTRA_PATH, path)
         if (activity is AppCompatActivity) {
-            val builder = AlertDialog.Builder(activity)
-                    .setTitle(R.string.ml_external_storage_title)
-                    .setCancelable(false)
-                    .setMessage(message)
-                    .setPositiveButton(R.string.ml_external_storage_accept) { _, _ ->
+//            val builder = AlertDialog.Builder(activity)
+//                    .setTitle(R.string.ml_external_storage_title)
+//                    .setCancelable(false)
+//                    .setMessage(message)
+//                    .setPositiveButton(R.string.ml_external_storage_accept) { _, _ ->
                         activity.launchForeground(si)
-                    }
-                    .setNegativeButton(R.string.ml_external_storage_decline) { dialog, _ -> dialog.dismiss() }
-            builder.show()
+//                    }
+//                    .setNegativeButton(R.string.ml_external_storage_decline) { dialog, _ -> dialog.dismiss() }
+//            builder.show()
         } else {
             val builder = android.app.AlertDialog.Builder(activity)
                     .setTitle(R.string.ml_external_storage_title)
