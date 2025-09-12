@@ -710,8 +710,6 @@ abstract class BaseBrowserFragment : MediaBrowserFragment<BrowserModel>(), IRefr
     }
 
     override fun onClick(v: View, position: Int, item: MediaLibraryItem) {
-        Toast.makeText(currentContext(), "CLIK BASE FRAGMENT", Toast.LENGTH_SHORT).show()
-        Log.d("TAG", "CLIK BASE FRAGMENT")
         if (KeyHelper.isShiftPressed || KeyHelper.isCtrlPressed) {
             onLongClick(v, position, item)
             return

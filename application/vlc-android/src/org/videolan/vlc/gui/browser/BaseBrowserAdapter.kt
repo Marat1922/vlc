@@ -178,8 +178,8 @@ open class BaseBrowserAdapter(val browserContainer: BrowserContainer<MediaLibrar
             (holder as MediaViewHolder).bindingContainer.setProgress(holder.bindingContainer.container.context, progress, max)
             if (media.type != MediaWrapper.TYPE_AUDIO) holder.bindingContainer.setIsPlayed(holder.bindingContainer.container.context, media.playCount > 0)
         }  else if (payloads[0] is CharSequence) {
-            (holder as MediaViewHolder).bindingContainer.text.visibility = View.VISIBLE
-            holder.bindingContainer.text.text = (payloads[0] as CharSequence).getDescriptionSpan(holder.bindingContainer.text.context)
+            (holder as MediaViewHolder).bindingContainer.text.visibility = View.GONE
+//            holder.bindingContainer.text.text = (payloads[0] as CharSequence).getDescriptionSpan(holder.bindingContainer.text.context)
             val item = getItem(position) as MediaWrapper
             holder.bindingContainer.container.contentDescription = TalkbackUtil.getDir(holder.binding.root.context, item, item.hasStateFlags(MediaLibraryItem.FLAG_FAVORITE))
         } else if (payloads[0] is Int) {

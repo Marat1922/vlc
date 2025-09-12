@@ -60,7 +60,6 @@ abstract class BaseFragment : Fragment(), ActionMode.Callback {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Toast.makeText(requireActivity(), "AFAFSD", Toast.LENGTH_SHORT).show()
         setHasOptionsMenu(true)
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
