@@ -60,6 +60,7 @@ import org.videolan.tools.KEY_ARTISTS_SHOW_ALL
 import org.videolan.tools.RESULT_RESTART
 import org.videolan.tools.Settings
 import org.videolan.tools.putSingle
+import org.videolan.vlc.MediaParsingService
 import org.videolan.vlc.R
 import org.videolan.vlc.databinding.AudioBrowserBinding
 import org.videolan.vlc.gui.AudioPlayerContainerActivity
@@ -278,7 +279,7 @@ class AudioBrowserFragment : BaseAudioBrowser<AudioBrowserViewModel>() {
             delay(50L)
         }.launchWhenStarted(lifecycleScope)
         genresAdapter = AudioBrowserAdapter(MediaLibraryItem.TYPE_GENRE, this).apply { stateRestorationPolicy = RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY }
-        adapters = arrayOf(artistsAdapter, artistsAdapter, artistsAdapter, artistsAdapter, playlistAdapter)
+        adapters = arrayOf(artistsAdapter, playlistAdapter)
         setupProvider()
     }
 

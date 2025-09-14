@@ -172,7 +172,7 @@ class PreferencesUi : BasePreferenceFragment(), SharedPreferences.OnSharedPrefer
                 (activity as PreferencesActivity).setRestart()
             }
             "include_missing" -> {
-                Settings.includeMissing = sharedPreferences.getBoolean(key, true)
+                Settings.includeMissing = sharedPreferences.getBoolean(key, false)
                 (activity as PreferencesActivity).setRestart()
             }
         }

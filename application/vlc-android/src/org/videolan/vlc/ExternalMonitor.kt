@@ -104,7 +104,7 @@ object ExternalMonitor : BroadcastReceiver(), DefaultLifecycleObserver, Coroutin
                 }
             }
             UsbManager.ACTION_USB_DEVICE_DETACHED -> if (intent.hasExtra(UsbManager.EXTRA_DEVICE)) {
-                OtgAccess.otgRoot.value = null
+//                OtgAccess.otgRoot.value = null
                 val device = intent.parcelable<UsbDevice>(UsbManager.EXTRA_DEVICE)
                 device?.let { devices.remove(it) }
             }

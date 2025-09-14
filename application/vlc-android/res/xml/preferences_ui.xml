@@ -60,7 +60,7 @@
     <CheckBoxPreference
             app:singleLineTitle="false"
             android:key="include_missing"
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:summary="@string/browser_show_missing_media_summary"
             android:title="@string/browser_show_missing_media"/>
 

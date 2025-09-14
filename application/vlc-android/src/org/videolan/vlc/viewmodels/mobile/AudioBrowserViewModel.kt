@@ -44,7 +44,7 @@ class AudioBrowserViewModel(context: Context) : MedialibraryViewModel(context) {
     val tracksProvider = TracksProvider(null, context, this)
     val genresProvider = GenresProvider(context, this)
     private val playlistsProvider = PlaylistsProvider(context, this, Playlist.Type.Audio)
-    override val providers = arrayOf(tracksProvider, tracksProvider, tracksProvider, tracksProvider, playlistsProvider)
+    override val providers = arrayOf(tracksProvider, playlistsProvider)
     val providersInCard = arrayOf(false, false,false, false, true)
 
     var showResumeCard = settings.getBoolean("audio_resume_card", true)
