@@ -27,7 +27,6 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.KeyEvent
@@ -38,9 +37,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.ActionMenuView
-import androidx.appcompat.widget.Toolbar.LayoutParams
 import androidx.core.os.bundleOf
-import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -258,6 +255,7 @@ class MainActivity : ContentActivity(),
             setHomeButtonEnabled(false)
             setDisplayShowTitleEnabled(false)
         }
+        supportActionBar?.customView
     }
 
     override fun onStart() {

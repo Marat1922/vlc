@@ -170,8 +170,8 @@
 
         <ImageButton
             android:id="@+id/item_more"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
@@ -187,8 +187,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/item_delete"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
@@ -205,8 +205,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/item_move_down"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center"
@@ -224,8 +224,8 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/item_move_up"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_gravity="center"

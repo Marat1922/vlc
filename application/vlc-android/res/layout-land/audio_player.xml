@@ -470,17 +470,15 @@
 
             <TextView
                 android:id="@+id/song_title"
+                style="@style/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:ellipsize="marquee"
-                android:fontFamily="sans-serif-light"
                 android:importantForAccessibility="no"
                 android:marqueeRepeatLimit="1"
                 android:singleLine="true"
-                android:textColor="?attr/font_default"
-                android:textSize="24sp"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toTopOf="@+id/song_subtitle"
                 app:layout_constraintEnd_toStartOf="@+id/next_chapter"
@@ -506,6 +504,7 @@
 
             <TextView
                 android:id="@+id/song_subtitle"
+                style="@style/subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -515,8 +514,6 @@
                 android:importantForAccessibility="no"
                 android:marqueeRepeatLimit="1"
                 android:singleLine="true"
-                android:textColor="?attr/font_audio_light"
-                android:textSize="14sp"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toTopOf="@+id/song_track_info"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -527,6 +524,7 @@
 
             <TextView
                 android:id="@+id/song_track_info"
+                style="@style/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
@@ -535,9 +533,7 @@
                 android:ellipsize="marquee"
                 android:importantForAccessibility="no"
                 android:marqueeRepeatLimit="1"
-                android:maxLines="1"
-                android:textColor="?attr/font_audio_light"
-                android:textSize="12sp"
+                android:singleLine="true"
                 app:layout_constrainedWidth="true"
                 app:layout_constraintBottom_toTopOf="@+id/audio_rewind_10"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -582,10 +578,10 @@
 
             <TextView
                 android:id="@+id/audio_rewind_text"
+                style="@style/subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:importantForAccessibility="no"
-                android:textColor="?attr/player_icon_color"
                 android:textSize="8dp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/audio_rewind_10"

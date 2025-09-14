@@ -23,13 +23,11 @@
 
     <TextView
         android:id="@+id/title"
-        style="@style/VLC.TextViewTitle"
+        style="@style/Headline"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:background="#00000000"
         android:ellipsize="marquee"
-        android:fontFamily="sans-serif-medium"
         android:scrollHorizontally="true"
         android:singleLine="true"
         android:text="@string/title"
@@ -41,11 +39,10 @@
 
     <TextView
         android:id="@+id/artist"
-        style="@style/VLC.TextViewDescription"
+        style="@style/subtitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:background="#00000000"
         android:ellipsize="marquee"
         android:singleLine="true"
         app:layout_constraintBottom_toBottomOf="parent"
