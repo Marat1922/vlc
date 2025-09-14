@@ -53,7 +53,7 @@ import org.videolan.tools.isCallable
 import org.videolan.tools.putSingle
 import org.videolan.vlc.StartActivity
 import org.videolan.vlc.gui.dialogs.PermissionListDialog
-import org.videolan.vlc.gui.onboarding.ONBOARDING_DONE_KEY
+//import org.videolan.vlc.gui.onboarding.ONBOARDING_DONE_KEY
 import org.videolan.vlc.util.FileUtils
 import org.videolan.vlc.util.Permissions
 import org.videolan.vlc.util.Permissions.canReadStorage
@@ -183,12 +183,11 @@ class StoragePermissionsDelegate : BaseHeadlessFragment() {
                 val onboardingDone = withContext(Dispatchers.IO) {
                     if (AndroidDevices.isTv)
                         settings.getBoolean(KEY_TV_ONBOARDING_DONE, false)
-                    else
-                        settings.getBoolean(ONBOARDING_DONE_KEY, false)
+
                 }
-                if (granted && onboardingDone) {
-                    (cb ?: getAction(this@askStoragePermission, firstRun, upgrade)).run()
-                }
+//                if (granted && onboardingDone) {
+//                    (cb ?: getAction(this@askStoragePermission, firstRun, upgrade)).run()
+//                }
             }
         }
 

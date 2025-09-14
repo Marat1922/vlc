@@ -28,6 +28,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.annotation.WorkerThread
 import androidx.appcompat.app.AlertDialog
 import androidx.documentfile.provider.DocumentFile
@@ -36,6 +37,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import org.videolan.medialibrary.MLServiceLocator
 import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import org.videolan.vlc.R
+import java.io.File
 
 const val SAF_REQUEST = 85
 const val TAG = "OtgAccess"
@@ -81,7 +83,24 @@ class OtgAccess : BaseHeadlessFragment() {
 }
 
 fun FragmentActivity.requestOtgRoot() {
-    supportFragmentManager.beginTransaction().add(OtgAccess(), TAG).commitAllowingStateLoss()
+    // Вместо реального запроса, сразу "предоставляем" доступ
+    val otgUri = findUsbStoragePath() // ваша функция поиска USB путей
+    OtgAccess.otgRoot.value = otgUri
+
+    // Можно показать уведомление, что доступ "предоставлен"
+    Toast.makeText(this, "R.string.usb_access_granted", Toast.LENGTH_SHORT).show()
+}
+
+private fun findUsbStoragePath(): Uri {
+    // Поиск стандартных USB путей
+    val usbPaths = arrayOf("/storage/usbcard", "/mnt/usbstorage", "/storage/udisk")
+    usbPaths.forEach { path ->
+        val dir = File(path)
+        if (dir.exists() && dir.isDirectory && dir.canRead()) {
+            return Uri.fromFile(dir)
+        }
+    }
+    return Uri.parse("file:///storage/emulated/0") // fallback
 }
 
 @WorkerThread

@@ -55,7 +55,6 @@ import org.videolan.vlc.viewmodels.browser.TYPE_USB
 import org.videolan.vlc.viewmodels.browser.getBrowserModel
 
 open class UsbFileFragment : BaseBrowserFragment() {
-
     private var needsRefresh: Boolean = false
 
     override val categoryTitle: String
@@ -74,7 +73,6 @@ open class UsbFileFragment : BaseBrowserFragment() {
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as? SecondaryActivity)?.supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_close_up)
     }
-
 
     override fun onStart() {
         super.onStart()
@@ -140,7 +138,7 @@ open class UsbFileFragment : BaseBrowserFragment() {
     override fun getStorageDelegate(): IStorageFragmentDelegate? = null
 
     override val isNetwork = false
-    override val isFile = false
+    override val isFile = true
     override val isUsb = true
 
     override fun onResume() {

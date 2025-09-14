@@ -92,7 +92,7 @@ open class FileBrowserFragment : BaseBrowserFragment() {
     }
 
     protected open fun setupBrowser() {
-        viewModel = getBrowserModel(category = TYPE_USB, url = if (!isRootDirectory) mrl else null)
+        viewModel = getBrowserModel(category = TYPE_FILE, url = if (!isRootDirectory) mrl else null)
     }
 
     override fun getTitle(): String = if (isRootDirectory)

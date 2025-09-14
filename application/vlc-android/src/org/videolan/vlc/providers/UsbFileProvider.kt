@@ -1,5 +1,5 @@
 /*****************************************************************************
- * UsbFileProvider.kt
+ * FileBrowserProvider.kt
  *****************************************************************************
  * Copyright © 2018 VLC authors and VideoLAN
  *
@@ -20,11 +20,13 @@
 
 package org.videolan.vlc.providers
 
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.hardware.usb.UsbDevice
 import androidx.core.net.toUri
 import androidx.lifecycle.Observer
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.videolan.libvlc.util.AndroidUtil
@@ -36,8 +38,8 @@ import org.videolan.medialibrary.media.MediaLibraryItem
 import org.videolan.resources.AndroidDevices
 import org.videolan.tools.livedata.LiveDataset
 import org.videolan.vlc.ExternalMonitor
+import org.videolan.vlc.MediaParsingService
 import org.videolan.vlc.R
-import org.videolan.vlc.VlcMigrationHelper
 import org.videolan.vlc.gui.helpers.hf.StoragePermissionsDelegate
 import org.videolan.vlc.gui.helpers.hf.getDocumentFiles
 import org.videolan.vlc.repository.DirectoryRepository
@@ -49,10 +51,34 @@ open class UsbFileProvider(
     dataset: LiveDataset<MediaLibraryItem>,
     url: String?, private val filePicker: Boolean = false,
     private val showDummyCategory: Boolean = true, sort:Int, desc:Boolean) : BrowserProvider(context, dataset,
-    url, sort, desc), Observer<MutableList<UsbDevice>> {
+    url, sort, desc) {
 
-    private var storagePosition = -1
-    private var otgPosition = -1
+    private val directoryRepository = DirectoryRepository.getInstance(context)
+    private val storageReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            when (intent.action) {
+                Intent.ACTION_MEDIA_MOUNTED -> {
+                    val path = intent.data?.path
+                    if (path != null && !path.contains(AndroidDevices.EXTERNAL_PUBLIC_DIRECTORY)) {
+                        MediaParsingService.scanStorageImmediately(context, path)
+                        if (url == null || url == "root") {
+                            launch {
+                                updateUsbDevicesList()
+                            }
+                        }
+                    }
+                }
+                Intent.ACTION_MEDIA_UNMOUNTED,
+                Intent.ACTION_MEDIA_EJECT,
+                Intent.ACTION_MEDIA_REMOVED -> {
+                    val path = intent.data?.path
+                    if (path != null && !path.contains(AndroidDevices.EXTERNAL_PUBLIC_DIRECTORY)) {
+                        handleUsbDeviceRemoved(context, path)
+                    }
+                }
+            }
+        }
+    }
 
     init {
         fetch()
@@ -61,29 +87,86 @@ open class UsbFileProvider(
     private lateinit var storageObserver : Observer<Boolean>
 
     override suspend fun browseRootImpl() {
-        loading.postValue(true)
+        loading.postValue(false)
+        try {
+            updateUsbDevicesList()
+            registerStorageReceiver()
+        } catch (e: Exception) {
+            dataset.value = mutableListOf()
+        } finally {
+            loading.postValue(false)
+        }
+    }
 
-        // 1. Создаем список только для USB-устройств
-        val usbDevices = mutableListOf<MediaLibraryItem>()
+    private suspend fun updateUsbDevicesList() {
+        val storages = directoryRepository.getMediaDirectories()
+        val devices = mutableListOf<MediaLibraryItem>()
 
-        // 2. Проверяем поддержку OTG и наличие устройств
-        if (VlcMigrationHelper.isLolliPopOrLater && !ExternalMonitor.devices.isEmpty()) {
-            // 3. Добавляем OTG-устройство
-            val otg = MLServiceLocator.getAbstractMediaWrapper("otg://".toUri()).apply {
-                title = context.getString(R.string.otg_device_title)
-                type = MediaWrapper.TYPE_DIR
-                addStateFlags(MediaLibraryItem.FLAG_STORAGE)
-            }
-            usbDevices.add(otg)
+        // Добавляем заголовок только если нужно
+        if (!filePicker && showDummyCategory) {
+            val browserStorage = context.getString(R.string.browser_storages)
+            devices.add(DummyItem(browserStorage))
         }
 
-        // 4. Обновляем UI
-        dataset.value = usbDevices
-        loading.postValue(false)
-        headers.clear()
+        var hasUsbDevices = false
+        for (mediaDirLocation in storages) {
+            val file = File(mediaDirLocation)
+            if (!file.exists() || !file.canRead()) continue
 
-        // 5. Подписываемся на изменения OTG-устройств
-        ExternalMonitor.devices.observeForever(this@UsbFileProvider)
+
+            if (AndroidDevices.EXTERNAL_PUBLIC_DIRECTORY == mediaDirLocation) continue
+
+            hasUsbDevices = true
+
+            val directory = MLServiceLocator.getAbstractMediaWrapper(AndroidUtil.PathToUri(mediaDirLocation))
+            directory.type = MediaWrapper.TYPE_DIR
+
+            val deviceName = FileUtils.getStorageTag(directory.title)
+            if (deviceName != null) directory.setDisplayTitle(deviceName)
+            directory.addStateFlags(MediaLibraryItem.FLAG_STORAGE)
+
+            devices.add(directory)
+        }
+
+
+        if (AndroidUtil.isMarshMallowOrLater && !hasUsbDevices && !filePicker) {
+            if (!this::storageObserver.isInitialized) {
+                storageObserver = Observer { if (it == true) launch { browseRootImpl() } }
+                StoragePermissionsDelegate.storageAccessGranted.observeForever(storageObserver)
+            }
+        } else {
+            // Удаляем наблюдатель если разрешения есть
+            if (this::storageObserver.isInitialized) {
+                StoragePermissionsDelegate.storageAccessGranted.removeObserver(storageObserver)
+            }
+        }
+
+
+        dataset.value = if (hasUsbDevices) devices else mutableListOf()
+        loading.postValue(false)
+
+    }
+
+    private fun handleUsbDeviceRemoved(context: Context, path: String) {
+        if (url == null || url == "root") {
+            launch {
+                updateUsbDevicesList()
+            }
+        }
+    }
+
+    private fun registerStorageReceiver() {
+        val filter = IntentFilter().apply {
+            addAction(Intent.ACTION_MEDIA_MOUNTED)
+            addAction(Intent.ACTION_MEDIA_UNMOUNTED)
+            addAction(Intent.ACTION_MEDIA_EJECT)
+            addAction(Intent.ACTION_MEDIA_REMOVED)
+            addDataScheme("file")
+        }
+        try {
+            context.registerReceiver(storageReceiver, filter)
+        } catch (e: Exception) {
+        }
     }
 
     override suspend fun requestBrowsing(url: String?, eventListener: MediaBrowser.EventListener, interact : Boolean) = withContext(coroutineContextProvider.IO) {
@@ -96,7 +179,15 @@ open class UsbFileProvider(
 
     override fun browse(url: String?) {
         when {
-            url == "otg://" || url?.startsWith("content:") == true -> launch {
+            url == "otg://" -> launch {
+                loading.postValue(true)
+                dataset.value = withContext(coroutineContextProvider.IO) {
+                    @Suppress("UNCHECKED_CAST")
+                    getDocumentFiles(context, "otg") as? MutableList<MediaLibraryItem> ?: mutableListOf()
+                }
+                loading.postValue(false)
+            }
+            url?.startsWith("content:") == true -> launch {
                 loading.postValue(true)
                 dataset.value = withContext(coroutineContextProvider.IO) {
                     @Suppress("UNCHECKED_CAST")
@@ -111,19 +202,30 @@ open class UsbFileProvider(
 
     suspend fun browseByUrl(url: String): List<MediaWrapper> {
         return when {
-            url == "otg://" || url.startsWith("content:") -> {
+            url == "otg://" -> {
                 val result = ArrayList<MediaWrapper>()
-                launch {
-                    val files = withContext(coroutineContextProvider.IO) {
-                        @Suppress("UNCHECKED_CAST")
-                        getDocumentFiles(context, url.toUri().path?.substringAfterLast(':')
-                            ?: "") as? MutableList<MediaLibraryItem> ?: mutableListOf()
-                    }.map { it as MediaWrapper }
+                val files = withContext(coroutineContextProvider.IO) {
+                    @Suppress("UNCHECKED_CAST")
+                    getDocumentFiles(context, "otg") as? MutableList<MediaLibraryItem> ?: mutableListOf()
+                }.map { it as MediaWrapper }
 
-                    result.addAll(files.filter { it.itemType == MediaWrapper.TYPE_MEDIA })
-                    files.filter { it.itemType == MediaWrapper.TYPE_DIR }.forEach {
-                        result.addAll(browseByUrl(it.uri.toString()))
-                    }
+                result.addAll(files.filter { it.itemType == MediaWrapper.TYPE_MEDIA })
+                files.filter { it.itemType == MediaWrapper.TYPE_DIR }.forEach {
+                    result.addAll(browseByUrl(it.uri.toString()))
+                }
+                result.toList()
+            }
+
+            url.startsWith("content:") -> {
+                val result = ArrayList<MediaWrapper>()
+                val files = withContext(coroutineContextProvider.IO) {
+                    @Suppress("UNCHECKED_CAST")
+                    getDocumentFiles(context, url.toUri().path?.substringAfterLast(':') ?: "") as? MutableList<MediaLibraryItem> ?: mutableListOf()
+                }.map { it as MediaWrapper }
+
+                result.addAll(files.filter { it.itemType == MediaWrapper.TYPE_MEDIA })
+                files.filter { it.itemType == MediaWrapper.TYPE_DIR }.forEach {
+                    result.addAll(browseByUrl(it.uri.toString()))
                 }
                 result.toList()
             }
@@ -133,28 +235,15 @@ open class UsbFileProvider(
     }
 
     override fun release() {
-        if (url == null) {
-            ExternalMonitor.devices.removeObserver(this)
-            if (this::storageObserver.isInitialized) {
-                StoragePermissionsDelegate.storageAccessGranted.removeObserver(storageObserver)
-            }
+        try {
+            context.unregisterReceiver(storageReceiver)
+        } catch (e: Exception) {
         }
-        super.release()
-    }
 
-    override fun onChanged(list: MutableList<UsbDevice>) {
-        if (list.isNullOrEmpty()) {
-            if (otgPosition != -1) {
-                dataset.remove(otgPosition)
-                otgPosition = -1
-            }
-        } else if (otgPosition == -1) {
-            val otg = MLServiceLocator.getAbstractMediaWrapper("otg://".toUri()).apply {
-                title = context.getString(R.string.otg_device_title)
-                type = MediaWrapper.TYPE_DIR
-            }
-            otgPosition = storagePosition+1
-            dataset.add(otgPosition, otg)
+        if (this::storageObserver.isInitialized) {
+            StoragePermissionsDelegate.storageAccessGranted.removeObserver(storageObserver)
         }
+
+        super.release()
     }
 }

@@ -95,8 +95,8 @@ class StorageBrowserAdapter(browserContainer: BrowserContainer<MediaLibraryItem>
     override fun onBindViewHolder(holder: ViewHolder<ViewDataBinding>, position: Int, payloads: MutableList<Any>) {
         if (payloads.isNotEmpty() && payloads[0] is CharSequence) {
             if (!MedialibraryUtils.isBanned((getItem(position) as Storage).uri, bannedFolders)) {
-                (holder as MediaViewHolder).bindingContainer.text.visibility = View.VISIBLE
-                holder.bindingContainer.text.text = (payloads[0] as CharSequence).getDescriptionSpan(holder.bindingContainer.text.context)
+                (holder as MediaViewHolder).bindingContainer.text.visibility = View.GONE
+//                holder.bindingContainer.text.text = (payloads[0] as CharSequence).getDescriptionSpan(holder.bindingContainer.text.context)
             }
         } else super.onBindViewHolder(holder, position, payloads)
     }

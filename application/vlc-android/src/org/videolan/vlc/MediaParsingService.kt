@@ -70,6 +70,7 @@ import org.videolan.resources.ACTION_FORCE_RELOAD
 import org.videolan.resources.ACTION_INIT
 import org.videolan.resources.ACTION_PAUSE_SCAN
 import org.videolan.resources.ACTION_RELOAD
+import org.videolan.resources.ACTION_REMOVE_DEVICE
 import org.videolan.resources.ACTION_RESUME_SCAN
 import org.videolan.resources.AndroidDevices
 import org.videolan.resources.AppContextProvider
@@ -599,6 +600,16 @@ class MediaParsingService : LifecycleService(), DevicesDiscoveryCb {
         val discoveryError = MutableLiveData<DiscoveryError>()
         val newStorages = MutableLiveData<MutableList<String>>()
         val preselectedStorages = mutableListOf<String>()
+
+        val medialibraryUpdateEvent = MutableLiveData<Pair<String, Boolean>>()
+
+        fun scanStorageImmediately(context: Context, path: String) {
+            val intent = Intent(ACTION_DISCOVER_DEVICE, null, context, MediaParsingService::class.java)
+                .putExtra(EXTRA_PATH, path)
+            context.launchForeground(intent)
+
+            medialibraryUpdateEvent.postValue(Pair(path, true))
+        }
     }
 }
 

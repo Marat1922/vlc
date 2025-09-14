@@ -252,7 +252,7 @@ class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionRecei
 
         //Usb
         usbEntry = view.findViewById(R.id.usb_browser_entry)
-        val usbBrowserContainer = MainBrowserContainer(isNetwork = false, isFile = false, isUsb = true, inCards = false)
+        val usbBrowserContainer = MainBrowserContainer(isNetwork = false, isFile = false, isUsb = true, inCards = !displayInList)
         val usbBrowserAdapter = BaseBrowserAdapter(usbBrowserContainer)
         usbEntry.list.adapter = usbBrowserAdapter
         containerAdapterAssociation[usbBrowserContainer] = Pair(usbBrowserAdapter, usbViewModel)
@@ -274,80 +274,12 @@ class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionRecei
         usbViewModel.getDescriptionUpdate().observe(viewLifecycleOwner) { pair ->
             if (pair != null) usbBrowserAdapter.notifyItemChanged(pair.first, pair.second)
         }
-//        val usbBrowserContainer = MainBrowserContainer(isNetwork = false, isFile = true, inCards = false)
-//        val usbBrowserAdapter = BaseBrowserAdapter(usbBrowserContainer)
-//        usbEntry.list.adapter = usbBrowserAdapter
-//        containerAdapterAssociation[usbBrowserContainer] = Pair(storageBrowserAdapter, localViewModel)
-//        localViewModel.dataset.observe(viewLifecycleOwner) { list ->
-//            list?.let {
-//                if (Permissions.canReadStorage(requireActivity())) storageBrowserAdapter.update(it)
-//                usbEntry.loading.state = when {
-//                    !Permissions.canReadStorage(requireActivity()) -> EmptyLoadingState.MISSING_PERMISSION
-//                    list.isNotEmpty() -> EmptyLoadingState.NONE
-//                    localViewModel.loading.value == true -> EmptyLoadingState.LOADING
-//                    else -> EmptyLoadingState.EMPTY
-//                }
-//            }
-//        }
-//        localViewModel.loading.observe(viewLifecycleOwner) {
-//            if (it) localEntry.loading.state = EmptyLoadingState.LOADING else if (!Permissions.canReadStorage(requireActivity())) usbEntry.loading.state = EmptyLoadingState.MISSING_PERMISSION
-//        }
-//        localViewModel.browseRoot()
-//        localViewModel.getDescriptionUpdate().observe(viewLifecycleOwner) { pair ->
-//            if (pair != null) storageBrowserAdapter.notifyItemChanged(pair.first, pair.second)
-//        }
-
-//        favoritesEntry = view.findViewById(R.id.fav_browser_entry)
-//        favoritesEntry.loading.showNoMedia = false
-//        favoritesEntry.loading.emptyText = getString(R.string.no_favorite)
-//        val favoritesBrowserContainer = MainBrowserContainer(isNetwork = false, isFile = true, inCards = !displayInList)
-//        val favoritesAdapter = BaseBrowserAdapter(favoritesBrowserContainer)
-//        favoritesEntry.list.adapter = favoritesAdapter
-//        containerAdapterAssociation[favoritesBrowserContainer] = Pair(favoritesAdapter, favoritesViewModel)
-//        favoritesViewModel.favorites.observe(viewLifecycleOwner) { list ->
-//            list.let {
-//                if (list.isEmpty()) favoritesEntry.setGone() else favoritesEntry.setVisible()
-//                favoritesAdapter.update(it)
-//                favoritesEntry.loading.state = when {
-//                    list.isNotEmpty() -> EmptyLoadingState.NONE
-//                    localViewModel.loading.value == true -> EmptyLoadingState.LOADING
-//                    else -> EmptyLoadingState.EMPTY
-//                }
-//            }
-//        }
-//        favoritesViewModel.provider.loading.observe(viewLifecycleOwner) {
-//            if (it) localEntry.loading.state = EmptyLoadingState.LOADING
-//        }
-//        favoritesViewModel.provider.descriptionUpdate.observe(viewLifecycleOwner) { pair ->
-//            if (pair != null) favoritesAdapter.notifyItemChanged(pair.first, pair.second)
-//        }
 
 
 
-
-      //network
-//        networkEntry = view.findViewById(R.id.network_browser_entry)
-//        networkEntry.loading.showNoMedia = false
-//        networkEntry.loading.emptyText = getString(R.string.nomedia)
-//        val networkBrowserContainer = MainBrowserContainer(isNetwork = true, isFile = false, inCards = !displayInList)
-//        val networkAdapter = BaseBrowserAdapter(networkBrowserContainer)
-//        networkEntry.list.adapter = networkAdapter
-//        containerAdapterAssociation[networkBrowserContainer] = Pair(networkAdapter, networkViewModel)
-//        networkViewModel.dataset.observe(viewLifecycleOwner) { list ->
-//            list?.let {
-//                networkAdapter.update(it)
-//                updateNetworkEmptyView(networkEntry.loading)
-//                if (networkViewModel.loading.value == false) networkEntry.loading.state = if (list.isEmpty()) EmptyLoadingState.EMPTY else EmptyLoadingState.NONE
-//            }
-//        }
-//        networkViewModel.loading.observe(viewLifecycleOwner) {
-//            if (it) networkEntry.loading.state = EmptyLoadingState.LOADING
-//            updateNetworkEmptyView(networkEntry.loading)
-//        }
-//        networkViewModel.browseRoot()
 
         localEntry.displayInCards = false
-        usbEntry.displayInCards = !displayInList
+        usbEntry.displayInCards = false
 //        favoritesEntry.displayInCards = !displayInList
 //        networkEntry.displayInCards = !displayInList
 
@@ -449,28 +381,33 @@ class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionRecei
                 if (!checkAdapterForActionMode()) return
                 val adapter = requireAdapter()
                 if (mediaWrapper.type == MediaWrapper.TYPE_AUDIO ||
-                        mediaWrapper.type == MediaWrapper.TYPE_VIDEO ||
-                        mediaWrapper.type == MediaWrapper.TYPE_DIR) {
+                    mediaWrapper.type == MediaWrapper.TYPE_VIDEO ||
+                    mediaWrapper.type == MediaWrapper.TYPE_DIR) {
                     adapter.multiSelectHelper.toggleSelection(position)
                     if (adapter.multiSelectHelper.getSelection().isEmpty()) stopActionMode()
                     invalidateActionMode()
                 }
             } else {
                 if (item.itemType == MediaLibraryItem.TYPE_MEDIA) {
-                    if ("otg://" == item.location) {
-                        val rootUri = OtgAccess.otgRoot.value
-                        if (rootUri == null) {
-                            requiringOtg = true
-                            requireActivity().requestOtgRoot()
-                            return
+                        val location = item.location
+                        if ("otg://" == location || location?.startsWith("usb://") == true) {
+                            val rootUri = OtgAccess.otgRoot.value
+                            if (rootUri == null) {
+                                requiringOtg = true
+                                requireActivity().requestOtgRoot()
+                                return
+                            }
                         }
                     }
+                    openFileBrowser(item)
                 }
-                val intent = Intent(requireActivity().applicationContext, SecondaryActivity::class.java)
-                intent.putExtra(KEY_MEDIA, item)
-                intent.putExtra(SecondaryActivity.KEY_FRAGMENT, SecondaryActivity.FILE_BROWSER)
-                startActivity(intent)
-            }
+        }
+
+        private fun openFileBrowser(item: MediaLibraryItem) {
+            val intent = Intent(requireActivity().applicationContext, SecondaryActivity::class.java)
+            intent.putExtra(KEY_MEDIA, item)
+            intent.putExtra(SecondaryActivity.KEY_FRAGMENT, SecondaryActivity.FILE_BROWSER)
+            startActivity(intent)
         }
 
         override fun onLongClick(v: View, position: Int, item: MediaLibraryItem): Boolean {
