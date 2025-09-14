@@ -70,7 +70,6 @@ import org.videolan.resources.ACTION_FORCE_RELOAD
 import org.videolan.resources.ACTION_INIT
 import org.videolan.resources.ACTION_PAUSE_SCAN
 import org.videolan.resources.ACTION_RELOAD
-import org.videolan.resources.ACTION_REMOVE_DEVICE
 import org.videolan.resources.ACTION_RESUME_SCAN
 import org.videolan.resources.AndroidDevices
 import org.videolan.resources.AppContextProvider
