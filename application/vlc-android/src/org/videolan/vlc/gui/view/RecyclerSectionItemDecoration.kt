@@ -32,11 +32,12 @@ class RecyclerSectionItemDecoration(private val headerOffset: Int, private val s
         super.onDrawOver(c, parent, state)
         if (!Settings.showHeaders) return
 
-        if (!::headerView.isInitialized) {
-            headerView = inflateHeaderView(parent)
-            header = headerView.findViewById(R.id.section_header) as TextView
-            fixLayoutSize(headerView, parent)
-        }
+//        if (!::headerView.isInitialized) {
+//            headerView = inflateHeaderView(parent)
+//            header = headerView.findViewById(R.id.section_header) as TextView
+//            fixLayoutSize(headerView, parent)
+//            header.visibility = View.GONE
+//        }
 
 
         //draw current header
@@ -44,34 +45,34 @@ class RecyclerSectionItemDecoration(private val headerOffset: Int, private val s
         var previousSectionPosition = 0
 
         val previousChild = parent.getChildAt(0)
-        if (sticky && previousChild != null) {
-            val position = parent.getChildAdapterPosition(previousChild)
-            val sectionPosition = provider.getPositionForSection(position)
-            if (provider.getHeaderForPostion(sectionPosition) != null) {
-                previousSectionPosition = sectionPosition
-
-                val title = provider.getSectionforPosition(sectionPosition)
-                header.text = title
-                drawHeader(c, parent.getChildAt(0), headerView)
-            }
-        }
+//        if (sticky && previousChild != null) {
+//            val position = parent.getChildAdapterPosition(previousChild)
+//            val sectionPosition = provider.getPositionForSection(position)
+//            if (provider.getHeaderForPostion(sectionPosition) != null) {
+//                previousSectionPosition = sectionPosition
+//
+//                val title = provider.getSectionforPosition(sectionPosition)
+//                header.text = title
+//                drawHeader(c, parent.getChildAt(0), headerView)
+//            }
+//        }
 
         val drawnPositions = ArrayList<Int>()
-        for (i in 0 until parent.childCount) {
-            val child = parent.getChildAt(i)
-            val position = parent.getChildAdapterPosition(child)
-            if (position == previousSectionPosition) {
-                //prevent re-drawing the previous drawer
-                continue
-            }
-
-            val title = provider.getSectionforPosition(position)
-            header.text = title
-            if (provider.isFirstInSection(position)) {
-                drawHeader(c, child, headerView)
-                drawnPositions.add(i)
-            }
-        }
+//        for (i in 0 until parent.childCount) {
+//            val child = parent.getChildAt(i)
+//            val position = parent.getChildAdapterPosition(child)
+//            if (position == previousSectionPosition) {
+//                //prevent re-drawing the previous drawer
+//                continue
+//            }
+//
+//            val title = provider.getSectionforPosition(position)
+//            header.text = title
+//            if (provider.isFirstInSection(position)) {
+//                drawHeader(c, child, headerView)
+//                drawnPositions.add(i)
+//            }
+//        }
 
 
     }

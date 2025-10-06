@@ -11,4 +11,4 @@
         android:textAppearance="@style/Result.Title"
         android:focusable="true"
         android:onClick="onClick"
-        android:visibility="visible" />
+        android:visibility="gone" />

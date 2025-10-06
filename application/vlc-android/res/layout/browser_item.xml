@@ -87,10 +87,10 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         selected="@{selected}"
         android:id="@+id/browser_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-
+        android:layout_width="864dp"
+        android:layout_height="104dp"
+        android:layout_marginStart="20dp"
+android:background="@drawable/background_item_rectangle"
         android:clickable="true"
         android:focusable="true"
         android:minHeight="48dp"
@@ -111,9 +111,9 @@
         <!-- Image downloading is handled by org.videolan.vlc.gui.helpers.ImageLoader.loadImage() -->
         <ImageView
             android:id="@+id/item_icon"
-            android:layout_width="80dp"
-            android:layout_height="72dp"
-            android:layout_marginStart="86dp"
+            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="26dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
             android:importantForAccessibility="no"
@@ -124,7 +124,7 @@
             app:layout_constraintStart_toEndOf="@+id/browser_checkbox"
             app:layout_constraintTop_toTopOf="parent"
             app:media="@{item}"
-            tools:srcCompat="@drawable/ic_folder" />
+            tools:srcCompat="@drawable/ic_folder_item" />
 
         <org.videolan.vlc.gui.view.MiniVisualizer
             android:id="@+id/playing"
@@ -180,8 +180,7 @@
             android:scrollHorizontally="true"
             android:singleLine="true"
             android:text="@{filename ?? item.title}"
-            android:textColor="#4D5964"
-            android:textSize="32sp"
+          style="@style/titleText"
             app:ellipsizeMode="@{true}"
             app:layout_constraintBottom_toTopOf="@+id/text"
             app:layout_constraintEnd_toStartOf="@+id/item_ban"

@@ -61,10 +61,12 @@
     <androidx.constraintlayout.widget.ConstraintLayout
             selected="@{selected}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/audio_track_item_selector"
+            android:layout_height="104dp"
+            android:background="@drawable/background_item_rectangle"
             android:clickable="true"
             android:focusable="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
             android:minHeight="@dimen/audio_browser_item_size"
             android:onClick="@{holder::onClick}"
             vlc:mediaContentDescription="@{item}">
@@ -86,10 +88,10 @@
 
         <org.videolan.vlc.gui.view.FadableImageView
             android:id="@+id/media_cover"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
+            android:layout_width="48dp"
+            android:layout_height="60dp"
             android:layout_gravity="center"
-            android:layout_marginLeft="82dp"
+            android:layout_marginStart="32dp"
             android:importantForAccessibility="no"
             android:scaleType="centerCrop"
             android:src="@{cover}"
@@ -188,23 +190,14 @@
 <!--                    vlc:srcCompat="@drawable/ic_emoji_absent" />-->
 <!--        </LinearLayout>-->
 
-        <ImageView
-            android:id="@+id/selector_image"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:layout_margin="12dp"
-            vlc:layout_constraintBottom_toBottomOf="parent"
-            vlc:layout_constraintDimensionRatio="1"
-            vlc:layout_constraintStart_toStartOf="parent"
-            vlc:layout_constraintTop_toTopOf="parent" />
+
 
 
         <!-- TextView must be set to singleLine
             see https://code.google.com/p/android/issues/detail?id=33868 -->
         <TextView
             android:id="@+id/title"
-            style="@style/Headline"
+            style="@style/titleText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/default_margin"
@@ -226,7 +219,7 @@
 
         <TextView
             android:id="@+id/subtitle"
-            style="@style/supporting"
+            style="@style/trackSubtitleText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:lineSpacingExtra="1sp"

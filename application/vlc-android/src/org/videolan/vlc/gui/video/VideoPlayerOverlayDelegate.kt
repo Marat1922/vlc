@@ -28,9 +28,11 @@ import android.animation.Animator
 import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.os.Build
+import android.support.v4.media.session.PlaybackStateCompat
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
@@ -507,13 +509,15 @@ class VideoPlayerOverlayDelegate (private val player: VideoPlayerActivity) {
 
                 if (skipAnim) {
                     hudBinding.playerOverlayPlay.setImageResource(if (service.isPlaying)
-                        R.drawable.ic_pause_player
+                        R.drawable.ic_pause_video
                     else
-                        R.drawable.ic_play_player)
-                } else {
-                    val drawable = if (service.isPlaying) playToPause else pauseToPlay
-                    hudBinding.playerOverlayPlay.setImageDrawable(drawable)
-                    if (service.isPlaying != wasPlaying) drawable.start()
+                        R.drawable.ic_play_video)
+                }
+                else {
+                    hudBinding.playerOverlayPlay.setImageResource(if (service.isPlaying)
+                        R.drawable.ic_pause_video
+                    else
+                        R.drawable.ic_play_video)
                 }
                 hudBinding.playerOverlayPlay.contentDescription = player.getString(if (service.isPlaying) R.string.pause else R.string.play)
 
@@ -523,6 +527,37 @@ class VideoPlayerOverlayDelegate (private val player: VideoPlayerActivity) {
             if (::playlistAdapter.isInitialized) {
                 playlistAdapter.setCurrentlyPlaying(service.isPlaying)
             }
+        }
+    }
+
+    fun updateRepeatButton(repeatType: Int) {
+        if (!::hudBinding.isInitialized) return
+        when (repeatType) {
+
+            PlaybackStateCompat.REPEAT_MODE_ALL -> {
+                hudBinding.repeatVideo.setImageResource(R.drawable.ic_repeat_all_video)
+                hudBinding.repeatVideo.contentDescription = player.getString(R.string.repeat_all)
+            }
+            PlaybackStateCompat.REPEAT_MODE_NONE -> {
+                hudBinding.repeatVideo.setImageResource(R.drawable.ic_repeat_video)
+                hudBinding.repeatVideo.contentDescription = player.getString(R.string.repeat_none)
+            }
+        }
+    }
+
+
+    fun updateShuffleVideoButton(isShuffling: Boolean) {
+        if (!::hudBinding.isInitialized) return
+
+        // Получаем кнопку shuffle по правильному ID
+        val shuffleButton = hudBinding.shuffleVideo ?: return
+
+        if (isShuffling) {
+            shuffleButton.setImageResource(R.drawable.ic_shuffle_video_pressed)
+//            shuffleButton.contentDescription = player.getString(R.string.shuffle_on)
+        } else {
+            shuffleButton.setImageResource(R.drawable.ic_shuffle_video)
+//            shuffleButton.contentDescription = player.getString(R.string.shuffle_off)
         }
     }
 
@@ -553,9 +588,9 @@ class VideoPlayerOverlayDelegate (private val player: VideoPlayerActivity) {
             vscRight?.let {
                 it.setVisible()
                 hudRightBinding = DataBindingUtil.bind(player.findViewById(R.id.hud_right_overlay)) ?: return
-                if (!player.isBenchmark && player.enableCloneMode && !player.settings.contains("enable_clone_mode")) {
-                    UiTools.snackerConfirm(player, player.getString(R.string.video_save_clone_mode)) { player.settings.putSingle("enable_clone_mode", true) }
-                }
+//                if (!player.isBenchmark && player.enableCloneMode && !player.settings.contains("enable_clone_mode")) {
+//                    UiTools.snackerConfirm(player, player.getString(R.string.video_save_clone_mode)) { player.settings.putSingle("enable_clone_mode", true) }
+//                }
             }
 
             val vsc = player.findViewById<ViewStubCompat>(R.id.player_hud_stub)
@@ -672,8 +707,8 @@ class VideoPlayerOverlayDelegate (private val player: VideoPlayerActivity) {
                UiTools.snacker(player, R.string.ab_repeat_fastseek_warning, false)
             }
             abRepeatAddMarker.setOnClickListener(player)
-            hudBinding.orientationToggle.setOnClickListener(if (enabled) player else null)
-            hudBinding.orientationToggle.setOnLongClickListener(if (enabled) player else null)
+//            hudBinding.orientationToggle.setOnClickListener(if (enabled) player else null)
+//            hudBinding.orientationToggle.setOnLongClickListener(if (enabled) player else null)
             hudBinding.swipeToUnlock.setOnStartTouchingListener { showOverlayTimeout(VideoPlayerActivity.OVERLAY_INFINITE) }
             hudBinding.swipeToUnlock.setOnStopTouchingListener { showOverlayTimeout(Settings.videoHudDelay * 1000) }
             hudBinding.swipeToUnlock.setOnUnlockListener {
@@ -731,9 +766,9 @@ class VideoPlayerOverlayDelegate (private val player: VideoPlayerActivity) {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     fun resetHudLayout() {
         if (!::hudBinding.isInitialized) return
-        if (!player.isTv && !AndroidDevices.isChromeBook) {
-            hudBinding.orientationToggle.setVisible()
-        }
+//        if (!player.isTv && !AndroidDevices.isChromeBook) {
+//            hudBinding.orientationToggle.setVisible()
+//        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -756,7 +791,7 @@ class VideoPlayerOverlayDelegate (private val player: VideoPlayerActivity) {
             } else {
                 R.drawable.ic_player_lock_portrait
             }
-            hudBinding.orientationToggle.setImageDrawable(ContextCompat.getDrawable(player, drawable))
+//            hudBinding.orientationToggle.setImageDrawable(ContextCompat.getDrawable(player, drawable))
         }
         if (::hudRightBinding.isInitialized) {
             if (player.orientationMode.locked && Settings.getInstance(player).getBoolean(SHOW_ORIENTATION_BUTTON, true)) {
@@ -814,17 +849,17 @@ class VideoPlayerOverlayDelegate (private val player: VideoPlayerActivity) {
 
     fun updateHudMargins() {
         //here, we override the default Android overscan
-        val overscanHorizontal = if (player.isTv) 32.dp else 8.dp
+        val overscanHorizontal = if (player.isTv) 32.dp else 112.dp
         val overscanVertical = if (player.isTv) player.resources.getDimension(R.dimen.tv_overscan_vertical).toInt() else 8.dp
         if (::hudBinding.isInitialized) {
             val largeMargin = player.resources.getDimension(R.dimen.large_margins_center)
             val smallMargin = player.resources.getDimension(R.dimen.small_margins_sides)
 
 
-            applyMargin(hudBinding.playerOverlayTracks, if (!player.isTv) smallMargin.toInt() else overscanHorizontal, false)
+//            applyMargin(hudBinding.playerOverlayTracks, if (!player.isTv) smallMargin.toInt() else overscanHorizontal, false)
             applyMargin(hudBinding.playerOverlayAdvFunction, if (!player.isTv) smallMargin.toInt() else overscanHorizontal, true)
 
-            hudBinding.playerOverlaySeekbar.setPadding(overscanHorizontal, 0, overscanHorizontal, 0)
+            hudBinding.playerOverlaySeekbar.setPadding(overscanHorizontal, 0, overscanHorizontal, 115)
             hudBinding.bookmarkMarkerContainer.setPadding(overscanHorizontal, 0, overscanHorizontal, 0)
 
             if (player.isTv) {
@@ -842,8 +877,8 @@ class VideoPlayerOverlayDelegate (private val player: VideoPlayerActivity) {
                 applyMargin(hudBinding.playerOverlayRewind, 0, true)
                 applyMargin(hudBinding.playlistNext, 0, false)
                 applyMargin(hudBinding.playerOverlayForward, 0, false)
-                applyMargin(hudBinding.orientationToggle, 0, false)
-                applyMargin(hudBinding.playerResize, 0, true)
+//                applyMargin(hudBinding.orientationToggle, 0, false)
+//                applyMargin(hudBinding.playerResize, 0, true)
             } else {
                 hudBinding.playerSpaceLeft.setVisible()
                 hudBinding.playerSpaceRight.setVisible()
@@ -854,8 +889,8 @@ class VideoPlayerOverlayDelegate (private val player: VideoPlayerActivity) {
                 applyMargin(hudBinding.playerOverlayRewind, largeMargin.toInt(), true)
                 applyMargin(hudBinding.playlistNext, largeMargin.toInt(), false)
                 applyMargin(hudBinding.playerOverlayForward, largeMargin.toInt(), false)
-                applyMargin(hudBinding.orientationToggle, smallMargin.toInt(), false)
-                applyMargin(hudBinding.playerResize, smallMargin.toInt(), true)
+//                applyMargin(hudBinding.orientationToggle, smallMargin.toInt(), false)
+//                applyMargin(hudBinding.playerResize, smallMargin.toInt(), true)
             }
         }
         if (::hudRightBinding.isInitialized) {
@@ -891,13 +926,14 @@ class VideoPlayerOverlayDelegate (private val player: VideoPlayerActivity) {
             }
         }
         if (player.service?.hasPlaylist() == true) {
-            hudRightBinding.playlistToggle.setVisible()
+//            hudRightBinding.playlistToggle.setVisible()
             if (::hudBinding.isInitialized) {
                 hudBinding.playlistPrevious.setVisible()
                 hudBinding.playlistNext.setVisible()
             }
-        } else hudRightBinding.playlistToggle.setGone()
-        hudRightBinding.playlistToggle.setOnClickListener(player)
+        } else
+//            hudRightBinding.playlistToggle.setGone()
+//        hudRightBinding.playlistToggle.setOnClickListener(player)
         closeButton.setOnClickListener { togglePlaylist() }
         hingeArrowLeft?.setOnClickListener {
             Settings.getInstance(player).putSingle(HINGE_ON_RIGHT, false)
@@ -944,23 +980,23 @@ class VideoPlayerOverlayDelegate (private val player: VideoPlayerActivity) {
                 hudBinding.playerOverlayForward.contentDescription = player.getString(R.string.talkback_action_forward, Settings.videoJumpDelay.toString())
                 hudBinding.playerOverlayForwardText.visibility = if (show) View.VISIBLE else View.INVISIBLE
             }
-            hudBinding.playerOverlayTracks.visibility = if (show) View.VISIBLE else View.INVISIBLE
+//            hudBinding.playerOverlayTracks.visibility = if (show) View.VISIBLE else View.INVISIBLE
             hudBinding.playerOverlayAdvFunction.visibility = if (show) View.VISIBLE else View.INVISIBLE
-            hudBinding.playerResize.visibility = if (show) View.VISIBLE else View.INVISIBLE
+//            hudBinding.playerResize.visibility = if (show) View.VISIBLE else View.INVISIBLE
             if (hasPlaylist) {
                 hudBinding.playlistPrevious.visibility = if (show) View.VISIBLE else View.INVISIBLE
                 hudBinding.playlistNext.visibility = if (show) View.VISIBLE else View.INVISIBLE
             }
-            hudBinding.orientationToggle.visibility = if (player.isTv || AndroidDevices.isChromeBook) View.INVISIBLE else if (show) View.VISIBLE else View.INVISIBLE
+//            hudBinding.orientationToggle.visibility = if (player.isTv || AndroidDevices.isChromeBook) View.INVISIBLE else if (show) View.VISIBLE else View.INVISIBLE
             if (!show) hudBinding.playerOverlaySeekbar.disableAccessibilityEvents() else hudBinding.playerOverlaySeekbar.enableAccessibilityEvents()
         }
         if (::hudRightBinding.isInitialized) {
             val secondary = player.displayManager.isSecondary
-            if (secondary) hudRightBinding.videoSecondaryDisplay.setImageResource(R.drawable.ic_player_screenshare_stop)
-            hudRightBinding.videoSecondaryDisplay.visibility = if (!show) View.GONE else if (UiTools.hasSecondaryDisplay(player.applicationContext)) View.VISIBLE else View.GONE
-            hudRightBinding.videoSecondaryDisplay.contentDescription = player.resources.getString(if (secondary) R.string.video_remote_disable else R.string.video_remote_enable)
+//            if (secondary) hudRightBinding.videoSecondaryDisplay.setImageResource(R.drawable.ic_player_screenshare_stop)
+//            hudRightBinding.videoSecondaryDisplay.visibility = if (!show) View.GONE else if (UiTools.hasSecondaryDisplay(player.applicationContext)) View.VISIBLE else View.GONE
+//            hudRightBinding.videoSecondaryDisplay.contentDescription = player.resources.getString(if (secondary) R.string.video_remote_disable else R.string.video_remote_enable)
 
-            hudRightBinding.playlistToggle.visibility = if (show && player.service?.hasPlaylist() == true) View.VISIBLE else View.GONE
+//            hudRightBinding.playlistToggle.visibility = if (show && player.service?.hasPlaylist() == true) View.VISIBLE else View.GONE
             hudRightBinding.playerScreenshot.visibility = if (Settings.getInstance(player).getString(SCREENSHOT_MODE, "0") in arrayOf("1", "3")) View.VISIBLE else View.GONE
             hudRightBinding.playerOverlayNavmenu.visibility = if (player.menuIdx >= 0) View.VISIBLE else View.GONE
             hudRightBinding.sleepQuickAction.visibility = if (show && PlaybackService.playerSleepTime.value != null) View.VISIBLE else View.GONE

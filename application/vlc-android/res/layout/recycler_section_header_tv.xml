@@ -14,5 +14,6 @@
             android:paddingBottom="@dimen/audio_item_header_padding"
             android:singleLine="true"
             android:textColor="@color/white"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+        android:visibility="gone"/>
 </FrameLayout>

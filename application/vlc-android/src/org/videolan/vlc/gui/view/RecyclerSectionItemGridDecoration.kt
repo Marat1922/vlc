@@ -65,6 +65,7 @@ class RecyclerSectionItemGridDecoration(private val headerOffset: Int, private v
             headerView = inflateHeaderView(parent)
             header = headerView.findViewById(R.id.section_header) as TextView
             fixLayoutSize(headerView, parent)
+            header.visibility = View.GONE
         }
 
         //draw current header
