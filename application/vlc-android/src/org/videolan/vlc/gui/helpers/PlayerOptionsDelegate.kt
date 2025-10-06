@@ -114,9 +114,9 @@ class PlayerOptionsDelegate(val activity: FragmentActivity, val service: Playbac
                 options.add(PlayerOption(ID_PLAY_AS_AUDIO, R.drawable.ic_playasaudio_on, res.getString(R.string.play_as_audio)))
             if (primary && AndroidDevices.pipAllowed && !AndroidDevices.isDex(activity))
                 options.add(PlayerOption(ID_POPUP_VIDEO, R.drawable.ic_popup_dim, res.getString(R.string.ctx_pip_title)))
-            if (primary)
-                options.add(PlayerOption(ID_REPEAT, R.drawable.ic_repeat, res.getString(R.string.repeat_title)))
-            if (service.canShuffle()) options.add(PlayerOption(ID_SHUFFLE, R.drawable.ic_player_shuffle, res.getString(R.string.shuffle_title)))
+//            if (primary)
+//                options.add(PlayerOption(ID_REPEAT, R.drawable.ic_repeat, res.getString(R.string.repeat_title)))
+//            if (service.canShuffle()) options.add(PlayerOption(ID_SHUFFLE, R.drawable.ic_player_shuffle, res.getString(R.string.shuffle_title)))
             options.add(PlayerOption(ID_VIDEO_STATS, R.drawable.ic_video_stats, res.getString(R.string.video_information)))
         } else {
             if (service.videoTracksCount > 0) options.add(PlayerOption(ID_PLAY_AS_VIDEO, R.drawable.ic_playasaudio_off, res.getString(R.string.play_as_video)))
@@ -220,11 +220,11 @@ class PlayerOptionsDelegate(val activity: FragmentActivity, val service: Playbac
                 activity.startActivity(startMain)
                 hide()
             }
-            ID_REPEAT -> setRepeatMode()
-            ID_SHUFFLE -> {
-                service.shuffle()
-                setShuffle()
-            }
+//            ID_REPEAT -> setRepeatMode()
+//            ID_SHUFFLE -> {
+//                service.shuffle()
+//                setShuffle()
+//            }
             ID_PASSTHROUGH -> togglePassthrough()
             ID_ABREPEAT -> {
                 hide()
@@ -354,58 +354,58 @@ class PlayerOptionsDelegate(val activity: FragmentActivity, val service: Playbac
         hide()
     }
 
-    private fun setRepeatMode() {
-        when (service.repeatType) {
-            PlaybackStateCompat.REPEAT_MODE_NONE -> {
-                repeatBinding.optionIcon.setImageResource(R.drawable.ic_repeat_one)
-                service.repeatType = PlaybackStateCompat.REPEAT_MODE_ONE
-                repeatBinding.root.contentDescription = repeatBinding.root.context.getString(R.string.repeat_single)
-            }
-            PlaybackStateCompat.REPEAT_MODE_ONE -> if (service.hasPlaylist()) {
-                repeatBinding.optionIcon.setImageResource(R.drawable.ic_repeat_all)
-                service.repeatType = PlaybackStateCompat.REPEAT_MODE_ALL
-                repeatBinding.root.contentDescription = repeatBinding.root.context.getString(R.string.repeat_all)
-            } else {
-                repeatBinding.optionIcon.setImageResource(R.drawable.ic_repeat)
-                service.repeatType = PlaybackStateCompat.REPEAT_MODE_NONE
-                repeatBinding.root.contentDescription = repeatBinding.root.context.getString(R.string.repeat_none)
-            }
-            PlaybackStateCompat.REPEAT_MODE_ALL -> {
-                repeatBinding.optionIcon.setImageResource(R.drawable.ic_repeat)
-                service.repeatType = PlaybackStateCompat.REPEAT_MODE_NONE
-                repeatBinding.root.contentDescription = repeatBinding.root.context.getString(R.string.repeat_none)
-            }
-        }
-    }
+//    private fun setRepeatMode() {
+//        when (service.repeatType) {
+//            PlaybackStateCompat.REPEAT_MODE_NONE -> {
+//                repeatBinding.optionIcon.setImageResource(R.drawable.ic_repeat_one)
+//                service.repeatType = PlaybackStateCompat.REPEAT_MODE_ONE
+//                repeatBinding.root.contentDescription = repeatBinding.root.context.getString(R.string.repeat_single)
+//            }
+//            PlaybackStateCompat.REPEAT_MODE_ONE -> if (service.hasPlaylist()) {
+//                repeatBinding.optionIcon.setImageResource(R.drawable.ic_repeat_all)
+//                service.repeatType = PlaybackStateCompat.REPEAT_MODE_ALL
+//                repeatBinding.root.contentDescription = repeatBinding.root.context.getString(R.string.repeat_all)
+//            } else {
+//                repeatBinding.optionIcon.setImageResource(R.drawable.ic_repeat)
+//                service.repeatType = PlaybackStateCompat.REPEAT_MODE_NONE
+//                repeatBinding.root.contentDescription = repeatBinding.root.context.getString(R.string.repeat_none)
+//            }
+//            PlaybackStateCompat.REPEAT_MODE_ALL -> {
+//                repeatBinding.optionIcon.setImageResource(R.drawable.ic_repeat)
+//                service.repeatType = PlaybackStateCompat.REPEAT_MODE_NONE
+//                repeatBinding.root.contentDescription = repeatBinding.root.context.getString(R.string.repeat_none)
+//            }
+//        }
+//    }
 
-    private fun setShuffle() {
-        shuffleBinding.optionIcon.setImageResource(if (service.isShuffling) R.drawable.ic_shuffle_on_48dp else R.drawable.ic_player_shuffle)
-        shuffleBinding.root.contentDescription = shuffleBinding.root.context.getString(if (service.isShuffling) R.string.shuffle_on else R.string.shuffle)
-    }
+//    private fun setShuffle() {
+//        shuffleBinding.optionIcon.setImageResource(if (service.isShuffling) R.drawable.ic_shuffle_on_48dp else R.drawable.ic_player_shuffle)
+//        shuffleBinding.root.contentDescription = shuffleBinding.root.context.getString(if (service.isShuffling) R.string.shuffle_on else R.string.shuffle)
+//    }
+//
+//    private fun initShuffle(binding: PlayerOptionItemBinding) {
+//        shuffleBinding = binding
+//        AppScope.launch(Dispatchers.Main) {
+//            shuffleBinding.optionIcon.setImageResource(if (service.isShuffling) R.drawable.ic_shuffle_on_48dp else R.drawable.ic_player_shuffle)
+//            shuffleBinding.root.contentDescription = shuffleBinding.root.context.getString(if (service.isShuffling) R.string.shuffle_on else R.string.shuffle)
+//        }
+//    }
 
-    private fun initShuffle(binding: PlayerOptionItemBinding) {
-        shuffleBinding = binding
-        AppScope.launch(Dispatchers.Main) {
-            shuffleBinding.optionIcon.setImageResource(if (service.isShuffling) R.drawable.ic_shuffle_on_48dp else R.drawable.ic_player_shuffle)
-            shuffleBinding.root.contentDescription = shuffleBinding.root.context.getString(if (service.isShuffling) R.string.shuffle_on else R.string.shuffle)
-        }
-    }
-
-    private fun initRepeat(binding: PlayerOptionItemBinding) {
-        repeatBinding = binding
-        AppScope.launch(Dispatchers.Main) {
-            repeatBinding.optionIcon.setImageResource(when (service.repeatType) {
-                PlaybackStateCompat.REPEAT_MODE_ONE -> R.drawable.ic_repeat_one
-                PlaybackStateCompat.REPEAT_MODE_ALL -> R.drawable.ic_repeat_all
-                else -> R.drawable.ic_repeat
-            })
-            repeatBinding.root.contentDescription = repeatBinding.root.context.getString(when (service.repeatType) {
-                PlaybackStateCompat.REPEAT_MODE_ONE -> R.string.repeat_single
-                PlaybackStateCompat.REPEAT_MODE_ALL -> R.string.repeat_all
-                else -> R.string.repeat_none
-            })
-        }
-    }
+//    private fun initRepeat(binding: PlayerOptionItemBinding) {
+//        repeatBinding = binding
+//        AppScope.launch(Dispatchers.Main) {
+//            repeatBinding.optionIcon.setImageResource(when (service.repeatType) {
+//                PlaybackStateCompat.REPEAT_MODE_ONE -> R.drawable.ic_repeat_one
+//                PlaybackStateCompat.REPEAT_MODE_ALL -> R.drawable.ic_repeat_all
+//                else -> R.drawable.ic_repeat
+//            })
+//            repeatBinding.root.contentDescription = repeatBinding.root.context.getString(when (service.repeatType) {
+//                PlaybackStateCompat.REPEAT_MODE_ONE -> R.string.repeat_single
+//                PlaybackStateCompat.REPEAT_MODE_ALL -> R.string.repeat_all
+//                else -> R.string.repeat_none
+//            })
+//        }
+//    }
 
     private fun togglePassthrough() {
         val enabled = !VLCOptions.isAudioDigitalOutputEnabled(settings)
@@ -436,8 +436,8 @@ class PlayerOptionsDelegate(val activity: FragmentActivity, val service: Playbac
             when (option.id) {
                 ID_ABREPEAT -> abrBinding = holder.binding
                 ID_PASSTHROUGH -> ptBinding = holder.binding
-                ID_REPEAT -> initRepeat(holder.binding)
-                ID_SHUFFLE -> initShuffle(holder.binding)
+//                ID_REPEAT -> initRepeat(holder.binding)
+//                ID_SHUFFLE -> initShuffle(holder.binding)
                 ID_SLEEP -> sleepBinding = holder.binding
             }
             holder.binding.optionIcon.setImageResource(option.icon)
