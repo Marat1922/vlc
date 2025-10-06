@@ -93,6 +93,7 @@ import org.videolan.tools.setVisible
 import org.videolan.vlc.PlaybackService
 import org.videolan.vlc.R
 import org.videolan.vlc.databinding.AudioPlayerBinding
+import org.videolan.vlc.databinding.AudioPlayerCustomBinding
 import org.videolan.vlc.gui.AudioPlayerContainerActivity
 import org.videolan.vlc.gui.HeaderMediaListActivity
 import org.videolan.vlc.gui.HeaderMediaListActivity.Companion.ARTIST_FROM_ALBUM
@@ -264,8 +265,10 @@ class AudioPlayer : Fragment(), PlaylistAdapter.IPlayer, TextWatcher, IAudioPlay
         binding.timeline.setOnSeekBarChangeListener(timelineListener)
 
         //For resizing purpose, we have to cache this twice even if it's from the same resource
+//        playToPause = AnimatedVectorDrawableCompat.create(requireActivity(), R.drawable.anim_play_pause_video)!!
         playToPause = AnimatedVectorDrawableCompat.create(requireActivity(), R.drawable.anim_play_pause_video)!!
         pauseToPlay = AnimatedVectorDrawableCompat.create(requireActivity(), R.drawable.anim_pause_play_video)!!
+//        pauseToPlay = AnimatedVectorDrawableCompat.create(requireActivity(), R.drawable.anim_pause_play_video)!!
         playToPauseHeader = AnimatedVectorDrawableCompat.create(requireActivity(), R.drawable.anim_play_pause_video)!!
         pauseToPlayHeader = AnimatedVectorDrawableCompat.create(requireActivity(), R.drawable.anim_pause_play_video)!!
         playToPauseSmall = AnimatedVectorDrawableCompat.create(requireActivity(), R.drawable.anim_play_pause_video)!!
@@ -547,17 +550,18 @@ class AudioPlayer : Fragment(), PlaylistAdapter.IPlayer, TextWatcher, IAudioPlay
         val playing = playlistModel.playing
         val text = ctx.getString(if (playing) R.string.pause else R.string.play)
 
-        val drawable = if (playing) playToPause else pauseToPlay
+        val drawable = if (playing) R.drawable.ic_pause_audio else R.drawable.ic_auto_playall_circle
         val drawableSmall = if (playing) playToPauseSmall else pauseToPlaySmall
         val drawableHeaderLarge = if (playing) playToPauseHeader else pauseToPlayHeader
-        binding.playPause.setImageDrawable(drawable)
-        binding.headerLargePlayPause.setImageDrawable(drawableHeaderLarge)
-        binding.headerPlayPause.setImageDrawable(drawableSmall)
-        if (playing != wasPlaying) {
-            drawable.start()
-            drawableSmall.start()
-            drawableHeaderLarge.start()
-        }
+//        binding.playPause.setImageDrawable(drawable)
+        binding.playPause.setImageResource(drawable)
+        binding.headerLargePlayPause.setImageResource(drawable)
+        binding.headerPlayPause.setImageResource(drawable)
+//        if (playing != wasPlaying) {
+//            drawable.start()
+//            drawableSmall.start()
+//            drawableHeaderLarge.start()
+//        }
 
         playlistAdapter.setCurrentlyPlaying(playing)
         binding.playPause.contentDescription = text
@@ -573,7 +577,7 @@ class AudioPlayer : Fragment(), PlaylistAdapter.IPlayer, TextWatcher, IAudioPlay
         val shuffling = playlistModel.shuffling
         if (wasShuffling == shuffling) return
         shuffleButtons.forEach {
-            it.setImageResource(if (shuffling) R.drawable.ic_shuffle_on else R.drawable.ic_shuffle_audio)
+            it.setImageResource(if (shuffling) R.drawable.ic_shuffle_audio_pressed else R.drawable.ic_shuffle_audio)
             it.contentDescription = ctx.getString(if (shuffling) R.string.shuffle_on else R.string.shuffle)
         }
         wasShuffling = shuffling
