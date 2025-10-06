@@ -9,4 +9,5 @@
         android:singleLine="true"
         android:gravity="center_vertical"
         android:textColor="#272D32"
-        android:textSize="30sp" />
+        android:textSize="30sp"
+    android:visibility="gone"/>

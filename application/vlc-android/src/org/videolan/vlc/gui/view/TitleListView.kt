@@ -33,6 +33,7 @@ import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.videolan.tools.dp
@@ -117,7 +118,8 @@ class TitleListView : ConstraintLayout {
             list.removeItemDecorationAt(0)
         }
         if (displayInCards) {
-            list.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            list.layoutManager = GridLayoutManager(context,2)
+//            list.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             list.addItemDecoration(object : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
                     outRect.left = resources.getDimension(R.dimen.kl_half).toInt()
@@ -126,9 +128,6 @@ class TitleListView : ConstraintLayout {
             })
 
             list.setPadding(12.dp,0,12.dp,0)
-        } else {
-            list.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
-            list.setPadding(0,0,0,0)
         }
         list.adapter?.let {
             list.adapter = it

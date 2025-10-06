@@ -204,7 +204,7 @@ object UiTools {
 
     fun getDefaultVideoDrawable(context: Context): BitmapDrawable {
         if (DEFAULT_COVER_VIDEO_DRAWABLE == null) {
-            DEFAULT_COVER_VIDEO_DRAWABLE = BitmapDrawable(context.resources, getBitmapFromDrawable(context, R.drawable.ic_video_file))
+            DEFAULT_COVER_VIDEO_DRAWABLE = BitmapDrawable(context.resources, getBitmapFromDrawable(context, R.drawable.ic_video_tab_layout))
         }
         return DEFAULT_COVER_VIDEO_DRAWABLE!!
     }

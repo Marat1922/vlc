@@ -428,6 +428,7 @@ abstract class BaseAudioBrowser<T : MedialibraryViewModel> : MediaBrowserFragmen
     override fun onRefresh() {}
 
     override fun onClick(v: View, position: Int, item: MediaLibraryItem) {
+        Log.d("TAG", "AUDIOITEMCLCK")
         if (actionMode != null) {
             getCurrentAdapter()?.multiSelectHelper?.toggleSelection(position)
             invalidateActionMode()
@@ -489,7 +490,7 @@ abstract class BaseAudioBrowser<T : MedialibraryViewModel> : MediaBrowserFragmen
 
     override fun onMainActionClick(v: View, position: Int, item: MediaLibraryItem) {
         when(getDefaultActionMediaType().getCurrentPlaybackAction(Settings.getInstance(requireActivity()))) {
-            DefaultPlaybackAction.PLAY -> MediaUtils.openList(activity, listOf(*item.tracks), 0)
+            DefaultPlaybackAction.PLAY -> getCurrentProvider() ?.let { MediaUtils.playAll(activity, it, position, false) }
             DefaultPlaybackAction.ADD_TO_QUEUE -> MediaUtils.appendMedia(activity, listOf(*item.tracks))
             DefaultPlaybackAction.INSERT_NEXT -> MediaUtils.insertNext(activity, listOf(*item.tracks).toTypedArray())
             DefaultPlaybackAction.PLAY_ALL -> getCurrentProvider() ?.let { MediaUtils.playAll(activity, it, position, false) }

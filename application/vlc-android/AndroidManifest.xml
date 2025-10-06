@@ -63,7 +63,8 @@
         </intent>
     </queries>
 
-    <application>
+    <application
+        android:extractNativeLibs="true">
 
         <!-- Enable VLC in Samsung multiwindow mode -->
         <meta-data

@@ -180,14 +180,14 @@ class MainActivity : ContentActivity(),
                     child.setOnHierarchyChangeListener(object : ViewGroup.OnHierarchyChangeListener {
                         override fun onChildViewAdded(parent: View?, child: View?) {
                                 child?.setBackgroundResource(R.drawable.search_view_background)
-
                             val params = child?.layoutParams as? ActionMenuView.LayoutParams
                                 ?: ActionMenuView.LayoutParams(
                                     ActionMenuView.LayoutParams.WRAP_CONTENT,
                                     ActionMenuView.LayoutParams.WRAP_CONTENT
                                 )
-
-                            params.setMargins(0.dpToPx(this@MainActivity), 0.dpToPx(this@MainActivity)
+//                            params.width = 72.dpToPx(this@MainActivity)
+//                            params.height = 72.dpToPx(this@MainActivity)
+                            params.setMargins(0.dpToPx(this@MainActivity), 6.dpToPx(this@MainActivity)
                                 , 0.dpToPx(this@MainActivity), 0.dpToPx(this@MainActivity))
                             child?.layoutParams = params
                         }
@@ -255,7 +255,6 @@ class MainActivity : ContentActivity(),
             setHomeButtonEnabled(false)
             setDisplayShowTitleEnabled(false)
         }
-        supportActionBar?.customView
     }
 
     override fun onStart() {

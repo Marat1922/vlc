@@ -64,6 +64,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.videolan.BuildConfig
 import org.videolan.libvlc.MediaPlayer
 import org.videolan.libvlc.interfaces.IMedia
 import org.videolan.medialibrary.MLServiceLocator
@@ -88,7 +89,6 @@ import org.videolan.tools.dp
 import org.videolan.tools.isStarted
 import org.videolan.tools.putSingle
 import org.videolan.tools.removeFileScheme
-import org.videolan.vlc.BuildConfig
 import org.videolan.vlc.PlaybackService
 import org.videolan.vlc.R
 import org.videolan.vlc.databinding.DirectoryBrowserBinding
@@ -229,7 +229,7 @@ abstract class BaseBrowserFragment : MediaBrowserFragment<BrowserModel>(), IRefr
                 }
             })
         } else {
-            binding.networkList.layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+            binding.networkList.layoutManager = GridLayoutManager(activity, 2)
         }
         binding.networkList.adapter?.let {
             binding.networkList.adapter = it
@@ -358,6 +358,10 @@ abstract class BaseBrowserFragment : MediaBrowserFragment<BrowserModel>(), IRefr
         val media = currentMedia
         if (media != null && isSchemeSupported(media.uri?.scheme)) {
             ariane.visibility = View.GONE
+
+
+
+
             ariane.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             ariane.adapter = PathAdapter(this, media)
             if (ariane.itemDecorationCount == 0) {

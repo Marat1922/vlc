@@ -5,10 +5,15 @@
     <color name="tab_Secondary_press">#CACDD1</color>
     <color name="color_source_icon">#333F48</color>
     <color name="text_normal_text">#333F48</color>
+    <color name="video_progress_time_text">#FFFFFF</color>
     <color name="text_color_secondary_navio">#828B93</color>
     <color name="iconSecondaryColor">#758794</color>
     <color name="control_secondary_normal_color">#DCE1E6</color>
     <color name="text_normal_color_navio">#171B1E</color>
     <color name="pause_control_back">#FFFFFF</color>
     <color name="color_icon_disabled">#A6ACB2</color>
+    <color name="text_color_track_title">#272D32</color>
+    <color name="text_color_track_subtitle">#4D5964</color>
+    <color name="background_search_icon">#272D32</color>
+    <color name="background_fullscreen_icon">#7A000000</color>
 </resources>
