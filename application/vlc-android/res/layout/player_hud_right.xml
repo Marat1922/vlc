@@ -4,7 +4,9 @@
         xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-
+        <variable
+            name="player"
+            type="org.videolan.vlc.gui.video.VideoPlayerActivity" />
     </data>
 
 
@@ -116,42 +118,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/playlist_toggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/show_playlist"
-            android:focusable="true"
-            android:padding="6dp"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/clock"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed"
-            app:srcCompat="@drawable/ic_player_playqueue"
-            tools:visibility="visible" />
-
-        <ImageView
-                android:id="@+id/video_secondary_display"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/video_remote_enable"
-                android:focusable="true"
-                android:onClick="onClick"
-                android:padding="6dp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toStartOf="@+id/video_renderer"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_player_screenshare"
-                tools:visibility="visible" />
 
         <ImageView
                 android:id="@+id/video_renderer"
@@ -165,7 +131,7 @@
                 android:focusable="true"
                 android:padding="6dp"
                 android:visibility="gone"
-                app:layout_constraintEnd_toStartOf="@+id/playlist_toggle"
+                app:layout_constraintEnd_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_player_renderer"
                 tools:visibility="visible" />
@@ -254,7 +220,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:barrierDirection="bottom"
-                app:constraint_referenced_ids="playlist_toggle,video_renderer,player_overlay_navmenu,video_secondary_display"/>
+                app:constraint_referenced_ids="video_renderer,player_overlay_navmenu"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
