@@ -102,8 +102,7 @@
                     android:id="@+id/header_shuffle"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginEnd="4dp"
+                    android:layout_marginEnd="@dimen/padding_control_button"
                     android:background="?attr/actionBarItemBackground"
                     android:contentDescription="@string/shuffle_title"
                     android:elevation="4dp"
@@ -124,20 +123,19 @@
                     android:layout_width="64dp"
                     android:layout_height="64dp"
                     android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
+                    android:layout_marginEnd="@dimen/padding_control_button"
                     android:background="?attr/actionBarItemBackground"
                     android:contentDescription="@string/previous"
                     android:elevation="4dp"
                     android:focusable="true"
                     android:onClick="@{fragment::onPreviousClick}"
-                    android:padding="8dp"
                     android:visibility="gone"
                     app:layout_constraintBottom_toBottomOf="@id/header_large_play_pause"
                     app:layout_constraintEnd_toStartOf="@+id/header_large_play_pause"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/header_shuffle"
                     app:layout_constraintTop_toTopOf="@id/header_large_play_pause"
-                    app:srcCompat="@drawable/ic_previous" />
+                    app:srcCompat="@drawable/ic_previous_audio" />
 
             <androidx.appcompat.widget.AppCompatImageView
                     android:id="@+id/header_large_play_pause"
@@ -160,8 +158,7 @@
                     android:id="@+id/header_next"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="4dp"
+                    android:paddingStart="@dimen/padding_control_button"
                     android:background="?attr/actionBarItemBackground"
                     android:contentDescription="@string/next"
                     android:elevation="4dp"
@@ -175,14 +172,13 @@
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/header_large_play_pause"
                     app:layout_constraintTop_toTopOf="@id/header_large_play_pause"
-                    app:srcCompat="@drawable/ic_next" />
+                    app:srcCompat="@drawable/ic_next_audio" />
 
             <ImageView
                     android:id="@+id/header_repeat"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_marginEnd="16dp"
+                    android:paddingStart="@dimen/padding_control_button"
                     android:background="?attr/actionBarItemBackground"
                     android:contentDescription="@string/repeat_title"
                     android:elevation="4dp"
@@ -748,11 +744,11 @@
                 app:srcCompat="@drawable/ic_repeat_audio" />
 
         <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/centerGuideline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.5" />
+            android:id="@+id/centerGuideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="205dp" />
 
         <ImageView
                 android:id="@+id/hinge_go_left"

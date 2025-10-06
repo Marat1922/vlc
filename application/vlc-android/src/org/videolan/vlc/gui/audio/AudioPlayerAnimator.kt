@@ -163,7 +163,7 @@ internal class AudioPlayerAnimator : IAudioPlayerAnimator, LifecycleObserver {
      */
     private fun initConstraintSets() {
         arrayOf(headerShowPlaylistConstraint, headerHidePlaylistConstraint, headerHidePlaylistLandscapeConstraint).forEach {constraintSet ->
-            constraintSet.setVisibility(R.id.header_shuffle, if (showTabletControls() && audioPlayer.playlistModel.canShuffle) View.VISIBLE else View.GONE)
+            constraintSet.setVisibility(R.id.`header_shuffle`, if (showTabletControls() && audioPlayer.playlistModel.canShuffle) View.VISIBLE else View.GONE)
             arrayOf(R.id.header_previous, R.id.header_large_play_pause, R.id.header_next, R.id.header_repeat).forEach {
                 constraintSet.setVisibility(it, if (showTabletControls()) View.VISIBLE else View.GONE)
             }
