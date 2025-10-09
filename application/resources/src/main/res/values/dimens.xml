@@ -120,4 +120,6 @@
     <dimen name="audio_cover">48dp</dimen>
     <dimen name="video_cover">100dp</dimen>
 
+    <dimen name="item_padding">6dp</dimen>
+
 </resources>

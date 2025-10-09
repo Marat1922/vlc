@@ -10,4 +10,5 @@
     <color name="text_normal_color_navio">#F7F8FA</color>
     <color name="pause_control_back">#000000</color>
     <color name="color_icon_disabled">#45505A</color>
+    <color name="background_search_icon">#DCE1E6</color>
 </resources>

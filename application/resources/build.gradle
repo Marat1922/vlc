@@ -64,6 +64,8 @@ static def getOSApiKey(project) {
 }
 
 dependencies {
+    implementation(files("./libs/uikit.aar"))
+
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     api 'androidx.multidex:multidex:2.0.1'
 

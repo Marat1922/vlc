@@ -178,7 +178,7 @@ dependencies {
     implementation project(':application:vlc-android')
     implementation project(':application:television')
     implementation project(':application:remote-access-server')
-    implementation(files("./libs/uikit.aar"))
+
     testImplementation project(':application:television')
     testImplementation project(':application:remote-access-server')
 
