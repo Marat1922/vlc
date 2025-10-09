@@ -174,6 +174,7 @@ class MainActivity : ContentActivity(),
 
             }
         }
+        window.setBackgroundDrawableResource(R.color.transparent)
         toolbar.setOnHierarchyChangeListener(object  : ViewGroup.OnHierarchyChangeListener{
             override fun onChildViewAdded(parent: View?, child: View?) {
                 if (child is ActionMenuView) {

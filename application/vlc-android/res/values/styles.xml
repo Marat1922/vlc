@@ -40,7 +40,7 @@
 
 
         <item name="actionModeBackground">@color/action_mode_light</item>
-        <item name="background_default">@color/white</item>
+        <item name="background_default">@color/backgroundNormal</item>
         <item name="bottom_navigation_background">@drawable/bottom_navigation_background</item>
         <item name="audio_header_background">@color/white</item>
         <item name="audio_header_divider">@color/grey400</item>
@@ -706,13 +706,13 @@
         <item name="android:background">@drawable/tab_background</item>
         <item name="tabIndicatorHeight">0dp</item>
         <item name="tabIndicator">@null</item>
-        <item name="tabIconTint">@color/tab_icon_tint</item>
+        <item name="tabIconTint">@drawable/tab_icon_tint</item>
         <item name="tabRippleColor">@null</item>
         <item name="tabMode">scrollable</item>
-        <item name="tabTextColor">#272D32</item>
+        <item name="tabTextColor">@color/textNormal</item>
         <item name="android:textAllCaps">false</item>
         <item name="textAllCaps">false</item>
-        <item name="tabSelectedTextColor">#EDEEF0</item>
+        <item name="tabSelectedTextColor">@color/backgroundPlate</item>
         <item name="tabBackground">@drawable/tab_background_selector</item>
         <item name="tabSelectedTextAppearance">@style/TabLayout.VLC.TextAppearance</item>
     </style>
@@ -722,13 +722,14 @@
         <item name="textAllCaps">false</item>
         <item name="android:textSize">32sp</item>
         <item name="android:fontFamily">@font/vesta2_bold</item>
-        <item name="tabIconTint">#EDEEF0</item>
+        <item name="tabIconTint">@color/backgroundPlate</item>
+        <item name="tabTextColor">@color/backgroundPlate</item>
     </style>
 
     <style name="CustomAudioItemTrack.VLC" parent="Widget.AppCompat.TextView">
         <item name="tabIndicatorHeight">0dp</item>
         <item name="tabIndicator">@null</item>
-        <item name="tabIconTint">@color/tab_icon_tint</item>
+        <item name="tabIconTint">@drawable/tab_icon_tint</item>
         <item name="tabRippleColor">@null</item>
         <item name="tabMode">scrollable</item>
         <item name="tabTextColor">#272D32</item>
@@ -930,7 +931,7 @@
     </style>
 
     <style name="ProgressTextStyle">
-        <item name="android:textColor">@color/text_normal_text</item>
+        <item name="android:textColor">@color/iconNormal</item>
         <item name="android:fontFamily">@font/vesta2_medium
         </item> <!-- Replace with @font/sb_sans_text if you have the font -->
         <item name="android:textSize">28sp</item>
@@ -956,14 +957,14 @@
     <style name="title">
         <item name="android:textSize">40sp</item>
         <item name="android:letterSpacing" tools:ignore="NewApi">0.01</item>
-        <item name="android:textColor">@color/text_normal_text</item>
+        <item name="android:textColor">@color/textNormal</item>
         <item name="android:font" tools:targetApi="26">@font/vesta2_regular</item>
     </style>
 
     <style name="subtitle">
         <item name="android:textSize">36sp</item>
         <item name="android:letterSpacing" tools:targetApi="21">0.01</item>
-        <item name="android:textColor">@color/text_color_secondary_navio</item>
+        <item name="android:textColor">@color/textNormal</item>
         <item name="android:font" tools:targetApi="26">@font/vesta2_regular</item>
     </style>
 
@@ -971,14 +972,14 @@
         <item name="android:fontFamily">@font/vesta2_bold</item>
         <item name="android:textSize">32sp</item>
         <item name="android:letterSpacing" tools:targetApi="21">0.01</item>
-        <item name="android:textColor">@color/text_color_track_title</item>
+        <item name="android:textColor">@color/textNormal</item>
     </style>
 
     <style name="trackSubtitleText">
         <item name="android:fontFamily">@font/vesta2_regular</item>
         <item name="android:textSize">28sp</item>
         <item name="android:letterSpacing" tools:targetApi="21">0.01</item>
-        <item name="android:textColor">@color/text_color_track_subtitle</item>
+        <item name="android:textColor">@color/textSecondary</item>
     </style>
 
     <style name="VideoProgressTimeTextStyle">
