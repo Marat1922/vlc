@@ -18,5 +18,6 @@
         android:theme="@style/Theme.VLC.Transparent"
         android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
+        android:extractNativeLibs="false"
         tools:targetApi="q" />
 </manifest>

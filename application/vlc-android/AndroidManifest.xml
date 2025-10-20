@@ -63,8 +63,7 @@
         </intent>
     </queries>
 
-    <application
-        android:extractNativeLibs="true">
+    <application>
 
         <!-- Enable VLC in Samsung multiwindow mode -->
         <meta-data
@@ -1054,6 +1053,9 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
+        </activity>
+        <activity android:name=".gui.browser.ImageViewerActivity">
+
         </activity>
 
         <service
