@@ -78,8 +78,8 @@ abstract class BaseFragment : Fragment(), ActionMode.Callback {
     }
 
     fun manageFabNeverShow() {
-        val fab = requireActivity().findViewById<FloatingActionButton?>(R.id.fab)
-        ((fab?.layoutParams as? CoordinatorLayout.LayoutParams)?.behavior as? FloatingActionButtonBehavior)?.shouldNeverShow = !hasFAB() && requireActivity() is MainActivity
+//        val fab = requireActivity().findViewById<FloatingActionButton?>(R.id.fab)
+//        ((fab?.layoutParams as? CoordinatorLayout.LayoutParams)?.behavior as? FloatingActionButtonBehavior)?.shouldNeverShow = !hasFAB() && requireActivity() is MainActivity
     }
 
     override fun onStart() {
@@ -90,13 +90,13 @@ abstract class BaseFragment : Fragment(), ActionMode.Callback {
     }
 
     private fun updateFabPlayView() {
-        val visibility = fabPlay?.visibility
-        val fab = requireActivity().findViewById<FloatingActionButton>(R.id.fab)
-        val fabLarge = requireActivity().findViewById<FloatingActionButton>(R.id.fab_large)
-        fab.setGone()
-        fabLarge.setGone()
-        fabPlay = if (requireActivity().isTablet() && requireActivity() is MainActivity) fabLarge else fab
-        visibility?.let { fabPlay?.visibility = it }
+//        val visibility = fabPlay?.visibility
+//        val fab = requireActivity().findViewById<FloatingActionButton>(R.id.fab)
+//        val fabLarge = requireActivity().findViewById<FloatingActionButton>(R.id.fab_large)
+//        fab.setGone()
+//        fabLarge.setGone()
+//        fabPlay = if (requireActivity().isTablet() && requireActivity() is MainActivity) fabLarge else fab
+//        visibility?.let { fabPlay?.visibility = it }
     }
 
     override fun onStop() {

@@ -35,6 +35,6 @@ class FilePickerAdapter internal constructor(browserContainer: BrowserContainer<
         h.bindingContainer.setItem(media)
         h.bindingContainer.setHasContextMenu(false)
         h.bindingContainer.setProtocol(null)
-        h.bindingContainer.setCover(getIcon(media, false))
+        h.bindingContainer.setCover(getIcon(media, false, h.bindingContainer))
     }
 }

@@ -204,6 +204,10 @@ abstract class BaseBrowserFragment : MediaBrowserFragment<BrowserModel>(), IRefr
         }
         isRootDirectory = defineIsRoot()
         browserFavRepository = BrowserFavRepository.getInstance(requireContext())
+        if(PlaybackService.instance?.isPlaying == true){
+            Toast.makeText(activity, "PLAYING", Toast.LENGTH_SHORT).show()
+            Log.d("TAG", "PLAYING")
+        }
     }
 
     private fun manageDisplay() {
@@ -275,8 +279,8 @@ abstract class BaseBrowserFragment : MediaBrowserFragment<BrowserModel>(), IRefr
             updateEmptyView()
         }
         (view.rootView.findViewById<View?>(R.id.appbar) as? AppBarLayout)?.let {
-            binding.browserFastScroller.attachToCoordinator(it, view.rootView.findViewById<View>(R.id.coordinator) as CoordinatorLayout, view.rootView.findViewById<View>(R.id.fab) as FloatingActionButton)
-            binding.browserFastScroller.setRecyclerView(binding.networkList, viewModel.provider)
+//            binding.browserFastScroller.attachToCoordinator(it, view.rootView.findViewById<View>(R.id.coordinator) as CoordinatorLayout, view.rootView.findViewById<View>(R.id.fab) as FloatingActionButton)
+//            binding.browserFastScroller.setRecyclerView(binding.networkList, viewModel.provider)
         }
         PlaylistManager.currentPlayedMedia.observe(this) {
             adapter.currentMedia = it
@@ -718,7 +722,9 @@ abstract class BaseBrowserFragment : MediaBrowserFragment<BrowserModel>(), IRefr
             onLongClick(v, position, item)
             return
         }
+
         val mediaWrapper = item as MediaWrapper
+
         if (actionMode != null) {
             if (mediaWrapper.type == MediaWrapper.TYPE_AUDIO ||
                     mediaWrapper.type == MediaWrapper.TYPE_VIDEO ||
@@ -729,7 +735,11 @@ abstract class BaseBrowserFragment : MediaBrowserFragment<BrowserModel>(), IRefr
         } else {
             mediaWrapper.removeFlags(MediaWrapper.MEDIA_FORCE_AUDIO)
             if (mediaWrapper.type == MediaWrapper.TYPE_DIR) browse(mediaWrapper, true)
-            else {
+            if (adapter.isImageFile(mediaWrapper)) {
+                openImage(mediaWrapper)
+                return
+            }
+            if(mediaWrapper.type == MediaWrapper.TYPE_AUDIO || mediaWrapper.type == MediaWrapper.TYPE_VIDEO) {
                 lifecycleScope.launch {
                     val media = getMediaWithMeta(item).apply {
                         if (Settings.getInstance(requireActivity()).getBoolean(KEY_QUICK_PLAY_DEFAULT, false))
@@ -751,10 +761,20 @@ abstract class BaseBrowserFragment : MediaBrowserFragment<BrowserModel>(), IRefr
                         }
                     }
                 }
+            } else {
+                Toast.makeText(context, "Формат не поддерживается", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+
+    private fun openImage(mediaWrapper: MediaWrapper) {
+        val intent = Intent(requireContext(), ImageViewerActivity::class.java).apply {
+            putExtra("image_uri", mediaWrapper.uri.toString())
+            putExtra("image_title", mediaWrapper.title)
+        }
+        startActivity(intent)
+    }
     override fun onLongClick(v: View, position: Int, item: MediaLibraryItem): Boolean {
         if (item.itemType != MediaLibraryItem.TYPE_MEDIA) return false
         val mediaWrapper = item as MediaWrapper
