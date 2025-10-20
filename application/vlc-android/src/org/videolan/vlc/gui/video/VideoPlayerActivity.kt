@@ -290,6 +290,7 @@ open class VideoPlayerActivity : AppCompatActivity(), PlaybackService.Callback,
 
     private var currentAudioTrack = "-2"
     private var currentSpuTrack = "-2"
+    var closeVideoPlayer : ImageView? = null
 
     var isLocked = false
 
@@ -508,7 +509,7 @@ open class VideoPlayerActivity : AppCompatActivity(), PlaybackService.Callback,
 
     lateinit var bookmarkModel: BookmarkModel
     val isPlaylistVisible: Boolean
-        get() = overlayDelegate.playlistContainer.visibility == View.VISIBLE
+        get() = overlayDelegate.playlistContainer.visibility == View.GONE
 
     private val btReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
@@ -778,15 +779,15 @@ open class VideoPlayerActivity : AppCompatActivity(), PlaybackService.Callback,
         val audioTouch =
             (!VlcMigrationHelper.isLolliPopOrLater || !audiomanager.isVolumeFixed) && settings.getBoolean(
                 ENABLE_VOLUME_GESTURE,
-                true
+                false
             )
         val brightnessTouch =
-            !AndroidDevices.isChromeBook && settings.getBoolean(ENABLE_BRIGHTNESS_GESTURE, true)
+            !AndroidDevices.isChromeBook && settings.getBoolean(ENABLE_BRIGHTNESS_GESTURE, false)
         ((if (audioTouch) TOUCH_FLAG_AUDIO_VOLUME else 0)
                 + (if (brightnessTouch) TOUCH_FLAG_BRIGHTNESS else 0)
                 + (if (settings.getBoolean(
                 ENABLE_DOUBLE_TAP_SEEK,
-                true
+                false
             )
         ) TOUCH_FLAG_DOUBLE_TAP_SEEK else 0)
                 + (if (settings.getBoolean(ENABLE_DOUBLE_TAP_PLAY, true)) TOUCH_FLAG_PLAY else 0)
@@ -2012,12 +2013,21 @@ open class VideoPlayerActivity : AppCompatActivity(), PlaybackService.Callback,
         stopLoading()
         overlayDelegate.updateOverlayPausePlay()
         updateNavStatus()
-        if (!mw.hasFlag(MediaWrapper.MEDIA_PAUSED) && Settings.videoHudDelay != -1)
-            handler.sendEmptyMessageDelayed(FADE_OUT, Settings.videoHudDelay.toLong() * 1000)
-        else {
-            mw.removeFlags(MediaWrapper.MEDIA_PAUSED)
-            wasPaused = false
-        }
+
+        // ЗАМЕНИТЬ эту часть:
+        // if (!mw.hasFlag(MediaWrapper.MEDIA_PAUSED) && Settings.videoHudDelay != -1)
+        //     handler.sendEmptyMessageDelayed(FADE_OUT, Settings.videoHudDelay.toLong() * 1000)
+        // else {
+        //     mw.removeFlags(MediaWrapper.MEDIA_PAUSED)
+        //     wasPaused = false
+        // }
+
+        // НА ЭТО (показ панели как при клике на экран):
+        overlayDelegate.showOverlay(true)
+
+        mw.removeFlags(MediaWrapper.MEDIA_PAUSED)
+        wasPaused = false
+
         setESTracks()
         if (overlayDelegate.isHudRightBindingInitialized() && (overlayDelegate.hudRightBinding.playerOverlayTitle.length() == 0 || PlaybackService.hasRenderer()))
             overlayDelegate.setTitle(mw.title)
@@ -2960,7 +2970,7 @@ open class VideoPlayerActivity : AppCompatActivity(), PlaybackService.Callback,
      */
     fun onChangedControlSetting(key: String) = when (key) {
         AUDIO_BOOST -> isAudioBoostEnabled = settings.getBoolean(AUDIO_BOOST, true)
-        ENABLE_VOLUME_GESTURE, ENABLE_BRIGHTNESS_GESTURE, ENABLE_DOUBLE_TAP_SEEK, ENABLE_DOUBLE_TAP_PLAY, ENABLE_SWIPE_SEEK, ENABLE_SCALE_GESTURE, ENABLE_FASTPLAY -> touchDelegate.touchControls =
+        ENABLE_VOLUME_GESTURE, ENABLE_BRIGHTNESS_GESTURE, ENABLE_DOUBLE_TAP_SEEK, ENABLE_SWIPE_SEEK, ENABLE_SCALE_GESTURE, ENABLE_FASTPLAY -> touchDelegate.touchControls =
             generateTouchFlags()
 
         SCREENSHOT_MODE -> {

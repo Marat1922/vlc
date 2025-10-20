@@ -341,26 +341,26 @@ class FastScroller : LinearLayout, Observer<HeadersIndex>, SchedulerCallback, Ap
         override fun onScrolled(rv: RecyclerView, dx: Int, dy: Int) {
             updatePositions()
             //launch the collapse / expand animations if needed
-            appbarLayout.totalScrollRange.let {
-
-                if (tryCollapseAppbarOnNextScroll && lastVerticalOffset != -it) {
-                    if (!isAnimating.get()) {
-                        appbarLayout.setExpanded(false)
-                        floatingActionButton?.hide()
-                        isAnimating.set(true)
-                    }
-                    tryCollapseAppbarOnNextScroll = false
-                }
-
-                if (tryExpandAppbarOnNextScroll && lastVerticalOffset == -it) {
-                    if (!isAnimating.get()) {
-                        appbarLayout.setExpanded(true)
-                        floatingActionButton?.show()
-                        isAnimating.set(true)
-                    }
-                    tryExpandAppbarOnNextScroll = false
-                }
-            }
+//            appbarLayout.totalScrollRange.let {
+//
+//                if (tryCollapseAppbarOnNextScroll && lastVerticalOffset != -it) {
+//                    if (!isAnimating.get()) {
+//                        appbarLayout.setExpanded(false)
+//                        floatingActionButton?.hide()
+//                        isAnimating.set(true)
+//                    }
+//                    tryCollapseAppbarOnNextScroll = false
+//                }
+//
+//                if (tryExpandAppbarOnNextScroll && lastVerticalOffset == -it) {
+//                    if (!isAnimating.get()) {
+//                        appbarLayout.setExpanded(true)
+//                        floatingActionButton?.show()
+//                        isAnimating.set(true)
+//                    }
+//                    tryExpandAppbarOnNextScroll = false
+//                }
+//            }
         }
     }
 

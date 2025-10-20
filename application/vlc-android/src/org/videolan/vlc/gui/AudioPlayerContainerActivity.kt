@@ -121,7 +121,7 @@ open class AudioPlayerContainerActivity : BaseActivity(), KeycodeListener, Sched
     private var bottomBar: BottomNavigationView? = null
     lateinit var appBarLayout: AppBarLayout
     protected lateinit var toolbar: Toolbar
-    private var tabLayout: TabLayout? = null
+    var tabLayout: TabLayout? = null
     private var navigationRail: NavigationRailView? = null
     lateinit var audioPlayer: AudioPlayer
     private lateinit var audioPlayerContainer: FrameLayout

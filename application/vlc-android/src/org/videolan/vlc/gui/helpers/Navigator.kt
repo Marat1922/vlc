@@ -92,7 +92,11 @@ class Navigator :  DefaultLifecycleObserver, INavigator {
         activity = this
         this@Navigator.settings = settings
         forExpresso = intent.parcelableList(EXTRA_FOR_ESPRESSO)
-        currentFragmentId = intent.getIntExtra(EXTRA_TARGET, 0)
+
+        // ВОССТАНАВЛИВАЕМ ПРАВИЛЬНЫЙ ID ИЗ СОХРАНЕННОГО СОСТОЯНИЯ
+        currentFragmentId = state?.getInt("CURRENT_FRAGMENT_ID", defaultFragmentId) ?: defaultFragmentId
+        currentFragmentId2 = state?.getInt("CURRENT_TAB_POSITION", 0) ?: 0
+
         if (state !== null) {
             currentFragment = supportFragmentManager.getFragment(state, "current_fragment")
         }
@@ -114,17 +118,21 @@ class Navigator :  DefaultLifecycleObserver, INavigator {
                     .setTag(menuItem.itemId)
             )
         }
+
+        val savedTabPosition = state?.getInt("CURRENT_TAB_POSITION", 0) ?: 0
+        if (savedTabPosition < tabLayout.tabCount) {
+            tabLayout.getTabAt(savedTabPosition)?.select()
+        }
+
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 showFragment(tab?.tag as Int)
-                currentFragmentId2 = tab.position
-                Log.d("TAG", " currentFragmentId = $currentFragmentId2")
+                currentFragmentId2 = tab?.position ?: 0
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {}
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
-
     }
 
     override fun onStart(owner: LifecycleOwner) {

@@ -136,8 +136,8 @@ class AudioBrowserFragment : BaseAudioBrowser<AudioBrowserViewModel>() {
         super.onViewCreated(view, savedInstanceState)
         val appbar = view.rootView.findViewById<AppBarLayout>(R.id.appbar)
         val coordinator = view.rootView.findViewById<CoordinatorLayout>(R.id.coordinator)
-        val fab = view.rootView.findViewById<FloatingActionButton>(R.id.fab)
-        binding.songsFastScroller.attachToCoordinator(appbar, coordinator, fab)
+//        val fab = view.rootView.findViewById<FloatingActionButton>(R.id.fab)
+//        binding.songsFastScroller.attachToCoordinator(appbar, coordinator, fab)
         binding.audioEmptyLoading.setOnNoMediaClickListener { requireActivity().setResult(RESULT_RESTART) }
 
         val views = ArrayList<View>(MODE_TOTAL)
