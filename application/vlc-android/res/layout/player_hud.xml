@@ -560,22 +560,37 @@
             vlc:layout_constraintTop_toTopOf="parent"
             vlc:srcCompat="@drawable/ic_fullscreen" />
 
-        <ImageView
-            android:id="@+id/player_overlay_adv_function"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="44dp"
-            android:layout_marginBottom="46dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
+        <ImageButton
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            vlc:srcCompat="@drawable/ic_close_search_edit_text"
+            android:background="@drawable/background_fullscreen_icon_rectangle"
+            android:id="@+id/close_video_player"
+            android:contentDescription="@string/close"
+            android:visibility="visible"
             android:clickable="true"
-            android:contentDescription="@string/advanced"
-            android:focusable="true"
-            android:onClick="@{(v) -> player.showAdvancedOptions()}"
-            android:scaleType="fitEnd"
-            tools:visibility="visible"
-            vlc:layout_constraintBottom_toBottomOf="parent"
-            vlc:layout_constraintEnd_toEndOf="parent"
-            vlc:srcCompat="@drawable/ic_more_video_player" />
+            android:onClick="@{(v) -> player.stop()}"
+            android:layout_marginTop="32dp"
+            android:layout_marginStart="32dp"
+            vlc:layout_constraintStart_toStartOf="parent"
+            vlc:layout_constraintTop_toTopOf="parent" />
+
+<!--        <ImageView-->
+<!--            android:id="@+id/player_overlay_adv_function"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginEnd="44dp"-->
+<!--            android:layout_marginBottom="46dp"-->
+<!--            android:background="?attr/selectableItemBackgroundBorderless"-->
+<!--            android:clickable="true"-->
+<!--            android:contentDescription="@string/advanced"-->
+<!--            android:focusable="true"-->
+<!--            android:onClick="@{(v) -> player.showAdvancedOptions()}"-->
+<!--            android:scaleType="fitEnd"-->
+<!--            tools:visibility="gone"-->
+<!--            vlc:layout_constraintBottom_toBottomOf="parent"-->
+<!--            vlc:layout_constraintEnd_toEndOf="parent"-->
+<!--            vlc:srcCompat="@drawable/ic_more_video_player" />-->
 
         <org.videolan.vlc.gui.view.SwipeToUnlockView
             android:id="@+id/swipe_to_unlock"

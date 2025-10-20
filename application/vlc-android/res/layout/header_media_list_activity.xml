@@ -276,10 +276,6 @@
 
         <include layout="@layout/audioplayercontainer" />
 
-        <androidx.appcompat.widget.ViewStubCompat
-                android:id="@+id/audio_player_tips"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout="@layout/audio_player_tips" />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

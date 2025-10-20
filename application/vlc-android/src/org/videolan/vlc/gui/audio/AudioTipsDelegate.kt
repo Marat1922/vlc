@@ -187,7 +187,7 @@ class AudioTipsDelegate(private val activity: AudioPlayerContainerActivity) {
         currentTip = null
 
         activity.audioPlayer.playlistModel.service?.play()
-        activity.shownTips.add(R.id.audio_player_tips)
+//        activity.shownTips.add(R.id.audio_player_tips)
         activity.playerBehavior.lock(false)
     }
 

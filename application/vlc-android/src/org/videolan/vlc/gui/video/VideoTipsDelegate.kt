@@ -91,40 +91,40 @@ class VideoTipsDelegate(private val player: VideoPlayerActivity) : OnClickListen
      * - Start the tips
      */
     fun init() {
-        (player.findViewById<View>(R.id.player_overlay_tips) as? ViewStubCompat)?.inflate()
-
-        tipsBrightnessProgress = player.findViewById(R.id.tipsBrightnessProgress)
-        tipsVolumeProgress = player.findViewById(R.id.tipsVolumeProgress)
-        overlayTipsLayout = player.findViewById(R.id.overlayTipsLayout)
-        tapIndicatorTracks = player.findViewById(R.id.tapIndicatorTracks)
-        tapIndicatorOrientation = player.findViewById(R.id.tapIndicatorOrientation)
-        tapIndicatorPlay = player.findViewById(R.id.tapIndicatorPlay)
-        tapIndicatorRatio = player.findViewById(R.id.tapIndicatorRatio)
-        tapIndicatorAdvanced = player.findViewById(R.id.tapIndicatorAdvanced)
-        tapGesture = player.findViewById(R.id.tapGesture)
-        nextButton = player.findViewById(R.id.nextButton)
-        tipsBrightnessText = player.findViewById(R.id.tipsBrightnessText)
-        tipsVolumeText = player.findViewById(R.id.tipsVolumeText)
-        doubleTapCenter = player.findViewById(R.id.doubleTapCenter)
-        doubleTapLeft = player.findViewById(R.id.doubleTapLeft)
-        doubleTapRight = player.findViewById(R.id.doubleTapRight)
-        seekRewindFirst = player.findViewById(R.id.seekRewindFirst)
-        seekRewindSecond = player.findViewById(R.id.seekRewindSecond)
-        seekForwardFirst = player.findViewById(R.id.seekForwardFirst)
-        seekForwardSecond = player.findViewById(R.id.seekForwardSecond)
-        tapGestureHorizontal = player.findViewById(R.id.tapGestureHorizontal)
-        helpTitle = player.findViewById(R.id.helpTitle)
-        helpDescription = player.findViewById(R.id.helpDescription)
-
-        tipsBrightnessProgress.setValue(50)
-        tipsVolumeProgress.setValue(50)
-        if (!::initialConstraintSet.isInitialized) {
-            initialConstraintSet = ConstraintSet()
-            initialConstraintSet.clone(overlayTipsLayout)
-        }
-        overlayTipsLayout.setVisible()
-        next()
-        getTapIndicators().forEach { it.setOnClickListener(this) }
+//        (player.findViewById<View>(R.id.player_overlay_tips) as? ViewStubCompat)?.inflate()
+//
+//        tipsBrightnessProgress = player.findViewById(R.id.tipsBrightnessProgress)
+//        tipsVolumeProgress = player.findViewById(R.id.tipsVolumeProgress)
+//        overlayTipsLayout = player.findViewById(R.id.overlayTipsLayout)
+//        tapIndicatorTracks = player.findViewById(R.id.tapIndicatorTracks)
+//        tapIndicatorOrientation = player.findViewById(R.id.tapIndicatorOrientation)
+//        tapIndicatorPlay = player.findViewById(R.id.tapIndicatorPlay)
+//        tapIndicatorRatio = player.findViewById(R.id.tapIndicatorRatio)
+//        tapIndicatorAdvanced = player.findViewById(R.id.tapIndicatorAdvanced)
+//        tapGesture = player.findViewById(R.id.tapGesture)
+//        nextButton = player.findViewById(R.id.nextButton)
+//        tipsBrightnessText = player.findViewById(R.id.tipsBrightnessText)
+//        tipsVolumeText = player.findViewById(R.id.tipsVolumeText)
+//        doubleTapCenter = player.findViewById(R.id.doubleTapCenter)
+//        doubleTapLeft = player.findViewById(R.id.doubleTapLeft)
+//        doubleTapRight = player.findViewById(R.id.doubleTapRight)
+//        seekRewindFirst = player.findViewById(R.id.seekRewindFirst)
+//        seekRewindSecond = player.findViewById(R.id.seekRewindSecond)
+//        seekForwardFirst = player.findViewById(R.id.seekForwardFirst)
+//        seekForwardSecond = player.findViewById(R.id.seekForwardSecond)
+//        tapGestureHorizontal = player.findViewById(R.id.tapGestureHorizontal)
+//        helpTitle = player.findViewById(R.id.helpTitle)
+//        helpDescription = player.findViewById(R.id.helpDescription)
+//
+//        tipsBrightnessProgress.setValue(50)
+//        tipsVolumeProgress.setValue(50)
+//        if (!::initialConstraintSet.isInitialized) {
+//            initialConstraintSet = ConstraintSet()
+//            initialConstraintSet.clone(overlayTipsLayout)
+//        }
+//        overlayTipsLayout.setVisible()
+//        next()
+//        getTapIndicators().forEach { it.setOnClickListener(this) }
     }
 
     /**
