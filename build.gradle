@@ -26,6 +26,9 @@ allprojects {
         google()
         mavenCentral()
         mavenLocal()
+        flatDir {
+            dirs project(':application:resources').file('libs')
+        }
     }
     tasks.withType(Javadoc) {
         // Ignores errors from mavenAndroidJavadocs task

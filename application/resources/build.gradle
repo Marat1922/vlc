@@ -10,7 +10,11 @@ android {
             pickFirsts += ['**/*.so']
         }
     }
-
+    repositories {
+        flatDir {
+            dirs 'libs'
+        }
+    }
 
     defaultConfig {
         minSdkVersion rootProject.ext.minSdkVersion
@@ -64,7 +68,7 @@ static def getOSApiKey(project) {
 }
 
 dependencies {
-    implementation(files("./libs/uikit.aar"))
+    implementation(name: 'uikit', ext: 'aar')
 
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     api 'androidx.multidex:multidex:2.0.1'
