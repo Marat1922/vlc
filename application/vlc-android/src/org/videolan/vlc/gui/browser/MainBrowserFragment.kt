@@ -32,6 +32,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.view.ActionMode
 import androidx.core.content.edit
 import androidx.core.net.toUri
@@ -44,14 +45,18 @@ import org.videolan.medialibrary.interfaces.media.MediaWrapper
 import org.videolan.medialibrary.media.MediaLibraryItem
 import org.videolan.medialibrary.media.MediaWrapperImpl
 import org.videolan.resources.EXTRA_FOR_ESPRESSO
+import org.videolan.resources.util.getFromMl
 import org.videolan.resources.util.parcelableList
 import org.videolan.tools.KEY_BROWSE_NETWORK
+import org.videolan.tools.KEY_QUICK_PLAY_DEFAULT
+import org.videolan.tools.LOGIN_STORE
 import org.videolan.tools.NetworkMonitor
 import org.videolan.tools.Settings
 import org.videolan.tools.isStarted
 import org.videolan.tools.putSingle
 import org.videolan.tools.setGone
 import org.videolan.tools.setVisible
+import org.videolan.vlc.PlaybackService
 import org.videolan.vlc.R
 import org.videolan.vlc.gui.BaseFragment
 import org.videolan.vlc.gui.SecondaryActivity
@@ -60,6 +65,8 @@ import org.videolan.vlc.gui.dialogs.CtxActionReceiver
 import org.videolan.vlc.gui.dialogs.KEY_PERMISSION_CHANGED
 import org.videolan.vlc.gui.dialogs.NetworkServerDialog
 import org.videolan.vlc.gui.dialogs.showContext
+import org.videolan.vlc.gui.helpers.DefaultPlaybackAction
+import org.videolan.vlc.gui.helpers.DefaultPlaybackActionMediaType
 import org.videolan.vlc.gui.helpers.UiTools.addToPlaylist
 import org.videolan.vlc.gui.helpers.UiTools.addToPlaylistAsync
 import org.videolan.vlc.gui.helpers.UiTools.showMediaInfo
@@ -70,6 +77,7 @@ import org.videolan.vlc.gui.view.EmptyLoadingState
 import org.videolan.vlc.gui.view.EmptyLoadingStateView
 import org.videolan.vlc.gui.view.TitleListView
 import org.videolan.vlc.media.MediaUtils
+import org.videolan.vlc.providers.TAG
 import org.videolan.vlc.repository.BrowserFavRepository
 import org.videolan.vlc.util.ContextOption
 import org.videolan.vlc.util.ContextOption.CTX_ADD_FOLDER_AND_SUB_PLAYLIST
@@ -211,6 +219,10 @@ class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionRecei
         usbViewModel = getBrowserModel(category = TYPE_USB, url = null)
 //        favoritesViewModel = BrowserFavoritesModel(requireContext())
         networkViewModel = getBrowserModel(category = TYPE_NETWORK, url = null, mocked = arguments?.parcelableList(EXTRA_FOR_ESPRESSO))
+//        if(PlaybackService.instance?.isPlaying == true){
+//            Toast.makeText(activity, "PLAYING", Toast.LENGTH_SHORT).show()
+//            Log.d("TAG", "PLAYING")
+//        }
     }
 
     override fun onPause() {
@@ -382,27 +394,96 @@ class MainBrowserFragment : BaseFragment(), View.OnClickListener, CtxActionRecei
                 val adapter = requireAdapter()
                 if (mediaWrapper.type == MediaWrapper.TYPE_AUDIO ||
                     mediaWrapper.type == MediaWrapper.TYPE_VIDEO ||
-                    mediaWrapper.type == MediaWrapper.TYPE_DIR) {
+                    mediaWrapper.type == MediaWrapper.TYPE_DIR
+                ) {
                     adapter.multiSelectHelper.toggleSelection(position)
                     if (adapter.multiSelectHelper.getSelection().isEmpty()) stopActionMode()
                     invalidateActionMode()
                 }
             } else {
                 if (item.itemType == MediaLibraryItem.TYPE_MEDIA) {
-                        val location = item.location
-                        if ("otg://" == location || location?.startsWith("usb://") == true) {
-                            val rootUri = OtgAccess.otgRoot.value
-                            if (rootUri == null) {
-                                requiringOtg = true
-                                requireActivity().requestOtgRoot()
-                                return
-                            }
+                    val mediaWrapper = item as MediaWrapper
+                    if (isImageFile(mediaWrapper)){
+                        openImage(mediaWrapper)
+                        return
+                    }
+                    val location = mediaWrapper.location
+                    if ("otg://" == location || location?.startsWith("usb://") == true) {
+                        val rootUri = OtgAccess.otgRoot.value
+                        if (rootUri == null) {
+                            requiringOtg = true
+                            requireActivity().requestOtgRoot()
+                            return
                         }
                     }
+
+                    if (mediaWrapper.type == MediaWrapper.TYPE_DIR) {
+                        openFileBrowser(item)
+                    } else if(mediaWrapper.type == MediaWrapper.TYPE_AUDIO || mediaWrapper.type == MediaWrapper.TYPE_VIDEO) {
+                        lifecycleScope.launch {
+                            val media = getMediaWithMeta(mediaWrapper).apply {
+                                if (Settings.getInstance(requireActivity())
+                                        .getBoolean(KEY_QUICK_PLAY_DEFAULT, false)
+                                )
+                                    addFlags(MediaWrapper.MEDIA_NO_PARSE)
+                            }
+                            when (DefaultPlaybackActionMediaType.FILE.getCurrentPlaybackAction(
+                                Settings.getInstance(requireActivity())
+                            )) {
+                                DefaultPlaybackAction.PLAY -> MediaUtils.openMedia(
+                                    requireContext(),
+                                    getMediaWithMeta(media)
+                                )
+
+                                DefaultPlaybackAction.ADD_TO_QUEUE -> MediaUtils.appendMedia(
+                                    activity,
+                                    media
+                                )
+
+                                DefaultPlaybackAction.INSERT_NEXT -> MediaUtils.insertNext(
+                                    activity,
+                                    media
+                                )
+
+                                else -> {
+                                    val media = localViewModel.dataset.getList()
+                                        .filter { it.itemType != MediaWrapper.TYPE_DIR }
+                                        .map {
+                                            getMediaWithMeta(it as MediaWrapper).apply {
+                                                if (Settings.getInstance(requireActivity())
+                                                        .getBoolean(KEY_QUICK_PLAY_DEFAULT, false)
+                                                )
+                                                    addFlags(MediaWrapper.MEDIA_NO_PARSE)
+                                            }
+                                        }
+                                    MediaUtils.openList(v.context, media, position)
+                                }
+                            }
+                        }
+                    } else{
+                    }
+                } else {
                     openFileBrowser(item)
                 }
+            }
         }
-
+        private suspend fun getMediaWithMeta(mw: MediaWrapper): MediaWrapper {
+            return if (!false) mw else requireActivity().getFromMl {
+                getMedia(mw.uri) ?: mw
+            }
+        }
+        fun isImageFile(mediaWrapper: MediaWrapper): Boolean {
+            val fileName = mediaWrapper.uri.lastPathSegment ?: return false
+            val imageExtensions = arrayOf(".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".tiff", ".tif", ".svg")
+            return imageExtensions.any { fileName.lowercase().endsWith(it) }
+        }
+        private fun openImage(mediaWrapper: MediaWrapper) {
+            val intent = Intent(requireContext(), ImageViewerActivity::class.java).apply {
+                putExtra("image_uri", mediaWrapper.uri.toString())
+                putExtra("image_title", mediaWrapper.title)
+            }
+            startActivity(intent)
+        }
         private fun openFileBrowser(item: MediaLibraryItem) {
             val intent = Intent(requireActivity().applicationContext, SecondaryActivity::class.java)
             intent.putExtra(KEY_MEDIA, item)
