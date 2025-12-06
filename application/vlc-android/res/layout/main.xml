@@ -54,22 +54,7 @@
 
     <include layout="@layout/audioplayercontainer" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:layout_marginBottom="@dimen/default_margin"
-        android:tint="@color/grey50"
-        android:visibility="invisible"
-        app:borderWidth="0dp"
-        app:layout_anchor="@+id/navigation"
-        app:layout_anchorGravity="top|end"
-        app:layout_behavior="org.videolan.vlc.gui.helpers.FloatingActionButtonBehavior"
-        app:layout_dodgeInsetEdges="bottom"
-        app:rippleColor="@color/orange50"
-        app:srcCompat="@drawable/ic_fab_add"
-        app:useCompatPadding="true" />
+
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/navigation"
@@ -87,11 +72,6 @@
         app:menu="@menu/bottom_navigation" />
 
 
-    <androidx.appcompat.widget.ViewStubCompat
-        android:id="@+id/audio_player_tips"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout="@layout/audio_player_tips" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 

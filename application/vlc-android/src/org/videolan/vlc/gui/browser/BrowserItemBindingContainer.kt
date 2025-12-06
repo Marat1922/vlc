@@ -47,7 +47,9 @@ class BrowserItemBindingContainer(val binding: ViewDataBinding) {
             else -> throw IllegalStateException("Binding should be either a CardBrowserItemBinding or BrowserItemBinding")
         }
     }
-
+//    fun setIsMainBrowser(isMain: Boolean) {
+//        binding.isMainBrowser = isMain
+//    }
     fun setCover(value: BitmapDrawable) {
         when (binding) {
             is CardBrowserItemBinding -> {

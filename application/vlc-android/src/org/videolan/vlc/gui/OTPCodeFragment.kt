@@ -74,7 +74,7 @@ class OTPCodeFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().findViewById<FloatingActionButton>(R.id.fab).setGone()
+//        requireActivity().findViewById<FloatingActionButton>(R.id.fab).setGone()
         requireActivity().findViewById<View>(R.id.sliding_tabs).setGone()
         binding.cancelButton.setOnClickListener {
             lifecycleScope.launch {

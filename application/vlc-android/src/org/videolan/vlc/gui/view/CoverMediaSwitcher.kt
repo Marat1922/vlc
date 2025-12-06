@@ -53,7 +53,7 @@ class CoverMediaSwitcher(context: Context, attrs: AttributeSet) : AudioMediaSwit
         val coverView = v.findViewById<ImageView>(R.id.cover)
         val titleView = v.findViewById<TextView>(R.id.song_title)
         val artistView = v.findViewById<TextView>(R.id.song_subtitle)
-        val trackInfoView = v.findViewById<TextView?>(R.id.song_track_info)
+//        val trackInfoView = v.findViewById<TextView?>(R.id.song_track_info)
         val previousChapterView = v.findViewById<ImageView?>(R.id.previous_chapter)
         val nextChapterView = v.findViewById<ImageView?>(R.id.next_chapter)
 
@@ -72,7 +72,7 @@ class CoverMediaSwitcher(context: Context, attrs: AttributeSet) : AudioMediaSwit
             coverView.setImageDrawable(ContextCompat.getDrawable(v.context, R.drawable.ic_no_thumbnail_song))
         }
 
-        trackInfoView?.visibility = if (Settings.showAudioTrackInfo) View.VISIBLE else View.GONE
+//        trackInfoView?.visibility = if (Settings.showAudioTrackInfo) View.VISIBLE else View.GONE
 
         titleView.setOnClickListener { onTextClicked() }
         artistView.setOnClickListener { onTextClicked() }
@@ -85,16 +85,16 @@ class CoverMediaSwitcher(context: Context, attrs: AttributeSet) : AudioMediaSwit
 
         titleView.text = title
         artistView.text = TextUtils.separatedString(artist, album)
-        trackInfoView?.text = trackInfo
+//        trackInfoView?.text = trackInfo
 
-        setEllipsizeModeByPref(titleView, true)
-        if (Settings.listTitleEllipsize == 4) titleView.isSelected = true
-        setEllipsizeModeByPref(artistView, true)
-        if (Settings.listTitleEllipsize == 4) artistView.isSelected = true
-        trackInfoView?.let {
-            setEllipsizeModeByPref(it, true)
-            if (Settings.listTitleEllipsize == 4) it.isSelected = true
-        }
+//        setEllipsizeModeByPref(titleView, true)
+//        if (Settings.listTitleEllipsize == 4) titleView.isSelected = true
+//        setEllipsizeModeByPref(artistView, true)
+//        if (Settings.listTitleEllipsize == 4) artistView.isSelected = true
+//        trackInfoView?.let {
+//            setEllipsizeModeByPref(it, true)
+//            if (Settings.listTitleEllipsize == 4) it.isSelected = true
+//        }
 
         addView(v)
 

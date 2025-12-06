@@ -35,6 +35,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.ActionMenuView
 import androidx.core.os.bundleOf
@@ -114,7 +115,11 @@ class MainActivity : ContentActivity(),
         setContentView(R.layout.main)
         initAudioPlayerContainerActivity()
         setupNavigation(savedInstanceState)
-
+        savedInstanceState?.getInt("CURRENT_TAB_POSITION")?.let { savedPosition ->
+            currentFragmentId2 = savedPosition
+            // Обновляем TabLayout чтобы показать правильную вкладку
+            tabLayout?.getTabAt(savedPosition)?.select()
+        }
 //        window.decorView.setBackgroundColor(Color.TRANSPARENT)
         /* Set up the action bar */
         prepareActionBar()
@@ -276,8 +281,14 @@ class MainActivity : ContentActivity(),
 
     override fun onSaveInstanceState(outState: Bundle) {
         val current = currentFragment
-        supportFragmentManager.putFragment(outState, "current_fragment", current!!)
+        if (current != null) {
+            supportFragmentManager.putFragment(outState, "current_fragment", current)
+        }
         outState.putInt(EXTRA_TARGET, currentFragmentId)
+
+        // СОХРАНЯЕМ ПОЗИЦИЮ ТАБА
+        outState.putInt("CURRENT_TAB_POSITION", currentFragmentId2)
+
         super.onSaveInstanceState(outState)
     }
 

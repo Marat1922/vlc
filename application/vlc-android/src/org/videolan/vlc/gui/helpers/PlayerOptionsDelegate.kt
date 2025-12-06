@@ -142,7 +142,7 @@ class PlayerOptionsDelegate(val activity: FragmentActivity, val service: Playbac
                 options.add(PlayerOption(ID_SHOW_VIDEO_TIPS, R.drawable.ic_videotips, res.getString(R.string.tips_title)))
             } else {
                 options.add(PlayerOption(ID_AUDIO_CONTROL_SETTING, R.drawable.ic_audio_controls, res.getString(R.string.control_setting)))
-                options.add(PlayerOption(ID_SHOW_AUDIO_TIPS, R.drawable.ic_audiotips, res.getString(R.string.audio_player_tips)))
+//                options.add(PlayerOption(ID_SHOW_AUDIO_TIPS, R.drawable.ic_audiotips, res.getString(R.string.audio_player_tips)))
                 options.add(PlayerOption(ID_SHOW_PLAYLIST_TIPS, R.drawable.ic_playlisttips, res.getString(R.string.playlist_tips)))
             }
         }
@@ -242,20 +242,20 @@ class PlayerOptionsDelegate(val activity: FragmentActivity, val service: Playbac
                 hide()
                 (activity as VideoPlayerActivity).tipsDelegate.init()
             }
-            ID_SHOW_AUDIO_TIPS -> {
-                hide()
-                val audioPlayerContainerActivity = activity as AudioPlayerContainerActivity
-                audioPlayerContainerActivity.findViewById<ViewStubCompat>(R.id.audio_player_tips)?.let {
-                    audioPlayerContainerActivity.tipsDelegate.init(it)
-                }
-            }
-            ID_SHOW_PLAYLIST_TIPS -> {
-                hide()
-                val audioPlayerContainerActivity = activity as AudioPlayerContainerActivity
-                audioPlayerContainerActivity.findViewById<ViewStubCompat>(R.id.audio_playlist_tips)?.let {
-                    audioPlayerContainerActivity.playlistTipsDelegate.init(it)
-                }
-            }
+//            ID_SHOW_AUDIO_TIPS -> {
+//                hide()
+//                val audioPlayerContainerActivity = activity as AudioPlayerContainerActivity
+//                audioPlayerContainerActivity.findViewById<ViewStubCompat>(R.id.audio_player_tips)?.let {
+//                    audioPlayerContainerActivity.tipsDelegate.init(it)
+//                }
+//            }
+//            ID_SHOW_PLAYLIST_TIPS -> {
+//                hide()
+//                val audioPlayerContainerActivity = activity as AudioPlayerContainerActivity
+//                audioPlayerContainerActivity.findViewById<ViewStubCompat>(R.id.audio_playlist_tips)?.let {
+//                    audioPlayerContainerActivity.playlistTipsDelegate.init(it)
+//                }
+//            }
             ID_BOOKMARK -> {
                 hide()
                 bookmarkClickedListener.invoke()

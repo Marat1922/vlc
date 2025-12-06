@@ -85,6 +85,9 @@
         <variable
                 name="forceCoverHiding"
                 type="boolean" />
+        <variable
+            name="isMainBrowser"
+            type="boolean" />
     </data>
 
     <com.google.android.material.card.MaterialCardView

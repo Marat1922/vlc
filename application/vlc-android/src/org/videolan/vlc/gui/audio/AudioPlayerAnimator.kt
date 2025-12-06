@@ -163,18 +163,18 @@ internal class AudioPlayerAnimator : IAudioPlayerAnimator, LifecycleObserver {
      */
     private fun initConstraintSets() {
         arrayOf(headerShowPlaylistConstraint, headerHidePlaylistConstraint, headerHidePlaylistLandscapeConstraint).forEach {constraintSet ->
-            constraintSet.setVisibility(R.id.`header_shuffle`, if (showTabletControls() && audioPlayer.playlistModel.canShuffle) View.VISIBLE else View.GONE)
+            constraintSet.setVisibility(R.id.`header_shuffle`, if (showTabletControls() && audioPlayer.playlistModel.canShuffle) View.VISIBLE else View.VISIBLE)
             arrayOf(R.id.header_previous, R.id.header_large_play_pause, R.id.header_next, R.id.header_repeat).forEach {
-                constraintSet.setVisibility(it, if (showTabletControls()) View.VISIBLE else View.GONE)
+                constraintSet.setVisibility(it, if (showTabletControls()) View.VISIBLE else View.VISIBLE)
             }
             constraintSet.setVisibility(R.id.header_play_pause, if (showTabletControls()) View.GONE else View.VISIBLE)
         }
 
         hidePlaylistConstraint.setVisibility(R.id.songs_list, View.GONE)
         hidePlaylistConstraint.setVisibility(R.id.cover_media_switcher, View.VISIBLE)
-        hidePlaylistConstraint.setVisibility(R.id.audio_rewind_10, View.VISIBLE)
+        hidePlaylistConstraint.setVisibility(R.id.audio_rewind_10, View.GONE)
         hidePlaylistConstraint.setVisibility(R.id.audio_rewind_text, View.VISIBLE)
-        hidePlaylistConstraint.setVisibility(R.id.audio_forward_10, View.VISIBLE)
+        hidePlaylistConstraint.setVisibility(R.id.audio_forward_10, View.GONE)
         hidePlaylistConstraint.setVisibility(R.id.audio_forward_text, View.VISIBLE)
         hidePlaylistConstraint.setVisibility(R.id.audio_forward_bookmark, View.VISIBLE)
         hidePlaylistConstraint.setVisibility(R.id.audio_rewind_bookmark, View.VISIBLE)

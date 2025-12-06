@@ -285,7 +285,7 @@ class AudioPlayer : Fragment(), PlaylistAdapter.IPlayer, TextWatcher, IAudioPlay
         playlistModel.service?.playlistManager?.abRepeatOn?.observe(viewLifecycleOwner) {
             binding.abRepeatMarkerGuidelineContainer.visibility = if (it) View.VISIBLE else View.GONE
             abRepeatAddMarker.visibility = if (it) View.VISIBLE else View.GONE
-            binding.audioPlayProgress.visibility = if (!shouldHidePlayProgress()) View.VISIBLE else View.GONE
+//            binding.audioPlayProgress.visibility = if (!shouldHidePlayProgress()) View.VISIBLE else View.GONE
 
             playlistModel.service?.manageAbRepeatStep(binding.abRepeatReset, binding.abRepeatStop, binding.abRepeatContainer, abRepeatAddMarker)
         }
@@ -532,14 +532,14 @@ class AudioPlayer : Fragment(), PlaylistAdapter.IPlayer, TextWatcher, IAudioPlay
         binding.songSubtitle?.text = if (!chapter.isNullOrEmpty()) TextUtils.separatedString(playlistModel.title, playlistModel.artist) else TextUtils.separatedString(playlistModel.artist, playlistModel.album)
         binding.songTitle?.isSelected = true
         binding.songSubtitle?.isSelected = true
-        binding.songTrackInfo?.text = playlistModel.service?.trackInfo()
-        binding.songTrackInfo?.visibility = if (Settings.showAudioTrackInfo) View.VISIBLE else View.GONE
-        binding.songTrackInfo?.isSelected = true
+//        binding.songTrackInfo?.text = playlistModel.service?.trackInfo()
+//        binding.songTrackInfo?.visibility = if (Settings.showAudioTrackInfo) View.VISIBLE else View.GONE
+//        binding.songTrackInfo?.isSelected = true
 
-        binding.audioRewindText.text = "${Settings.audioJumpDelay}"
-        binding.audioForwardText.text = "${Settings.audioJumpDelay}"
-        binding.audioForward10.contentDescription = getString(R.string.talkback_action_forward, Settings.audioJumpDelay.toString())
-        binding.audioRewind10.contentDescription = getString(R.string.talkback_action_rewind, Settings.audioJumpDelay.toString())
+//        binding.audioRewindText.text = "${Settings.audioJumpDelay}"
+//        binding.audioForwardText.text = "${Settings.audioJumpDelay}"
+//        binding.audioForward10.contentDescription = getString(R.string.talkback_action_forward, Settings.audioJumpDelay.toString())
+//        binding.audioRewind10.contentDescription = getString(R.string.talkback_action_rewind, Settings.audioJumpDelay.toString())
         updateBackground()
 
     }
@@ -550,7 +550,7 @@ class AudioPlayer : Fragment(), PlaylistAdapter.IPlayer, TextWatcher, IAudioPlay
         val playing = playlistModel.playing
         val text = ctx.getString(if (playing) R.string.pause else R.string.play)
 
-        val drawable = if (playing) R.drawable.ic_pause_audio else R.drawable.ic_auto_playall_circle
+        val drawable = if (playing) R.drawable.ic_pause_audio else R.drawable.ic_play_audio
         val drawableSmall = if (playing) playToPauseSmall else pauseToPlaySmall
         val drawableHeaderLarge = if (playing) playToPauseHeader else pauseToPlayHeader
 //        binding.playPause.setImageDrawable(drawable)
@@ -591,13 +591,13 @@ class AudioPlayer : Fragment(), PlaylistAdapter.IPlayer, TextWatcher, IAudioPlay
         when (repeatType) {
             PlaybackStateCompat.REPEAT_MODE_ONE -> {
                 arrayOf(binding.repeat, binding.headerRepeat).forEach {
-                    it.setImageResource(R.drawable.ic_repeat_one_audio)
+                    it.setImageResource(R.drawable.ic_repeat_one)
                     it.contentDescription = ctx.getString(R.string.repeat_single)
                 }
             }
             PlaybackStateCompat.REPEAT_MODE_ALL -> {
                 arrayOf(binding.repeat, binding.headerRepeat).forEach {
-                    it.setImageResource(R.drawable.ic_repeat_all_audio)
+                    it.setImageResource(R.drawable.ic_repeat_all_video)
                     it.contentDescription = ctx.getString(R.string.repeat_all)
                 }
             }
@@ -631,69 +631,70 @@ class AudioPlayer : Fragment(), PlaylistAdapter.IPlayer, TextWatcher, IAudioPlay
             binding.progressBar.progress = progress.time.toInt()
         }
 
-        lifecycleScope.launchWhenStarted {
-            val text:Pair<String, String> = withContext(Dispatchers.Default) {
-                val medias = playlistModel.medias ?: return@withContext Pair("", "")
-                withContext(Dispatchers.Main) { if (!shouldHidePlayProgress()) binding.audioPlayProgress.setVisible() else binding.audioPlayProgress.setGone() }
-                if (playlistModel.currentMediaPosition == -1) return@withContext Pair("", "")
-                val elapsedTracksTime = playlistModel.previousTotalTime ?: return@withContext Pair("", "")
-                val progressTime = elapsedTracksTime + progress.time
-                val totalTime = playlistModel.getTotalTime()
-                val progressTimeText = Tools.millisToString(
-                        if (showRemainingTime && totalTime > 0) totalTime - progressTime else progressTime,
-                        false,
-                        true,
-                        false
-                )
-                val totalTimeText = Tools.millisToString(totalTime, false, false, false)
-                val totalTimeDescription = TalkbackUtil.millisToString(requireActivity(), totalTime)
-                val progressTimeDescription =  TalkbackUtil.millisToString(requireActivity(), if (showRemainingTime && totalTime > 0) totalTime - progressTime else progressTime)
-                val currentProgressText = if (progressTimeText.isNullOrEmpty()) "0:00" else progressTimeText
-
-                val size = if (playlistModel.service?.playlistManager?.stopAfter != -1 ) (playlistModel.service?.playlistManager?.stopAfter ?: 0) + 1 else medias.size
-                val textTrack = getString(R.string.track_index, "${playlistModel.currentMediaPosition + 1} / $size")
-                val textTrackDescription = getString(R.string.talkback_track_index, "${playlistModel.currentMediaPosition + 1}", "$size")
-
-                val textProgress = if (audioPlayProgressMode) {
-                    val endsAt = System.currentTimeMillis() + totalTime - progressTime
-                    if ((lastEndsAt - endsAt).absoluteValue > 1) lastEndsAt = endsAt
-                    getString(
-                            R.string.audio_queue_progress_finished,
-                            getTimeInstance(java.text.DateFormat.MEDIUM).format(lastEndsAt)
-                    )
-                } else
-                    if (showRemainingTime && totalTime > 0) getString(
-                            R.string.audio_queue_progress_remaining,
-                            currentProgressText
-                    )
-                    else getString(
-                            R.string.audio_queue_progress,
-                            if (totalTimeText.isNullOrEmpty()) currentProgressText else "$currentProgressText / $totalTimeText"
-                    )
-                val textDescription = if (audioPlayProgressMode) {
-                    val endsAt = System.currentTimeMillis() + totalTime - progressTime
-                    if ((lastEndsAt - endsAt).absoluteValue > 1) lastEndsAt = endsAt
-                    getString(
-                            R.string.audio_queue_progress_finished,
-                            getTimeInstance(java.text.DateFormat.MEDIUM).format(lastEndsAt)
-                    )
-                } else
-                    if (showRemainingTime && totalTime > 0) getString(
-                            R.string.audio_queue_progress_remaining,
-                            progressTimeDescription
-                    )
-                    else getString(
-                            R.string.audio_queue_progress,
-                            if (totalTimeText.isNullOrEmpty()) progressTimeDescription else getString(R.string.talkback_out_of, progressTimeDescription, totalTimeDescription)
-                    )
-                Pair("$textTrack  ${TextUtils.SEPARATOR}  $textProgress", "$textTrackDescription. $textDescription")
-            }
-            binding.audioPlayProgress.text = text.first
-            binding.audioPlayProgress.contentDescription = text.second
-        }
+//        lifecycleScope.launchWhenStarted {
+//            val text:Pair<String, String> = withContext(Dispatchers.Default) {
+//                val medias = playlistModel.medias ?: return@withContext Pair("", "")
+////                withContext(Dispatchers.Main) { if (!shouldHidePlayProgress()) binding.audioPlayProgress.setVisible() else binding.audioPlayProgress.setGone() }
+//                if (playlistModel.currentMediaPosition == -1) return@withContext Pair("", "")
+//                val elapsedTracksTime = playlistModel.previousTotalTime ?: return@withContext Pair("", "")
+//                val progressTime = elapsedTracksTime + progress.time
+//                val totalTime = playlistModel.getTotalTime()
+//                val progressTimeText = Tools.millisToString(
+//                        if (showRemainingTime && totalTime > 0) totalTime - progressTime else progressTime,
+//                        false,
+//                        true,
+//                        false
+//                )
+//                val totalTimeText = Tools.millisToString(totalTime, false, false, false)
+//                val totalTimeDescription = TalkbackUtil.millisToString(requireActivity(), totalTime)
+//                val progressTimeDescription =  TalkbackUtil.millisToString(requireActivity(), if (showRemainingTime && totalTime > 0) totalTime - progressTime else progressTime)
+//                val currentProgressText = if (progressTimeText.isNullOrEmpty()) "0:00" else progressTimeText
+//
+//                val size = if (playlistModel.service?.playlistManager?.stopAfter != -1 ) (playlistModel.service?.playlistManager?.stopAfter ?: 0) + 1 else medias.size
+//                val textTrack = getString(R.string.track_index, "${playlistModel.currentMediaPosition + 1} / $size")
+//                val textTrackDescription = getString(R.string.talkback_track_index, "${playlistModel.currentMediaPosition + 1}", "$size")
+//
+//                val textProgress = if (audioPlayProgressMode) {
+//                    val endsAt = System.currentTimeMillis() + totalTime - progressTime
+//                    if ((lastEndsAt - endsAt).absoluteValue > 1) lastEndsAt = endsAt
+//                    getString(
+//                            R.string.audio_queue_progress_finished,
+//                            getTimeInstance(java.text.DateFormat.MEDIUM).format(lastEndsAt)
+//                    )
+//                } else
+//                    if (showRemainingTime && totalTime > 0) getString(
+//                            R.string.audio_queue_progress_remaining,
+//                            currentProgressText
+//                    )
+//                    else getString(
+//                            R.string.audio_queue_progress,
+//                            if (totalTimeText.isNullOrEmpty()) currentProgressText else "$currentProgressText / $totalTimeText"
+//                    )
+//                val textDescription = if (audioPlayProgressMode) {
+//                    val endsAt = System.currentTimeMillis() + totalTime - progressTime
+//                    if ((lastEndsAt - endsAt).absoluteValue > 1) lastEndsAt = endsAt
+//                    getString(
+//                            R.string.audio_queue_progress_finished,
+//                            getTimeInstance(java.text.DateFormat.MEDIUM).format(lastEndsAt)
+//                    )
+//                } else
+//                    if (showRemainingTime && totalTime > 0) getString(
+//                            R.string.audio_queue_progress_remaining,
+//                            progressTimeDescription
+//                    )
+//                    else getString(
+//                            R.string.audio_queue_progress,
+//                            if (totalTimeText.isNullOrEmpty()) progressTimeDescription else getString(R.string.talkback_out_of, progressTimeDescription, totalTimeDescription)
+//                    )
+//                Pair("$textTrack  ${TextUtils.SEPARATOR}  $textProgress", "$textTrackDescription. $textDescription")
+//            }
+//            binding.audioPlayProgress.text = text.first
+//            binding.audioPlayProgress.contentDescription = text.second
+//            binding.audioPlayProgress.visibility = View.GONE
+//        }
     }
 
-    private fun shouldHidePlayProgress() = abRepeatAddMarker.visibility != View.GONE || areBookmarksVisible() || playlistModel.medias?.size ?: 0 < 2
+//    private fun shouldHidePlayProgress() = abRepeatAddMarker.visibility != View.GONE || areBookmarksVisible() || playlistModel.medias?.size ?: 0 < 2
 
     override fun onSelectionSet(position: Int) {
         binding.songsList.scrollToPosition(position)
@@ -840,7 +841,7 @@ class AudioPlayer : Fragment(), PlaylistAdapter.IPlayer, TextWatcher, IAudioPlay
         if (!this::bookmarkListDelegate.isInitialized) {
             bookmarkListDelegate = BookmarkListDelegate(requireActivity(), service, bookmarkModel, false)
             bookmarkListDelegate.visibilityListener = {
-                binding.audioPlayProgress.visibility = if (shouldHidePlayProgress()) View.GONE else View.VISIBLE
+//                binding.audioPlayProgress.visibility = if (shouldHidePlayProgress()) View.GONE else View.VISIBLE
                 lifecycleScope.launch {
                     doUpdate()
                 }
@@ -974,7 +975,7 @@ class AudioPlayer : Fragment(), PlaylistAdapter.IPlayer, TextWatcher, IAudioPlay
 
     private fun showPlaylistTips() {
         val activity = activity as? AudioPlayerContainerActivity
-        activity?.showTipViewIfNeeded(R.id.audio_playlist_tips, PREF_PLAYLIST_TIPS_SHOWN)
+//        activity?.showTipViewIfNeeded(R.id.audio_playlist_tips, PREF_PLAYLIST_TIPS_SHOWN)
     }
 
     fun onStateChanged(newState: Int) {
@@ -986,7 +987,7 @@ class AudioPlayer : Fragment(), PlaylistAdapter.IPlayer, TextWatcher, IAudioPlay
             }
             BottomSheetBehavior.STATE_EXPANDED -> {
                 onSlide(1f)
-                showPlaylistTips()
+//                showPlaylistTips()
                 playlistAdapter.currentIndex = playlistModel.currentMediaPosition
             }
         }
