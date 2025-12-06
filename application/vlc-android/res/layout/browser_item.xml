@@ -82,6 +82,10 @@
         <variable
             name="selected"
             type="boolean" />
+
+        <variable
+            name="isMainBrowser"
+            type="boolean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -219,7 +223,7 @@ android:background="@drawable/background_item_rectangle"
             android:contentDescription="@string/more_actions"
             android:onClick="@{holder::onMoreClick}"
             android:padding="8dp"
-            android:visibility="@{hasContextMenu ? View.VISIBLE : View.GONE, default=gone}"
+            android:visibility="@{hasContextMenu ? View.GONE : View.GONE, default=gone}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

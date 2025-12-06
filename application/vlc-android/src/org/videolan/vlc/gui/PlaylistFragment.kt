@@ -120,7 +120,7 @@ class PlaylistFragment : BaseAudioBrowser<PlaylistsViewModel>(), SwipeRefreshLay
 
         playlists.adapter = playlistAdapter
         fastScroller = view.rootView.findViewById(R.id.songs_fast_scroller_playlist) as FastScroller
-        fastScroller.attachToCoordinator(requireActivity().findViewById(R.id.appbar) as AppBarLayout, requireActivity().findViewById(R.id.coordinator) as CoordinatorLayout, requireActivity().findViewById(R.id.fab) as FloatingActionButton)
+//        fastScroller.attachToCoordinator(requireActivity().findViewById(R.id.appbar) as AppBarLayout, requireActivity().findViewById(R.id.coordinator) as CoordinatorLayout, requireActivity().findViewById(R.id.fab) as FloatingActionButton)
         viewModel.provider.pagedList.observe(viewLifecycleOwner) {
             @Suppress("UNCHECKED_CAST")
             playlistAdapter.submitList(it as PagedList<MediaLibraryItem>)
@@ -135,7 +135,7 @@ class PlaylistFragment : BaseAudioBrowser<PlaylistsViewModel>(), SwipeRefreshLay
         }
 
         fastScroller.setRecyclerView(getCurrentRV(), viewModel.provider)
-        (parentFragment as? VideoBrowserFragment)?.playlistOnlyFavorites = viewModel.provider.onlyFavorites
+//        (parentFragment as? VideoBrowserFragment)?.playlistOnlyFavorites = viewModel.provider.onlyFavorites
         requireActivity().supportFragmentManager.setFragmentResultListener(CONFIRM_PLAYLIST_RENAME_DIALOG_RESULT, viewLifecycleOwner) { requestKey, bundle ->
             val media = bundle.parcelable<MediaLibraryItem>(RENAME_DIALOG_MEDIA) ?: return@setFragmentResultListener
             val name = bundle.getString(RENAME_DIALOG_NEW_NAME) ?: return@setFragmentResultListener
@@ -157,7 +157,7 @@ class PlaylistFragment : BaseAudioBrowser<PlaylistsViewModel>(), SwipeRefreshLay
             ONLY_FAVS -> {
                 viewModel.providers[currentTab].showOnlyFavs(value as Boolean)
                 viewModel.refresh()
-                (parentFragment as? VideoBrowserFragment)?.playlistOnlyFavorites = value
+//                (parentFragment as? VideoBrowserFragment)?.playlistOnlyFavorites = value
             }
             CURRENT_SORT -> {
                 @Suppress("UNCHECKED_CAST") val sort = value as Pair<Int, Boolean>

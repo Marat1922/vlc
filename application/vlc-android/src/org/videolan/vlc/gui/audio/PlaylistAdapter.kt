@@ -155,9 +155,9 @@ class PlaylistAdapter(private val player: IPlayer) : DiffUtilAdapter<MediaWrappe
             holder.binding.cover = defaultCoverAudio
         }
 
-        val tablet = holder.binding.itemDelete.context.isTablet() || AndroidDevices.isTv
-        if (tablet) holder.binding.itemDelete.setVisible() else holder.binding.itemDelete.setGone()
-        holder.binding.showReorderButtons = showReorderButtons && tablet
+//        val tablet = holder.binding.itemDelete.context.isTablet() || AndroidDevices.isTv
+//        if (tablet) holder.binding.itemDelete.setVisible() else holder.binding.itemDelete.setGone()
+//        holder.binding.showReorderButtons = showReorderButtons && tablet
 
         holder.binding.executePendingBindings()
     }

@@ -381,26 +381,9 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-                vlc:rippleColor="@color/orange50"
-                android:id="@+id/fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/default_margin"
-                vlc:useCompatPadding="true"
-                vlc:layout_dodgeInsetEdges="bottom"
-                vlc:layout_anchor="@+id/container"
-                vlc:layout_anchorGravity="bottom|end"
-                android:layout_margin="16dp"
-                vlc:layout_behavior="org.videolan.vlc.gui.helpers.FloatingActionButtonBehavior"
-                vlc:srcCompat="@drawable/ic_fab_play" />
 
         <include layout="@layout/audioplayercontainer" />
-        <androidx.appcompat.widget.ViewStubCompat
-                android:id="@+id/audio_player_tips"
-                android:layout="@layout/audio_player_tips"
-                android:layout_height="match_parent"
-                android:layout_width="match_parent" />
+
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

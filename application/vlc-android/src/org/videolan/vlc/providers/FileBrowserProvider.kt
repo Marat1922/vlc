@@ -92,8 +92,12 @@ open class FileBrowserProvider(
 
                 uri?.let {
                     items.add(MLServiceLocator.getAbstractMediaWrapper(it).apply {
-                        type = if (file.isDirectory) MediaWrapper.TYPE_DIR else MediaWrapper.TYPE_VIDEO
-                        // Установите другие свойства wrapper при необходимости
+                        type = if (file.isDirectory) {
+                            MediaWrapper.TYPE_DIR
+                        } else {
+                            val mw = MLServiceLocator.getAbstractMediaWrapper(it)
+                            mw.type
+                        }
                     })
                 }
             }
@@ -131,22 +135,14 @@ open class FileBrowserProvider(
     suspend fun browseByUrl(url: String): List<MediaWrapper> {
         return when {
             url == "otg://" || url.startsWith("content:") -> {
-                val result = ArrayList<MediaWrapper>()
-                launch {
-                    val files = withContext(coroutineContextProvider.IO) {
-                        @Suppress("UNCHECKED_CAST")
-                        getDocumentFiles(context, url.toUri().path?.substringAfterLast(':')
-                                ?: "") as? MutableList<MediaLibraryItem> ?: mutableListOf()
-                    }.map { it as MediaWrapper }
+                withContext(coroutineContextProvider.IO) {
+                    val files = getDocumentFiles(context, url.toUri().path?.substringAfterLast(':') ?: "")
+                            as? MutableList<MediaLibraryItem> ?: mutableListOf()
 
-                    result.addAll(files.filter { it.itemType == MediaWrapper.TYPE_MEDIA })
-                    files.filter { it.itemType == MediaWrapper.TYPE_DIR }.forEach {
-                        result.addAll(browseByUrl(it.uri.toString()))
-                    }
+
+                    files.filterIsInstance<MediaWrapper>().toList()
                 }
-                result.toList()
             }
-
             else -> super.browseUrl(url).toList().map { it as MediaWrapper }
         }
     }

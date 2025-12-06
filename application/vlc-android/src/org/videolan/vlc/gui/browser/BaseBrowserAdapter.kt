@@ -25,7 +25,6 @@ package org.videolan.vlc.gui.browser
 import android.annotation.TargetApi
 import android.graphics.drawable.BitmapDrawable
 import android.os.Build
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,16 +44,15 @@ import org.videolan.resources.UPDATE_SELECTION
 import org.videolan.tools.MultiSelectAdapter
 import org.videolan.tools.MultiSelectHelper
 import org.videolan.tools.Settings
+import org.videolan.tools.dp
 import org.videolan.vlc.R
 import org.videolan.vlc.databinding.BrowserItemBinding
 import org.videolan.vlc.databinding.BrowserItemSeparatorBinding
-import org.videolan.vlc.databinding.CardBrowserItemBinding
 import org.videolan.vlc.gui.DiffUtilAdapter
 import org.videolan.vlc.gui.helpers.*
 import org.videolan.vlc.gui.view.FastScroller
 import org.videolan.vlc.gui.view.MiniVisualizer
 import org.videolan.vlc.util.LifecycleAwareScheduler
-import org.videolan.vlc.util.getDescriptionSpan
 import org.videolan.vlc.viewmodels.PlaylistModel
 
 const val UPDATE_PROGRESS = "update_progress"
@@ -65,6 +63,9 @@ open class BaseBrowserAdapter(val browserContainer: BrowserContainer<MediaLibrar
     val multiSelectHelper: MultiSelectHelper<MediaLibraryItem> = MultiSelectHelper(this, UPDATE_SELECTION)
     private var selectedPosition = -1
 
+    val isMainBrowser: Boolean
+        get() = browserContainer is MainBrowserFragment
+
     private val folderDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_item)) }
     private val folderDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_item)) }
     private val audioDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_audio_item_track)) }
@@ -73,7 +74,7 @@ open class BaseBrowserAdapter(val browserContainer: BrowserContainer<MediaLibrar
     private val videoDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_video_tab_layout)) }
     private val subtitleDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_subtitles)) }
     private val subtitleDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_subtitles_big)) }
-    private val unknownDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_unknown)) }
+    private val unknownDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_unknown_file)) }
     private val qaMoviesDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_item)) }
     private val qaMoviesDrawableBig: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_item)) }
     private val qaMusicDrawable: BitmapDrawable by lazy { BitmapDrawable(browserContainer.containerActivity().resources, browserContainer.containerActivity().getBitmapFromDrawable(R.drawable.ic_folder_item)) }
@@ -198,14 +199,17 @@ open class BaseBrowserAdapter(val browserContainer: BrowserContainer<MediaLibrar
         if (media.type != MediaWrapper.TYPE_AUDIO) vh.bindingContainer.setIsPlayed(vh.bindingContainer.container.context, media.playCount > 0)
         vh.bindingContainer.setItem(media)
         vh.bindingContainer.setIsFavorite(isFavorite)
+//        vh.bindingContainer.setIsMainBrowser(isMainBrowser)
+        val isMainBrowser = browserContainer is MainBrowserFragment
         val scheme = media.uri?.scheme ?: ""
         vh.bindingContainer.setHasContextMenu(((!networkRoot || isFavorite)
                 && "content" != scheme
                 && "otg" != scheme)
-                && !multiSelectHelper.inActionMode)
+                && !multiSelectHelper.inActionMode
+                && !isMainBrowser)
         vh.bindingContainer.setFileName(if ((sort == Medialibrary.SORT_FILENAME || sort == Medialibrary.SORT_DEFAULT) && media.type != MediaWrapper.TYPE_DIR && "file" == scheme) media.fileName else null)
         if (networkRoot || (isFavorite && getProtocol(media)?.contains("file") == false)) vh.bindingContainer.setProtocol(getProtocol(media))
-        vh.bindingContainer.setCover(getIcon(media, specialIcons))
+        vh.bindingContainer.setCover(getIcon(media, specialIcons, vh.bindingContainer))
         vh.selectView(multiSelectHelper.isSelected(position))
         itemFocusChanged(position, false, vh.bindingContainer)
         if (currentMedia == media) {
@@ -359,9 +363,15 @@ open class BaseBrowserAdapter(val browserContainer: BrowserContainer<MediaLibrar
     }
 
 
-    fun getIcon(media: MediaWrapper, specialFolders: Boolean): BitmapDrawable {
+    fun getIcon(media: MediaWrapper, specialFolders: Boolean, bindingContainer: BrowserItemBindingContainer): BitmapDrawable {
+        if(isImageFile(media)){
+        }
         when (media.type) {
-            MediaWrapper.TYPE_AUDIO -> audioDrawableBig
+            MediaWrapper.TYPE_AUDIO -> {
+                audioDrawableBig
+               bindingContainer.itemIcon.layoutParams.width = 48.dp
+               bindingContainer.itemIcon.layoutParams.height = 60.dp
+            }
             MediaWrapper.TYPE_DIR -> {
                 if (specialFolders) {
                     val uri = media.uri
@@ -377,12 +387,20 @@ open class BaseBrowserAdapter(val browserContainer: BrowserContainer<MediaLibrar
                 return if (browserContainer.inCards) folderDrawableBig else folderDrawable
             }
             MediaWrapper.TYPE_VIDEO -> return if (browserContainer.inCards) videoDrawableBig else videoDrawable
-            MediaWrapper.TYPE_SUBTITLE -> return  if (browserContainer.inCards) subtitleDrawableBig else subtitleDrawable
-            else -> return unknownDrawable
+//            MediaWrapper.TYPE_SUBTITLE -> return  if (browserContainer.inCards) subtitleDrawableBig else subtitleDrawable
+            else -> {
+                bindingContainer.itemIcon.layoutParams.width = 48.dp
+                bindingContainer.itemIcon.layoutParams.height = 60.dp
+                return unknownDrawable
+            }
         }
         return audioDrawableBig
     }
-
+     fun isImageFile(mediaWrapper: MediaWrapper): Boolean {
+        val fileName = mediaWrapper.uri.lastPathSegment ?: return false
+        val imageExtensions = arrayOf(".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".tiff", ".tif", ".svg")
+        return imageExtensions.any { fileName.lowercase().endsWith(it) }
+    }
     private fun getProtocol(media: MediaWrapper): String? {
         return if (media.type != MediaWrapper.TYPE_DIR) null else media.uri?.scheme
     }

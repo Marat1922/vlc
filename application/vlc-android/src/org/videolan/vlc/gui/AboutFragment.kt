@@ -49,7 +49,7 @@ class AboutFragment : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        requireActivity().findViewById<FloatingActionButton>(R.id.fab).setGone()
+//        requireActivity().findViewById<FloatingActionButton>(R.id.fab).setGone()
         requireActivity().findViewById<View>(R.id.sliding_tabs).setGone()
         lifecycleScope.launch {
             UiTools.fillAboutView(requireActivity(), view)
