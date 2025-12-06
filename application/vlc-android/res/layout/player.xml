@@ -69,11 +69,7 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true">
 
-        <androidx.appcompat.widget.ViewStubCompat
-                android:id="@+id/player_overlay_tips"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout="@layout/player_tips" />
+
 
         <ImageView
                 android:id="@+id/player_overlay_loading"

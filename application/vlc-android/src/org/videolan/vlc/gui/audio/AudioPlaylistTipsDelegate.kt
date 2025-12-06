@@ -293,8 +293,8 @@ class AudioPlaylistTipsDelegate(private val activity: AudioPlayerContainerActivi
                     constraintSet.setMargin(R.id.tapIndicatorRearrange, ConstraintSet.TOP, indicatorY)
                     currentAnimations.clear()
                     constraintSet.setVisibility(R.id.tapIndicatorRearrange, View.VISIBLE)
-                    val indicatorX = secondItemBinding.itemDelete.left + (secondItemBinding.itemDelete.width / 2) - 24.dp
-                    constraintSet.setMargin(R.id.tapIndicatorRearrange, ConstraintSet.START, indicatorX)
+//                    val indicatorX = secondItemBinding.itemDelete.left + (secondItemBinding.itemDelete.width / 2) - 24.dp
+//                    constraintSet.setMargin(R.id.tapIndicatorRearrange, ConstraintSet.START, indicatorX)
                     constraintSet.clear(R.id.tapIndicatorRearrange, ConstraintSet.END)
                     TipsUtils.startTapAnimation(listOf(tapIndicatorRearrange))
                 } else {
@@ -317,8 +317,8 @@ class AudioPlaylistTipsDelegate(private val activity: AudioPlayerContainerActivi
                 constraintSet.setMargin(R.id.tapIndicatorRearrange, ConstraintSet.TOP, indicatorY)
                 currentAnimations.clear()
                 if (activity.isTablet()){
-                    val indicatorX = thirdItemBinding.itemMoveUp.left + (thirdItemBinding.itemMoveUp.width / 2) - 24.dp
-                    constraintSet.setMargin(R.id.tapIndicatorRearrange, ConstraintSet.START, indicatorX)
+//                    val indicatorX = thirdItemBinding.itemMoveUp.left + (thirdItemBinding.itemMoveUp.width / 2) - 24.dp
+//                    constraintSet.setMargin(R.id.tapIndicatorRearrange, ConstraintSet.START, indicatorX)
                     constraintSet.clear(R.id.tapIndicatorRearrange, ConstraintSet.END)
                     TipsUtils.startTapAnimation(listOf(tapIndicatorRearrange))
                 } else currentAnimations.add(dragAndDrop(tapIndicatorRearrange, thirdItemBinding.itemContainer))
@@ -357,7 +357,7 @@ class AudioPlaylistTipsDelegate(private val activity: AudioPlayerContainerActivi
         Settings.getInstance(activity).putSingle(PREF_PLAYLIST_TIPS_SHOWN, true)
         currentTip = null
         activity.audioPlayer.playlistModel.service?.play()
-        activity.shownTips.add(R.id.audio_playlist_tips)
+//        activity.shownTips.add(R.id.audio_playlist_tips)
         activity.playerBehavior.lock(false)
     }
 

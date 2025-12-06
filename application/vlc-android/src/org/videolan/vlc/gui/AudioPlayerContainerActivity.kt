@@ -121,7 +121,7 @@ open class AudioPlayerContainerActivity : BaseActivity(), KeycodeListener, Sched
     private var bottomBar: BottomNavigationView? = null
     lateinit var appBarLayout: AppBarLayout
     protected lateinit var toolbar: Toolbar
-    var tabLayout: TabLayout? = null
+    lateinit var tabLayout: TabLayout
     private var navigationRail: NavigationRailView? = null
     lateinit var audioPlayer: AudioPlayer
     private lateinit var audioPlayerContainer: FrameLayout
@@ -382,7 +382,7 @@ open class AudioPlayerContainerActivity : BaseActivity(), KeycodeListener, Sched
                 onPlayerStateChanged(bottomSheet, newState)
                 hideStatusIfNeeded(newState)
                 audioPlayer.onStateChanged(newState)
-                if (newState == STATE_COLLAPSED || newState == STATE_HIDDEN) removeTipViewIfDisplayed()
+//                if (newState == STATE_COLLAPSED || newState == STATE_HIDDEN) removeTipViewIfDisplayed()
                 updateFragmentMargins(newState)
                 applyMarginToProgressBar(playerBehavior.peekHeight)
                 setContentBottomPadding()
@@ -396,7 +396,7 @@ open class AudioPlayerContainerActivity : BaseActivity(), KeycodeListener, Sched
                 updateToolbarScrollability(newState == STATE_COLLAPSED)
             }
         })
-        showTipViewIfNeeded(R.id.audio_player_tips, PREF_AUDIOPLAYER_TIPS_SHOWN)
+//        showTipViewIfNeeded(R.id.audio_player_tips, PREF_AUDIOPLAYER_TIPS_SHOWN)
         if (playlistTipsDelegate.currentTip != null) lockPlayer(true)
         if (restoreBookmarks) {
             appBarLayout.post {
@@ -585,10 +585,10 @@ open class AudioPlayerContainerActivity : BaseActivity(), KeycodeListener, Sched
         if (BuildConfig.DEBUG || PlaybackService.hasRenderer()) return
         val vsc = findViewById<ViewStubCompat>(stubId)
         if (vsc != null && !settings.getBoolean(settingKey, false) && !Settings.showTvUi) {
-            when (stubId) {
-                R.id.audio_player_tips -> if (tipsDelegate.currentTip == null && !shownTips.contains(stubId)) tipsDelegate.init(vsc)
-                R.id.audio_playlist_tips -> if (playlistTipsDelegate.currentTip == null && !shownTips.contains(stubId)) playlistTipsDelegate.init(vsc)
-            }
+//            when (stubId) {
+//                R.id.audio_player_tips -> if (tipsDelegate.currentTip == null && !shownTips.contains(stubId)) tipsDelegate.init(vsc)
+//                R.id.audio_playlist_tips -> if (playlistTipsDelegate.currentTip == null && !shownTips.contains(stubId)) playlistTipsDelegate.init(vsc)
+//            }
             if (::audioPlayer.isInitialized) audioPlayer.playlistModel.service?.pause()
         }
     }
@@ -613,7 +613,7 @@ open class AudioPlayerContainerActivity : BaseActivity(), KeycodeListener, Sched
      * Remove the current tip view if there is one displayed.
      */
     fun removeTipViewIfDisplayed() {
-        findViewById<View>(R.id.audio_player_tips)?.let { (it.parent as ViewGroup).removeView(it) }
+//        findViewById<View>(R.id.audio_player_tips)?.let { (it.parent as ViewGroup).removeView(it) }
     }
 
     /**

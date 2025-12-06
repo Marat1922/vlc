@@ -30,30 +30,7 @@
 
         <include layout="@layout/audioplayercontainer" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp"
-            android:tint="@color/grey50"
-            android:visibility="invisible"
-            vlc:borderWidth="0dp"
-            vlc:layout_anchor="@+id/fragment_placeholder"
-            vlc:layout_anchorGravity="bottom|end"
-            vlc:layout_behavior="org.videolan.vlc.gui.helpers.FloatingActionButtonBehavior"
-            vlc:rippleColor="@color/orange50"
-            vlc:srcCompat="@drawable/ic_fab_add" />
+
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-    <androidx.appcompat.widget.ViewStubCompat
-        android:id="@+id/audio_playlist_tips"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout="@layout/audio_playlist_tips" />
-
-    <androidx.appcompat.widget.ViewStubCompat
-        android:id="@+id/audio_player_tips"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout="@layout/audio_player_tips" />
 </merge>
