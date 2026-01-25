@@ -34,11 +34,11 @@
     <item
         android:id="@+id/nav_audio"
         android:icon="@drawable/ic_audio_tab_layout"
-        android:title="Музыка" />
+        android:title="@string/audio" />
     <item
         android:id="@+id/nav_directories"
         android:icon="@drawable/ic_folder_tab_layout"
-        android:title="Папки" />
+        android:title="@string/folder" />
     <!--    <item-->
     <!--            android:id="@+id/nav_playlists"-->
     <!--            android:title="@string/playlists"-->

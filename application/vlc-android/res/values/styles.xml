@@ -712,7 +712,7 @@
         <item name="tabTextColor">@color/textNormal</item>
         <item name="android:textAllCaps">false</item>
         <item name="textAllCaps">false</item>
-        <item name="tabSelectedTextColor">@color/backgroundPlate</item>
+        <item name="tabSelectedTextColor">@color/textInverse</item>
         <item name="tabBackground">@drawable/tab_background_selector</item>
         <item name="tabSelectedTextAppearance">@style/TabLayout.VLC.TextAppearance</item>
     </style>
@@ -722,8 +722,8 @@
         <item name="textAllCaps">false</item>
         <item name="android:textSize">32sp</item>
         <item name="android:fontFamily">@font/vesta2_bold</item>
-        <item name="tabIconTint">@color/backgroundPlate</item>
-        <item name="tabTextColor">@color/backgroundPlate</item>
+        <item name="tabIconTint">@color/textInverse</item>
+        <item name="tabTextColor">@color/textNormal</item>
     </style>
 
     <style name="CustomAudioItemTrack.VLC" parent="Widget.AppCompat.TextView">
