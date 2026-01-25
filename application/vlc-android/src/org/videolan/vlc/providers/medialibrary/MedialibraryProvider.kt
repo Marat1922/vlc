@@ -79,7 +79,8 @@ abstract class MedialibraryProvider<T : MediaLibraryItem>(val context: Context, 
             maxSize = MEDIALIBRARY_PAGE_SIZE *2
     )
 
-    val pagedList by lazy(LazyThreadSafetyMode.NONE) { MLDatasourceFactory().toLiveData(pagingConfig) }
+    val pagedList by lazy(LazyThreadSafetyMode.NONE) {
+        MLDatasourceFactory().toLiveData(pagingConfig) }
 
     /**
      * With pagedLists when a list is over the MEDIALIBRARY_SIZE_LIMIT, media over it won't be set.

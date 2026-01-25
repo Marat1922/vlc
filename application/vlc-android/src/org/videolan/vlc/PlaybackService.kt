@@ -1172,7 +1172,9 @@ class PlaybackService : MediaBrowserServiceCompat(), LifecycleOwner, CoroutineSc
                 putString(MediaMetadataCompat.METADATA_KEY_TITLE, title)
                 putString(MediaMetadataCompat.METADATA_KEY_MEDIA_ID, MediaSessionBrowser.generateMediaId(media))
                 putString(MediaMetadataCompat.METADATA_KEY_GENRE, MediaUtils.getMediaGenre(ctx, media))
-                putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER, media.trackNumber.toLong())
+                putLong(MediaMetadataCompat.METADATA_KEY_TRACK_NUMBER,
+                    playlistManager.currentIndex.toLong()
+                )
                 putString(MediaMetadataCompat.METADATA_KEY_ARTIST, MediaUtils.getMediaArtist(ctx, media))
                 putString(MediaMetadataCompat.METADATA_KEY_ALBUM_ARTIST, MediaUtils.getMediaReferenceArtist(ctx, media))
                 putString(MediaMetadataCompat.METADATA_KEY_ALBUM, MediaUtils.getMediaAlbum(ctx, media))
