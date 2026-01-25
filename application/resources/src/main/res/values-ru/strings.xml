@@ -123,7 +123,7 @@
     </plurals>
 
     <string name="internal_memory">Внутренняя память</string>
-    <string name="audio">Аудио</string>
+    <string name="audio">Музыка</string>
     <string name="video">Видео</string>
     <string name="bookmarks">Избранное</string>
     <string name="equalizer">Эквалайзер</string>
@@ -564,6 +564,7 @@
     <string name="popup_expand">Развернуть видео</string>
     <string name="download_subtitles">Загрузить субтитры</string>
     <string name="browse_folder">Просмотр папки</string>
+    <string name="folder">Папки</string>
     <string name="listen">Прослушать</string>
     <string name="apply_to_bt">Применить к Bluetooth-устройству</string>
     <string name="videos_all">Все видео</string>

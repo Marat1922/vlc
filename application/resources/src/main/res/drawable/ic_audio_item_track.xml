@@ -1,10 +1,14 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="48dp"
-    android:height="60dp"
-    android:viewportWidth="48"
-    android:viewportHeight="60">
-  <path
-      android:pathData="M21.989,0.387C22.607,-0.032 23.392,-0.116 24.086,0.161L43.757,8.029C46.32,9.055 48,11.537 48,14.297V27C48,27.747 47.63,28.445 47.011,28.863C46.393,29.282 45.608,29.366 44.914,29.089L25.5,21.323V47.25C25.5,54.292 19.792,60 12.75,60C5.708,60 0,54.292 0,47.25C0,40.208 5.708,34.5 12.75,34.5C15.896,34.5 18.776,35.64 21,37.529V2.25C21,1.503 21.37,0.805 21.989,0.387Z"
-      android:fillColor="#A6ACB2"
-      android:fillType="evenOdd"/>
+    android:width="@dimen/dsDefaultHeight"
+    android:height="@dimen/dsDefaultHeight"
+    android:viewportWidth="72"
+    android:viewportHeight="72">
+  <group>
+    <clip-path
+        android:pathData="M0,0h72v72h-72z"/>
+    <path
+        android:pathData="M33.989,6.387C34.607,5.968 35.392,5.884 36.086,6.161L55.757,14.029C58.32,15.054 60,17.537 60,20.297V33C60,33.747 59.63,34.445 59.011,34.863C58.393,35.282 57.608,35.366 56.914,35.089L37.5,27.323V53.25C37.5,60.292 31.792,66 24.75,66C17.708,66 12,60.292 12,53.25C12,46.208 17.708,40.5 24.75,40.5C27.896,40.5 30.776,41.64 33,43.529V8.25C33,7.503 33.37,6.805 33.989,6.387Z"
+        android:fillColor="@color/iconNormal"
+        android:fillType="evenOdd"/>
+  </group>
 </vector>

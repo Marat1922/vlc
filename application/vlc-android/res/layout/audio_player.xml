@@ -421,7 +421,6 @@
                 android:layout_gravity="center_horizontal"
                 android:clipToPadding="false"
                 android:importantForAccessibility="no"
-                android:maxWidth="800dp"
                 android:paddingBottom="68dp"
                 app:layout_constraintBottom_toTopOf="@+id/songs_list_guide"
                 app:layout_constraintLeft_toLeftOf="parent"

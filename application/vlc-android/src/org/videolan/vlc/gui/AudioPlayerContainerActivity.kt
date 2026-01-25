@@ -247,7 +247,7 @@ open class AudioPlayerContainerActivity : BaseActivity(), KeycodeListener, Sched
         // Bottom bar navigation
         bottomMargin += if (this is MainActivity && !isTablet()) 58.dp else 0
         //mini player
-        bottomMargin += if (::playerBehavior.isInitialized && playerBehavior.state != STATE_HIDDEN) 72.dp else 0 + 4.dp
+        bottomMargin += if (::playerBehavior.isInitialized && playerBehavior.state != STATE_HIDDEN) 144.dp else 0 + 4.dp
         fragmentContainer.setPadding(fragmentContainer.paddingLeft, fragmentContainer.paddingTop, fragmentContainer.paddingRight, bottomMargin)
     }
 
