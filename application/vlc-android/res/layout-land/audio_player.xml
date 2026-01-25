@@ -424,6 +424,7 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginBottom="16dp"
+            android:layout_marginStart="@dimen/padding_M"
             android:background="?attr/audio_list_background"
             android:clipToPadding="false"
             android:importantForAccessibility="no"
@@ -642,7 +643,7 @@
             android:id="@+id/shuffle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/padding_control_button"
+            android:layout_marginEnd="64dp"
             android:paddingBottom="@dimen/bottom_padding_control_button"
             android:background="?attr/actionBarItemBackground"
             android:contentDescription="@string/shuffle_title"
@@ -651,17 +652,17 @@
             android:onClick="@{fragment::onShuffleClick}"
             android:visibility="@{can_shuffle ? View.VISIBLE : View.VISIBLE}"
             app:layout_constraintBottom_toBottomOf="@+id/play_pause"
+            app:layout_constraintEnd_toStartOf="@+id/previous"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/previous"
             app:layout_constraintTop_toTopOf="@+id/play_pause"
             app:srcCompat="@drawable/ic_shuffle_audio" />
 
+        <!-- Previous - слева от play_pause с отступом 64dp -->
         <ImageView
             android:id="@+id/previous"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingEnd="@dimen/padding_control_button"
+            android:layout_marginEnd="64dp"
             android:paddingBottom="@dimen/bottom_padding_control_button"
             android:background="?attr/actionBarItemBackground"
             android:contentDescription="@string/previous"
@@ -669,8 +670,7 @@
             android:focusable="true"
             android:onClick="@{fragment::onPreviousClick}"
             app:layout_constraintBottom_toBottomOf="@+id/play_pause"
-            app:layout_constraintLeft_toRightOf="@+id/shuffle"
-            app:layout_constraintRight_toLeftOf="@+id/play_pause"
+            app:layout_constraintEnd_toStartOf="@+id/play_pause"
             app:layout_constraintTop_toTopOf="@+id/play_pause"
             app:srcCompat="@drawable/ic_previous_audio" />
 
@@ -679,21 +679,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingBottom="@dimen/bottom_padding_control_button"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
             android:contentDescription="@string/play"
             android:elevation="4dp"
             android:onClick="@{fragment::onPlayPauseClick}"
             android:onLongClick="@{fragment::onStopClick}"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/previous"
-            app:layout_constraintRight_toLeftOf="@+id/next" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
+        <!-- Next - справа от play_pause с отступом 64dp -->
         <ImageView
             android:id="@+id/next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/padding_control_button"
+            android:layout_marginStart="64dp"
             android:paddingBottom="@dimen/bottom_padding_control_button"
             android:background="?attr/actionBarItemBackground"
             android:contentDescription="@string/next"
@@ -702,16 +701,16 @@
             android:onClick="@{fragment::onNextClick}"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="@+id/play_pause"
-            app:layout_constraintLeft_toRightOf="@+id/play_pause"
-            app:layout_constraintRight_toLeftOf="@+id/repeat"
+            app:layout_constraintStart_toEndOf="@+id/play_pause"
             app:layout_constraintTop_toTopOf="@+id/play_pause"
             app:srcCompat="@drawable/ic_next_audio" />
 
+        <!-- Repeat - справа от next с отступом 64dp -->
         <ImageView
             android:id="@+id/repeat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="100dp"
+            android:layout_marginStart="64dp"
             android:paddingBottom="@dimen/bottom_padding_control_button"
             android:background="?attr/actionBarItemBackground"
             android:contentDescription="@string/repeat_title"
@@ -720,8 +719,7 @@
             android:onClick="@{fragment::onRepeatClick}"
             android:scaleType="fitXY"
             app:layout_constraintBottom_toBottomOf="@+id/play_pause"
-            app:layout_constraintLeft_toRightOf="@+id/next"
-            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/next"
             app:layout_constraintTop_toTopOf="@+id/play_pause"
             app:srcCompat="@drawable/ic_repeat_audio" />
 
