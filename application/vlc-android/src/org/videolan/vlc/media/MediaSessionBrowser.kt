@@ -159,7 +159,7 @@ class MediaSessionBrowser {
             val parentIdUri = parentId.toUri()
             val page = parentIdUri.getQueryParameter("p")
             val pageOffset = page?.toInt()?.times(MAX_RESULT_SIZE) ?: 0
-            val isAndroidAuto = rootHints?.containsKey(EXTRA_BROWSER_ICON_SIZE) ?: false
+            val isAndroidAuto = true
             when (parentIdUri.removeQuery().toString()) {
                 ID_ROOT -> {
                     //Home
@@ -382,7 +382,7 @@ class MediaSessionBrowser {
                     }
                     ID_STREAM -> emptyMediaDesc.setIconUri(res.getResourceUri(R.drawable.ic_auto_stream_unknown))
                 }
-                results.add(MediaBrowserCompat.MediaItem(emptyMediaDesc.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE))
+                //results.add(MediaBrowserCompat.MediaItem(emptyMediaDesc.build(), MediaBrowserCompat.MediaItem.FLAG_PLAYABLE))
             }
             return results
         }
@@ -397,7 +397,7 @@ class MediaSessionBrowser {
         fun search(context: Context, query: String, rootHints: Bundle?): List<MediaBrowserCompat.MediaItem> {
             val res = context.resources
             val results: MutableList<MediaBrowserCompat.MediaItem> = ArrayList()
-            val isAndroidAuto = rootHints?.containsKey(EXTRA_BROWSER_ICON_SIZE) ?: false
+            val isAndroidAuto = true
             val searchAggregate = Medialibrary.getInstance().search(query, false, false)
             val searchMediaId = ID_SEARCH.toUri().buildUpon().appendQueryParameter("query", query).toString()
             results.addAll(buildMediaItems(context, ID_PLAYLIST, searchAggregate.playlists, forSearch = true))

@@ -132,6 +132,8 @@ class PlaylistManager(val service: PlaybackService) : MediaWrapperList.EventList
             field = value
             currentPlayedMedia.postValue(mediaList.getMedia(value))
         }
+        get
+
     private var nextIndex = -1
     private var prevIndex = -1
     private var previous = Stack<Int>()
