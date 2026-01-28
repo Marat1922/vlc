@@ -232,5 +232,10 @@
             android:layout_height="match_parent"
             android:layout="@layout/player_screenshot" />
 
+    <include
+        layout="@layout/driving_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/driving_dialog"/>
 
 </FrameLayout>

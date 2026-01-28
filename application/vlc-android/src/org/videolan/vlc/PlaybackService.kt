@@ -1457,7 +1457,7 @@ class PlaybackService : MediaBrowserServiceCompat(), LifecycleOwner, CoroutineSc
     fun loadLastPlaylist(type: Int) {
         forceForeground(true)
         if (!playlistManager.loadLastPlaylist(type)) {
-            Toast.makeText(this, getString(R.string.resume_playback_error), Toast.LENGTH_LONG).show()
+            //Toast.makeText(this, getString(R.string.resume_playback_error), Toast.LENGTH_LONG).show()
             stopService(Intent(applicationContext, PlaybackService::class.java))
         }
     }

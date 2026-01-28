@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundNormal">
+
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/iconslot"
+        android:layout_marginBottom="@dimen/padding_M"
+        app:layout_constraintBottom_toTopOf="@+id/title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/vesta2_bold"
+        android:letterSpacing="0.02"
+        android:lineSpacingExtra="2sp"
+        android:textColor="@color/textNormal"
+        android:textSize="32sp"
+        android:translationY="-1.25sp"
+        android:text="Разрешить просмотр видео в движении?"
+        app:layout_constraintBottom_toTopOf="@+id/subtitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="@dimen/padding_2XL"/>
+
+    <TextView
+        android:id="@+id/subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:fontFamily="@font/vesta2_regular"
+        android:textSize="28sp"
+        android:letterSpacing="0.02"
+        android:lineSpacingExtra="1sp"
+        android:translationY="-0.45sp"
+        android:text="Просмотр видео может отвлекать водителя и повышать \nриск аварии. Используйте эту функцию только \nдля пассажиров"
+        android:textColor="@color/textSecondary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/centerGuideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/allow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="@dimen/primary_button_min_width"
+        android:text="Разрешить"
+        android:textSize="32sp"
+        android:letterSpacing="0.02"
+        android:lineSpacingExtra="2sp"
+        android:textColor="@color/textNormal"
+        android:fontFamily="@font/vesta2_bold"
+        android:textAllCaps="false"
+        android:paddingHorizontal="@dimen/padding_XL"
+        android:background="@drawable/icon_accept"
+        android:layout_marginTop="@dimen/padding_2XL"
+        app:layout_constraintStart_toStartOf="@id/centerGuideline"
+        android:layout_marginStart="@dimen/padding_M"
+        app:layout_constraintTop_toBottomOf="@+id/subtitle" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="@dimen/primary_button_min_width"
+        android:text="Отменить"
+        android:textSize="32sp"
+        android:textAllCaps="false"
+        android:paddingHorizontal="@dimen/padding_XL"
+        android:letterSpacing="0.02"
+        android:lineSpacingExtra="2sp"
+        android:fontFamily="@font/vesta2_bold"
+        android:background="@drawable/icon_cancel"
+        android:layout_marginEnd="@dimen/padding_M"
+        android:layout_marginTop="@dimen/padding_2XL"
+        app:layout_constraintEnd_toEndOf="@id/centerGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/subtitle"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
