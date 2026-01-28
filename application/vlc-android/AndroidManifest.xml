@@ -35,10 +35,18 @@
     <uses-permission android:name="com.android.providers.tv.permission.WRITE_EPG_DATA"/>
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
+    <uses-permission android:name="android.car.permission.CAR_SPEED"/>
+    <uses-permission android:name="android.car.permission.CAR_POWERTRAIN"/>
+
+
     <!-- Custom permissions for our content provider -->
     <permission
         android:name="${applicationId}.MEDIA"
         android:protectionLevel="signature" />
+
+    <uses-feature
+        android:name="android.hardware.type.automotive"
+        android:required="true" />
 
     <!-- Declare permissions used by our app -->
     <uses-permission android:name="${applicationId}.MEDIA" />
@@ -119,6 +127,8 @@
                     android:host="${applicationId}"
                     android:scheme="vlclauncher"/>
             </intent-filter>
+
+            <meta-data android:name="distractionOptimized" android:value="true"/>
 
             <!-- This filter captures protocols without type info -->
             <intent-filter>
@@ -975,6 +985,7 @@
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable"/>
+            <meta-data android:name="distractionOptimized" android:value="true"/>
         </activity>
         <activity
             android:name=".gui.onboarding.OnboardingActivity"
@@ -982,7 +993,10 @@
         <activity
             android:name=".gui.SecondaryActivity"
             android:theme="@style/Theme.VLC"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan">
+            <meta-data android:name="distractionOptimized" android:value="true"/>
+
+        </activity>
         <activity
             android:name=".gui.HeaderMediaListActivity"
             android:theme="@style/Theme.VLC.NoStatus"/>
@@ -1036,6 +1050,7 @@
             </intent-filter>
             <meta-data android:name="com.samsung.android.support.REMOTE_ACTION"
                 android:resource="@xml/air_actions"/>
+            <meta-data android:name="distractionOptimized" android:value="true"/>
 
         </activity>
         <activity

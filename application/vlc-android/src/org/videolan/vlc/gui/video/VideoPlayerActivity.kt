@@ -27,6 +27,13 @@ import android.app.KeyguardManager
 import android.app.PictureInPictureParams
 import android.bluetooth.BluetoothA2dp
 import android.bluetooth.BluetoothHeadset
+import android.car.Car
+import android.car.Car.CarServiceLifecycleListener
+import android.car.VehicleAreaType
+import android.car.VehiclePropertyIds
+import android.car.hardware.CarPropertyValue
+import android.car.hardware.property.CarPropertyManager
+import android.car.hardware.property.CarPropertyManager.CarPropertyEventCallback
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.DialogInterface
@@ -58,17 +65,19 @@ import android.view.PixelCopy
 import android.view.Surface
 import android.view.SurfaceView
 import android.view.View
+import android.view.View.GONE
 import android.view.View.OnClickListener
 import android.view.View.OnLongClickListener
+import android.view.View.VISIBLE
 import android.view.WindowManager
 import android.view.animation.Animation
 import android.view.animation.AnimationSet
 import android.view.animation.DecelerateInterpolator
 import android.view.animation.RotateAnimation
 import android.view.inputmethod.BaseInputConnection
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.FrameLayout
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
@@ -79,7 +88,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.app.BaseContextWrappingDelegate
-import androidx.appcompat.widget.PopupMenu
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.constraintlayout.widget.Guideline
@@ -182,7 +190,6 @@ import org.videolan.vlc.BuildConfig
 import org.videolan.vlc.PlaybackService
 import org.videolan.vlc.R
 import org.videolan.vlc.VlcMigrationHelper
-import org.videolan.vlc.databinding.PlayerOptionItemBinding
 import org.videolan.vlc.getAllTracks
 import org.videolan.vlc.getSelectedVideoTrack
 import org.videolan.vlc.gui.DialogActivity
@@ -203,14 +210,12 @@ import org.videolan.vlc.gui.dialogs.SleepTimerDialog
 import org.videolan.vlc.gui.dialogs.VLCBottomSheetDialogFragment.Companion.shouldInterceptRemote
 import org.videolan.vlc.gui.dialogs.adapters.VlcTrack
 import org.videolan.vlc.gui.dialogs.showContext
-import org.videolan.vlc.gui.helpers.AudioUtil.setRingtone
 import org.videolan.vlc.gui.helpers.BitmapUtil
 import org.videolan.vlc.gui.helpers.KeycodeListener
 import org.videolan.vlc.gui.helpers.PlayerKeyListenerDelegate
 import org.videolan.vlc.gui.helpers.PlayerOptionsDelegate
 import org.videolan.vlc.gui.helpers.UiTools
 import org.videolan.vlc.gui.helpers.UiTools.addToPlaylist
-import org.videolan.vlc.gui.helpers.UiTools.isTablet
 import org.videolan.vlc.gui.helpers.UiTools.showPinIfNeeded
 import org.videolan.vlc.gui.helpers.hf.StoragePermissionsDelegate
 import org.videolan.vlc.interfaces.IPlaybackSettingsController
@@ -226,10 +231,7 @@ import org.videolan.vlc.util.ContextOption.CTX_FAV_ADD
 import org.videolan.vlc.util.ContextOption.CTX_FAV_REMOVE
 import org.videolan.vlc.util.ContextOption.CTX_GO_TO_ALBUM
 import org.videolan.vlc.util.ContextOption.CTX_GO_TO_ARTIST
-import org.videolan.vlc.util.ContextOption.CTX_GO_TO_FOLDER
-import org.videolan.vlc.util.ContextOption.CTX_INFORMATION
 import org.videolan.vlc.util.ContextOption.CTX_REMOVE_FROM_PLAYLIST
-import org.videolan.vlc.util.ContextOption.CTX_SET_RINGTONE
 import org.videolan.vlc.util.ContextOption.CTX_SHARE
 import org.videolan.vlc.util.ContextOption.CTX_STOP_AFTER_THIS
 import org.videolan.vlc.util.DialogDelegate
@@ -245,7 +247,6 @@ import org.videolan.vlc.util.Util
 import org.videolan.vlc.util.hasNotch
 import org.videolan.vlc.util.isTalkbackIsEnabled
 import org.videolan.vlc.util.share
-import org.videolan.vlc.util.showParentFolder
 import org.videolan.vlc.viewmodels.BookmarkModel
 import org.videolan.vlc.viewmodels.PlaylistModel
 import java.io.File
@@ -290,7 +291,7 @@ open class VideoPlayerActivity : AppCompatActivity(), PlaybackService.Callback,
 
     private var currentAudioTrack = "-2"
     private var currentSpuTrack = "-2"
-    var closeVideoPlayer : ImageView? = null
+    var closeVideoPlayer: ImageView? = null
 
     var isLocked = false
 
@@ -331,19 +332,74 @@ open class VideoPlayerActivity : AppCompatActivity(), PlaybackService.Callback,
 
     internal var fov: Float = 0.toFloat()
     lateinit var touchDelegate: VideoTouchDelegate
-    val statsDelegate: VideoStatsDelegate by lazy(LazyThreadSafetyMode.NONE) { VideoStatsDelegate(this, { overlayDelegate.showOverlayTimeout(OVERLAY_INFINITE) }, { overlayDelegate.showOverlay(true) }) }
-    val delayDelegate: VideoDelayDelegate by lazy(LazyThreadSafetyMode.NONE) { VideoDelayDelegate(this@VideoPlayerActivity) }
-    val screenshotDelegate: VideoPlayerScreenshotDelegate by lazy(LazyThreadSafetyMode.NONE) { VideoPlayerScreenshotDelegate(this@VideoPlayerActivity) }
-    val overlayDelegate: VideoPlayerOverlayDelegate by lazy(LazyThreadSafetyMode.NONE) { VideoPlayerOverlayDelegate(this@VideoPlayerActivity) }
-    val resizeDelegate: VideoPlayerResizeDelegate by lazy(LazyThreadSafetyMode.NONE) { VideoPlayerResizeDelegate(this@VideoPlayerActivity) }
-    val orientationDelegate: VideoPlayerOrientationDelegate by lazy(LazyThreadSafetyMode.NONE) { VideoPlayerOrientationDelegate(this@VideoPlayerActivity) }
-    private val playerKeyListenerDelegate: PlayerKeyListenerDelegate by lazy(LazyThreadSafetyMode.NONE) { PlayerKeyListenerDelegate(this@VideoPlayerActivity) }
+    val statsDelegate: VideoStatsDelegate by lazy(LazyThreadSafetyMode.NONE) {
+        VideoStatsDelegate(
+            this,
+            { overlayDelegate.showOverlayTimeout(OVERLAY_INFINITE) },
+            { overlayDelegate.showOverlay(true) })
+    }
+    val delayDelegate: VideoDelayDelegate by lazy(LazyThreadSafetyMode.NONE) {
+        VideoDelayDelegate(
+            this@VideoPlayerActivity
+        )
+    }
+    val screenshotDelegate: VideoPlayerScreenshotDelegate by lazy(LazyThreadSafetyMode.NONE) {
+        VideoPlayerScreenshotDelegate(
+            this@VideoPlayerActivity
+        )
+    }
+    val overlayDelegate: VideoPlayerOverlayDelegate by lazy(LazyThreadSafetyMode.NONE) {
+        VideoPlayerOverlayDelegate(
+            this@VideoPlayerActivity
+        )
+    }
+    val resizeDelegate: VideoPlayerResizeDelegate by lazy(LazyThreadSafetyMode.NONE) {
+        VideoPlayerResizeDelegate(
+            this@VideoPlayerActivity
+        )
+    }
+    val orientationDelegate: VideoPlayerOrientationDelegate by lazy(LazyThreadSafetyMode.NONE) {
+        VideoPlayerOrientationDelegate(
+            this@VideoPlayerActivity
+        )
+    }
+    private val playerKeyListenerDelegate: PlayerKeyListenerDelegate by lazy(LazyThreadSafetyMode.NONE) {
+        PlayerKeyListenerDelegate(
+            this@VideoPlayerActivity
+        )
+    }
     val tipsDelegate: VideoTipsDelegate by lazy(LazyThreadSafetyMode.NONE) { VideoTipsDelegate(this@VideoPlayerActivity) }
     var isTv: Boolean = false
 
     private val dialogsDelegate = DialogDelegate()
     private var baseContextWrappingDelegate: AppCompatDelegate? = null
     var waitingForPin = false
+
+    private lateinit var mCar: Car
+
+    private lateinit var mCarPropertyManager: CarPropertyManager
+
+    private val mPropertyEventCallback: CarPropertyEventCallback =
+        object : CarPropertyEventCallback {
+            override fun onChangeEvent(property: CarPropertyValue<*>?) {
+                runOnUiThread {
+                    val needBlocking: Boolean = needToRestrictInstaller()
+                    val blockingView = rootView?.findViewById<View>(R.id.driving_dialog)
+                    blockingView?.let {
+                        it.visibility = if (needBlocking) VISIBLE else GONE
+                        val button = it.findViewById<Button>(R.id.allow)
+                        button!!.setOnClickListener {
+                            blockingView.visibility = GONE
+                        }
+                        it.findViewById<Button>(R.id.cancel)
+                            .setOnClickListener { VideoPlayerActivity@ ::finish }
+                    }
+                }
+            }
+
+            override fun onErrorEvent(propId: Int, zone: Int) {
+            }
+        }
 
     /**
      * Flag to indicate whether the media should be paused once loaded
@@ -383,6 +439,7 @@ open class VideoPlayerActivity : AppCompatActivity(), PlaybackService.Callback,
 
     internal val isPlaybackSettingActive: Boolean
         get() = delayDelegate.playbackSetting != IPlaybackSettingsController.DelayState.OFF
+
 
     /**
      * Handle resize of the surface and the overlay
@@ -558,6 +615,40 @@ open class VideoPlayerActivity : AppCompatActivity(), PlaybackService.Callback,
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        mCar = Car.createCar(
+            this, /* handler= */ null,
+            Car.CAR_WAIT_TIMEOUT_WAIT_FOREVER,
+            CarServiceLifecycleListener { car: Car, ready: Boolean ->
+                if (!ready) return@CarServiceLifecycleListener
+
+                mCarPropertyManager =
+                    car.getCarManager(Car.PROPERTY_SERVICE) as CarPropertyManager
+                mCarPropertyManager?.apply {
+                    registerCallback(
+                        mPropertyEventCallback, VehiclePropertyIds.PARKING_BRAKE_ON,
+                        0F
+                    )
+                    registerCallback(
+                        mPropertyEventCallback,
+                        VehiclePropertyIds.GEAR_SELECTION,
+                        0F
+                    )
+                }
+
+                val needBlocking = needToRestrictInstaller()
+                runOnUiThread({
+                    val blockingView = rootView?.findViewById<View>(R.id.driving_dialog)
+                    blockingView?.let {
+                        it.visibility = if (needBlocking) VISIBLE else GONE
+                        it.findViewById<Button>(R.id.allow)
+                            .setOnClickListener { blockingView.visibility = GONE }
+                        it.findViewById<Button>(R.id.cancel)
+                            .setOnClickListener { VideoPlayerActivity@ ::finish }
+                    }
+
+                })
+            })
 
         dialogsDelegate.observeDialogs(this, this)
         Util.checkCpuCompatibility(this)
@@ -1492,7 +1583,7 @@ open class VideoPlayerActivity : AppCompatActivity(), PlaybackService.Callback,
             }
 
             KeyEvent.KEYCODE_V, KeyEvent.KEYCODE_MEDIA_AUDIO_TRACK, KeyEvent.KEYCODE_BUTTON_X -> {
-                onAudioSubClick( null)
+                onAudioSubClick(null)
                 return true
             }
 
@@ -1667,7 +1758,7 @@ open class VideoPlayerActivity : AppCompatActivity(), PlaybackService.Callback,
             }
 
             KeyEvent.KEYCODE_CAPTIONS -> {
-                onAudioSubClick( null)
+                onAudioSubClick(null)
                 return true
             }
 
@@ -1757,6 +1848,27 @@ open class VideoPlayerActivity : AppCompatActivity(), PlaybackService.Callback,
         }
         optionsDelegate?.show()
         overlayDelegate.hideOverlay(fromUser = false, forceTalkback = true)
+    }
+
+    private fun needToRestrictInstaller(): Boolean {
+        val allowedByUser =
+            android.provider.Settings.System.getInt(contentResolver, ALLOW_VIDEO_DRIVING, 0)
+        if (allowedByUser == 1)
+            return false
+
+
+        val isParkingBrakeOn: Boolean = mCarPropertyManager.getBooleanProperty(
+            VehiclePropertyIds.PARKING_BRAKE_ON, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL
+        )
+
+        val geerSelection: Int = mCarPropertyManager.getIntProperty(
+            VehiclePropertyIds.GEAR_SELECTION, VehicleAreaType.VEHICLE_AREA_TYPE_GLOBAL
+        )
+
+        if (isParkingBrakeOn || (geerSelection == android.car.VehicleGear.GEAR_PARK || geerSelection == android.car.VehicleGear.GEAR_NEUTRAL)) {
+            return false
+        }
+        return true
     }
 
     private fun volumeUp() {
@@ -2036,9 +2148,13 @@ open class VideoPlayerActivity : AppCompatActivity(), PlaybackService.Callback,
         optionsDelegate?.setup()
         settings.edit { remove(VIDEO_PAUSED) }
         if (isInPictureInPictureMode && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val track = service?.playlistManager?.player?.mediaplayer?.getSelectedVideoTrack() ?: return
+            val track =
+                service?.playlistManager?.player?.mediaplayer?.getSelectedVideoTrack() ?: return
             val ar =
-                Rational(track.getWidth().coerceAtMost((track.getHeight() * 2.39f).toInt()), track.getHeight())
+                Rational(
+                    track.getWidth().coerceAtMost((track.getHeight() * 2.39f).toInt()),
+                    track.getHeight()
+                )
             if (ar.isFinite && !ar.isZero) {
                 setPictureInPictureParams(
                     PictureInPictureParams.Builder().setAspectRatio(ar).build()
@@ -2987,6 +3103,16 @@ open class VideoPlayerActivity : AppCompatActivity(), PlaybackService.Callback,
     companion object {
 
         private const val TAG = "VLC/VideoPlayerActivity"
+
+        object VehicleGear {
+            const val GEAR_UNKNOWN = 0
+            const val GEAR_NEUTRAL = 1
+            const val GEAR_REVERSE = 2
+            const val GEAR_PARK = 4
+            const val GEAR_DRIVE = 8
+        }
+
+        private val ALLOW_VIDEO_DRIVING = "allow_video"
 
         private val ACTION_RESULT = "player.result".buildPkgString()
         private const val EXTRA_POSITION = "extra_position"
