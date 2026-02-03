@@ -205,7 +205,6 @@ abstract class BaseBrowserFragment : MediaBrowserFragment<BrowserModel>(), IRefr
         isRootDirectory = defineIsRoot()
         browserFavRepository = BrowserFavRepository.getInstance(requireContext())
         if(PlaybackService.instance?.isPlaying == true){
-            Toast.makeText(activity, "PLAYING", Toast.LENGTH_SHORT).show()
             Log.d("TAG", "PLAYING")
         }
     }
@@ -761,8 +760,6 @@ abstract class BaseBrowserFragment : MediaBrowserFragment<BrowserModel>(), IRefr
                         }
                     }
                 }
-            } else {
-                Toast.makeText(context, "Формат не поддерживается", Toast.LENGTH_SHORT).show()
             }
         }
     }

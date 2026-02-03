@@ -134,7 +134,11 @@
     <string name="directories">Каталоги</string>
     <string name="loading">Загрузка…</string>
     <string name="please_wait">Пожалуйста, подождите…</string>
-    <string name="nomedia">Медиафайлы не найдены. Пожалуйста, перенесите файлы на ваше устройство или измените настройки.</string>
+    <string name="nomedia">Медиафайлы не найдены. Пожалуйста, перенесите файлы на ваше устройство.</string>
+    <string name="nomedia_audio">Музыка не найдена</string>
+    <string name="nomedia_video">Видео не найдено</string>
+    <string name="nomedia_folders">Папки не найдены.</string>
+
     <string name="empty_search">Поиск %s не дал результатов</string>
     <string name="noplaylist">Плейлисты не найдены.</string>
     <string name="nosubfolder">Нет вложенной папки</string>
