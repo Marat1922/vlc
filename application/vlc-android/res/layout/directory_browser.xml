@@ -66,7 +66,7 @@
                 android:id="@+id/empty_loading"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                app:empty_text="@string/nomedia"
+                app:empty_text="@string/nomedia_folders"
                 app:show_no_media="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

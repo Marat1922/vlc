@@ -23,173 +23,172 @@
   -->
 
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline12"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.5"/>
+        android:id="@+id/guideline12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5" />
 
     <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/text_barrier"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="top"
-            app:constraint_referenced_ids="permissionTextView,emptyTextView" />
+        android:id="@+id/text_barrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="top"
+        app:constraint_referenced_ids="permissionTextView,emptyTextView" />
 
     <androidx.constraintlayout.widget.Barrier
-            android:id="@+id/text_barrier_bottom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:barrierDirection="bottom"
-            app:constraint_referenced_ids="emptyTextView" />
+        android:id="@+id/text_barrier_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="emptyTextView" />
 
     <TextView
-            android:id="@+id/emptyTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center"
-            android:maxWidth="600dp"
-            android:textColor="?attr/font_light"
-            android:textSize="16sp"
-            app:layout_constraintBottom_toBottomOf="@id/guideline12"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            tools:visibility="visible" />
+        android:id="@+id/emptyTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:letterSpacing="0.01"
+        android:textColor="@color/textSecondary"
+        android:lineSpacingExtra="-1sp"
+        android:textSize="36sp"
+        app:layout_constraintBottom_toBottomOf="@id/guideline12"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:visibility="visible" />
 
     <TextView
-            android:id="@+id/permissionTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginRight="16dp"
-            android:fontFamily="sans-serif-medium"
-            android:gravity="center"
-            android:maxWidth="600dp"
-            android:text="@string/permission_not_granted"
-            android:textColor="?attr/empty_title"
-            android:textSize="22sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/emptyImageView"
-            tools:visibility="visible" />
+        android:id="@+id/permissionTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginRight="16dp"
+        android:fontFamily="sans-serif-medium"
+        android:gravity="center"
+        android:maxWidth="600dp"
+        android:text="@string/permission_not_granted"
+        android:textColor="?attr/empty_title"
+        android:textSize="22sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/emptyImageView"
+        tools:visibility="visible" />
 
     <TextView
-            android:id="@+id/permissionTextView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginRight="16dp"
-            android:gravity="center"
-            android:maxWidth="600dp"
-            android:text="@string/permission_media"
-            android:textColor="?attr/font_light"
-            android:textSize="16sp"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/permissionTitle"
-            tools:visibility="visible" />
+        android:id="@+id/permissionTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginRight="16dp"
+        android:gravity="center"
+        android:maxWidth="600dp"
+        android:text="@string/permission_media"
+        android:textColor="?attr/font_light"
+        android:textSize="16sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/permissionTitle"
+        tools:visibility="visible" />
 
     <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/emptyImageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@id/emptyTextView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_empty" />
-
-
+        android:id="@+id/emptyImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/emptyTextView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/emptymedia" />
 
 
     <Button
-            android:id="@+id/grantPermissionButton"
-            style="?attr/empty_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="@string/permission_ask_again"
-            app:layout_constraintEnd_toEndOf="@+id/emptyTextView"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/emptyTextView"
-            app:layout_constraintTop_toBottomOf="@+id/permissionTextView"
-            app:layout_constraintVertical_chainStyle="packed" />
+        android:id="@+id/grantPermissionButton"
+        style="?attr/empty_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/permission_ask_again"
+        app:layout_constraintEnd_toEndOf="@+id/emptyTextView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/emptyTextView"
+        app:layout_constraintTop_toBottomOf="@+id/permissionTextView"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <Button
-            android:id="@+id/pickFile"
-            style="?attr/empty_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/pick_file"
-            app:layout_constraintEnd_toEndOf="@+id/emptyTextView"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="@+id/emptyTextView"
-            app:layout_constraintTop_toBottomOf="@+id/grantPermissionButton" />
+        android:id="@+id/pickFile"
+        style="?attr/empty_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/pick_file"
+        app:layout_constraintEnd_toEndOf="@+id/emptyTextView"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/emptyTextView"
+        app:layout_constraintTop_toBottomOf="@+id/grantPermissionButton" />
 
     <TextView
-            android:id="@+id/loadingTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="start"
-            android:text="@string/loading"
-            android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/guideline12"
-            app:layout_constraintEnd_toStartOf="@+id/loadingFlipper"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent" />
+        android:id="@+id/loadingTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="start"
+        android:text="@string/loading"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/guideline12"
+        app:layout_constraintEnd_toStartOf="@+id/loadingFlipper"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <ViewFlipper
-            android:id="@+id/loadingFlipper"
-            android:layout_width="wrap_content"
+        android:id="@+id/loadingFlipper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:autoStart="true"
+        android:flipInterval="1000"
+        app:layout_constraintBaseline_toBaselineOf="@+id/loadingTitle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/loadingTitle">
+
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:autoStart="true"
-            android:flipInterval="1000"
-            app:layout_constraintBaseline_toBaselineOf="@+id/loadingTitle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/loadingTitle">
+            android:text="@string/empty"
+            android:textSize="20sp" />
 
         <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:text="@string/empty"
-                android:textSize="20sp" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/load_1_period"
+            android:textSize="20sp" />
 
         <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:text="@string/load_1_period"
-                android:textSize="20sp" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/load_2_period"
+            android:textSize="20sp" />
 
         <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:text="@string/load_2_period"
-                android:textSize="20sp" />
-
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:text="@string/load_3_period"
-                android:textSize="20sp" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:text="@string/load_3_period"
+            android:textSize="20sp" />
     </ViewFlipper>
 
 
