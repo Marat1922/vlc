@@ -2125,21 +2125,12 @@ open class VideoPlayerActivity : AppCompatActivity(), PlaybackService.Callback,
         stopLoading()
         overlayDelegate.updateOverlayPausePlay()
         updateNavStatus()
-
-        // ЗАМЕНИТЬ эту часть:
-        // if (!mw.hasFlag(MediaWrapper.MEDIA_PAUSED) && Settings.videoHudDelay != -1)
-        //     handler.sendEmptyMessageDelayed(FADE_OUT, Settings.videoHudDelay.toLong() * 1000)
-        // else {
-        //     mw.removeFlags(MediaWrapper.MEDIA_PAUSED)
-        //     wasPaused = false
-        // }
-
-        // НА ЭТО (показ панели как при клике на экран):
-        overlayDelegate.showOverlay(true)
-
-        mw.removeFlags(MediaWrapper.MEDIA_PAUSED)
-        wasPaused = false
-
+        if (!mw.hasFlag(MediaWrapper.MEDIA_PAUSED) && Settings.videoHudDelay != -1)
+            handler.sendEmptyMessageDelayed(FADE_OUT, Settings.videoHudDelay.toLong() * 1000)
+        else {
+            mw.removeFlags(MediaWrapper.MEDIA_PAUSED)
+            wasPaused = false
+        }
         setESTracks()
         if (overlayDelegate.isHudRightBindingInitialized() && (overlayDelegate.hudRightBinding.playerOverlayTitle.length() == 0 || PlaybackService.hasRenderer()))
             overlayDelegate.setTitle(mw.title)

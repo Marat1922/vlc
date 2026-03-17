@@ -8,9 +8,9 @@
         android:pathData="M0,0h72v72h-72z"/>
     <path
         android:pathData="M23.159,41.759C18.833,39.13 18.833,32.851 23.159,30.222L52.744,12.242C57.243,9.508 63,12.747 63,18.01V53.971C63,59.235 57.243,62.473 52.744,59.739L23.159,41.759Z"
-        android:fillColor="@color/iconNormal"/>
+        android:fillColor="@color/dockIconSelected"/>
     <path
         android:pathData="M9,14.991C9,13.749 10.007,12.741 11.25,12.741C12.493,12.741 13.5,13.749 13.5,14.991V58.491C13.5,59.734 12.493,60.741 11.25,60.741C10.007,60.741 9,59.734 9,58.491V14.991Z"
-        android:fillColor="@color/iconNormal"/>
+        android:fillColor="@color/dockIconSelected"/>
   </group>
 </vector>
