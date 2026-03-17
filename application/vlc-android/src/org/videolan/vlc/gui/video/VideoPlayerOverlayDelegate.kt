@@ -471,9 +471,11 @@ class VideoPlayerOverlayDelegate (private val player: VideoPlayerActivity) {
                     if (overlayTimeout != VideoPlayerActivity.OVERLAY_INFINITE)
                         player.handler.sendMessageDelayed(player.handler.obtainMessage(VideoPlayerActivity.FADE_OUT), overlayTimeout.toLong())
                     hudBinding.playerOverlayPlay.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
-                    if (isBookmarkShown())try {
-                        if (player.isTalkbackIsEnabled()) bookmarkListDelegate?.addBookmarkButton?.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
-                    } catch (e: Exception) {
+                    if (isBookmarkShown()) {
+                        try {
+                            if (player.isTalkbackIsEnabled()) bookmarkListDelegate?.addBookmarkButton?.sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_FOCUSED)
+                        } catch (e: Exception) {
+                        }
                     }
                 }
                 enterAnimate(arrayOf(hudRightBinding.hudRightOverlay, hudRightBackground), -100.dp.toFloat())
@@ -995,7 +997,6 @@ class VideoPlayerOverlayDelegate (private val player: VideoPlayerActivity) {
 //            if (secondary) hudRightBinding.videoSecondaryDisplay.setImageResource(R.drawable.ic_player_screenshare_stop)
 //            hudRightBinding.videoSecondaryDisplay.visibility = if (!show) View.GONE else if (UiTools.hasSecondaryDisplay(player.applicationContext)) View.VISIBLE else View.GONE
 //            hudRightBinding.videoSecondaryDisplay.contentDescription = player.resources.getString(if (secondary) R.string.video_remote_disable else R.string.video_remote_enable)
-
 //            hudRightBinding.playlistToggle.visibility = if (show && player.service?.hasPlaylist() == true) View.VISIBLE else View.GONE
             hudRightBinding.playerScreenshot.visibility = if (Settings.getInstance(player).getString(SCREENSHOT_MODE, "0") in arrayOf("1", "3")) View.VISIBLE else View.GONE
             hudRightBinding.playerOverlayNavmenu.visibility = if (player.menuIdx >= 0) View.VISIBLE else View.GONE
